@@ -26,10 +26,11 @@ jobs:
         virtualenvs-create: true
         virtualenvs-in-project: true
 
-    - name: Sync lock file and install dependencies
+    - name: Generate runner lock file and install
       run: |
-        poetry lock --no-update
+        rm -f poetry.lock
+        poetry lock
         poetry install --no-interaction --no-root
-  
+
     - name: Run code quality checks (Linting)
       run: poetry run flake8 src/
