@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 from datetime import datetime
 
 
@@ -26,7 +25,7 @@ class DataValidator:
         # Check for unexpected extra columns
         extra_cols = set(df.columns) - set(expected_columns)
         if extra_cols:
-            report['issues'].append(f"Extra columns (not in schema): {extra_cols}")
+            report['issues'].append(f"Extra columns: {extra_cols}")
 
         # Check data types match expected
         for col, expected_type in expected_types.items():
@@ -35,13 +34,15 @@ class DataValidator:
                 if actual_type != expected_type:
                     report['passed'] = False
                     report['issues'].append(
-                        f"Column '{col}': expected type '{expected_type}', got '{actual_type}'"
+                        f"Column '{col}': expected type '{expected_type}', "
+                        f"got '{actual_type}'"
                     )
 
         self.validation_results.append(report)
         return report
 
-    def validate_completeness(self, df, required_columns, max_missing_pct=0.05):
+    def validate_completeness(self, df, required_columns,
+                              max_missing_pct=0.05):
         """Check that required columns don't have too many missing values."""
         report = {
             'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -53,7 +54,7 @@ class DataValidator:
         for col in required_columns:
             if col not in df.columns:
                 report['passed'] = False
-                report['issues'].append(f"Required column '{col}' not found in data")
+                report['issues'].append(f"Required column '{col}' not found")
                 continue
 
             missing_count = df[col].isnull().sum()
@@ -87,7 +88,8 @@ class DataValidator:
                 if len(below_min) > 0:
                     report['passed'] = False
                     report['issues'].append(
-                        f"Column '{col}': {len(below_min)} values below minimum ({rules['min']})"
+                        f"Column '{col}': {len(below_min)} values",
+                        f"below minimum ({rules['min']})"
                     )
 
             if 'max' in rules:
@@ -95,7 +97,8 @@ class DataValidator:
                 if len(above_max) > 0:
                     report['passed'] = False
                     report['issues'].append(
-                        f"Column '{col}': {len(above_max)} values above maximum ({rules['max']})"
+                        f"Column '{col}': {len(above_max)} values",
+                        f"above maximum ({rules['max']})"
                     )
 
         self.validation_results.append(report)
@@ -154,7 +157,7 @@ class DataValidator:
         """
         Detect outliers in numeric columns using the IQR method.
         Flags values outside [Q1 - 1.5*IQR, Q3 + 1.5*IQR].
-        Mirrors the IQR outlier checks done in the notebook for price and kilometer.
+        Mirrors the IQR outlier checks for price and kilometer.
         """
         report = {
             'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -173,14 +176,16 @@ class DataValidator:
             lower_bound = Q1 - 1.5 * IQR
             upper_bound = Q3 + 1.5 * IQR
 
-            outlier_count = df[(df[col] < lower_bound) | (df[col] > upper_bound)].shape[0]
+            outlier_count = (df[(df[col] < lower_bound) |
+                                (df[col] > upper_bound)].shape[0])
             outlier_pct = (outlier_count / len(df)) * 100
 
             if outlier_count > 0:
                 report['passed'] = False
                 report['issues'].append(
                     f"Column '{col}': {outlier_count} outliers detected "
-                    f"({outlier_pct:.2f}%) — bounds [{lower_bound:.2f}, {upper_bound:.2f}]"
+                    f"({outlier_pct:.2f}%) — bounds [{lower_bound:.2f},"
+                    f"{upper_bound:.2f}]"
                 )
 
         self.validation_results.append(report)
@@ -204,7 +209,7 @@ class DataValidator:
         if duplicate_count > 0:
             report['passed'] = False
             report['issues'].append(
-                f"{duplicate_count} fully duplicate rows found ({duplicate_pct:.2f}%)"
+                f"{duplicate_count} fully duplicates ({duplicate_pct:.2f}%)"
             )
 
         self.validation_results.append(report)
@@ -248,11 +253,11 @@ class DataValidator:
         }
 
 
-raw_data  = pd.read_csv("../../data/joined_cars_dataset.csv")
+raw_data = pd.read_csv("../../data/joined_cars_dataset.csv")
 
 expected_columns = [
     'price', 'yearOfRegistration', 'powerPS',
-    'kilometer', 'price_tier', 'fuelType', 
+    'kilometer', 'price_tier', 'fuelType',
     'vehicleType', 'brand', 'gearbox', 'seller'
 ]
 
@@ -286,7 +291,8 @@ outlier_columns = ['price', 'kilometer']
 validator = DataValidator()
 
 validator.validate_schema(raw_data, expected_columns, expected_types)
-validator.validate_completeness(raw_data, required_columns, max_missing_pct=0.05)
+validator.validate_completeness(raw_data, required_columns,
+                                max_missing_pct=0.05)
 validator.validate_ranges(raw_data, range_rules)
 validator.validate_categorical(raw_data, categorical_rules)
 validator.validate_outliers_iqr(raw_data, outlier_columns)
