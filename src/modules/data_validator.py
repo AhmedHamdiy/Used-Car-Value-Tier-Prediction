@@ -240,7 +240,7 @@ class DataValidator:
                 for issue in result['issues']:
                     print(f"   ⚠  {issue}")
             else:
-                print("   ✓  No issues found.")
+                print("  No issues found.")
 
         print("\n" + "=" * 55)
 
