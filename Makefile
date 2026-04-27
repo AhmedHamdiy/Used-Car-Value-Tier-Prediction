@@ -33,8 +33,13 @@ lint:
 	poetry run flake8 $(SRC_DIR) $(SCRIPTS_DIR)
 	@echo "Code linting complete!"
 
+test:
+	@echo "Running unit and integration tests with coverage..."
+	poetry run pytest tests/ --cov=src --cov-report=term-missing --cov-report=html
+	@echo "Detailed coverage report generated in htmlcov/index.html"
+
 check: format lint
 	@echo "Code quality checks passed!"
 
-pipeline: data preprocess check
+pipeline: data preprocess test check
 	@echo "Full data pipeline executed successfully!"
