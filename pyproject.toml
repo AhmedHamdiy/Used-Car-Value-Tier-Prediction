@@ -6,9 +6,9 @@ authors = [
     {name = "ahmed_hamdiy",email = "ahmed.hamdiy03@gmail.com"}
 ]
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.11,<3.13"
 dependencies = [
-    "pandas>=3.0.2,<4.0.0",
+    "pandas<3",
     "pygments>=2.20.0,<3.0.0",
     "matplotlib>=3.10.8,<4.0.0",
     "seaborn>=0.13.2,<0.14.0",
@@ -17,9 +17,15 @@ dependencies = [
     "requests>=2.33.1,<3.0.0",
     "beautifulsoup4>=4.14.3,<5.0.0",
     "kagglehub>=1.0.0,<2.0.0",
-    "flake8>=7.3.0,<8.0.0"
+    "flake8>=7.3.0,<8.0.0",
+
+    "mlflow>=3.11",
+    "scikit-learn",
 ]
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+package-mode = false
