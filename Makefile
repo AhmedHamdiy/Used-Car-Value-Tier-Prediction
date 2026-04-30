@@ -15,7 +15,9 @@ data:
 
 preprocess:
 	@echo "Merging datasets..."
-	poetry run python scripts/data/merge_data.py
+	poetry run python scripts/merge_data.py
+	@echo "Running preprocessing pipeline..."
+	poetry run python scripts/run_preprocessing.py
 
 clean:
 	@echo "Cleaning up intermediate files..."
