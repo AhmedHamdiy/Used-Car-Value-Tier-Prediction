@@ -4,20 +4,20 @@ SCRIPTS_DIR = "scripts"
 SRC_DIR = "src"
 DATA_DIR = "data"
 
-.PHONY: data preprocess pipeline
+.PHONY: data merge preprocess pipeline test format lint check
 
 data:
 	@echo "Fetching Kaggle dataset..."
 	poetry run python {SCRIPTS_DIR}/data/download_kaggle.py
 	@echo "Running AutoScout24 scraper..."
-	poetry run python scripts/data/scrape_autoscout.py # Alaadin please upload ur script
+	poetry run bash scripts/data/scrape_data.sh
 	@echo "Data acquisition complete!"
 
-preprocess:
+merge:
 	@echo "Merging datasets..."
 	poetry run python scripts/data/merge_data.py
 
-clean:
+preprocess:
 	@echo "Cleaning up intermediate files..."
 	rm -rf $(DATA_DIR)/iterim
 	rm -rf __pycache__ .pytest_cache dist build *.egg-info
@@ -41,5 +41,5 @@ test:
 check: format lint
 	@echo "Code quality checks passed!"
 
-pipeline: data preprocess test check
+pipeline: merge preprocess test check
 	@echo "Full data pipeline executed successfully!"
