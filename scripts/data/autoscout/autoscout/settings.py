@@ -20,15 +20,15 @@ DUPEFILTER_CLASS = "scrapy_splash.SplashAwareDupeFilter"
 REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
 
 # Politeness — don't hammer the server
-DOWNLOAD_DELAY = 3          # seconds between requests
+DOWNLOAD_DELAY = 3  # seconds between requests
 RANDOMIZE_DOWNLOAD_DELAY = True
 AUTOTHROTTLE_ENABLED = True
 AUTOTHROTTLE_START_DELAY = 2
 AUTOTHROTTLE_MAX_DELAY = 15
 AUTOTHROTTLE_TARGET_CONCURRENCY = 1.0
 
-CONCURRENT_REQUESTS = 1     # one request at a time to be safe
-ROBOTSTXT_OBEY = False      # AutoScout blocks scrapers in robots.txt
+CONCURRENT_REQUESTS = 1  # one request at a time to be safe
+ROBOTSTXT_OBEY = False  # AutoScout blocks scrapers in robots.txt
 
 # Output
 FEEDS = {

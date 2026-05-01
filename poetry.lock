@@ -1107,6 +1107,50 @@ files = [
 all = ["mypy (>=1.11.2)", "pytest (>=8.3.2)", "ruff (>=0.6.2)"]
 
 [[package]]
+name = "imbalanced-learn"
+version = "0.14.1"
+description = "Toolbox for imbalanced dataset in machine learning"
+optional = false
+python-versions = ">=3.10"
+groups = ["main"]
+files = [
+    {file = "imbalanced_learn-0.14.1-py3-none-any.whl", hash = "sha256:fcdff8d27870d6992ea3496230788b97ff98e24302e7f6c598701da525ae440f"},
+    {file = "imbalanced_learn-0.14.1.tar.gz", hash = "sha256:46eeb5773a96b6fa92426356da66f3e4390a7ed8e715a633c6fb68ee4a3ccdcb"},
+]
+
+[package.dependencies]
+joblib = ">=1.2.0,<2"
+numpy = ">=1.25.2,<3"
+scikit-learn = ">=1.4.2,<2"
+scipy = ">=1.11.4,<2"
+sklearn-compat = ">=0.1.5,<0.2"
+threadpoolctl = ">=2.0.0,<4"
+
+[package.extras]
+dev = ["ipykernel", "ipython", "jupyterlab"]
+docs = ["matplotlib (>=3.7.3,<4)", "memory_profiler (>=0.61.0,<1)", "numpydoc (>=1.5.0,<2)", "pandas (>=2.0.3,<3)", "pydata-sphinx-theme (>=0.15.4,<1)", "seaborn (>=0.12.2,<1)", "sphinx (>=8.0.2,<9)", "sphinx-copybutton (>=0.5.2,<1)", "sphinx-design (>=0.6.1,<1)", "sphinx-gallery (>=0.13.0,<1)", "sphinxcontrib-bibtex (>=2.6.3,<3)", "tensorflow (>=2.16.1,<3)"]
+keras = ["keras (>=3.3.3,<4)"]
+linters = ["black (==23.3.0)", "pre-commit", "ruff (==0.14.2)"]
+optional = ["pandas (>=2.0.3,<3)"]
+tensorflow = ["tensorflow (>=2.16.1,<3)"]
+tests = ["packaging (>=23.2,<25)", "pytest (>=7.2.2,<9)", "pytest-cov (>=4.1.0,<6)", "pytest-xdist (>=3.5.0,<4)"]
+
+[[package]]
+name = "imblearn"
+version = "0.0"
+description = "Toolbox for imbalanced dataset in machine learning."
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "imblearn-0.0-py2.py3-none-any.whl", hash = "sha256:d42c2d709d22c00d2b9a91e638d57240a8b79b4014122d92181fcd2549a2f79a"},
+    {file = "imblearn-0.0.tar.gz", hash = "sha256:d8fbb662919c1b16f438ad91a8256220e53bcf6815c9ad5502c518b798de34f2"},
+]
+
+[package.dependencies]
+imbalanced-learn = "*"
+
+[[package]]
 name = "incremental"
 version = "24.11.0"
 description = "A CalVer version manager that supports the future."
@@ -3838,6 +3882,27 @@ files = [
 ]
 
 [[package]]
+name = "sklearn-compat"
+version = "0.1.5"
+description = "Ease support for compatible scikit-learn estimators across versions"
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "sklearn_compat-0.1.5-py3-none-any.whl", hash = "sha256:dddd00c442027b6a2c2fd4a86667b804a7353cdb5093bfd0d5431f5e3c135fce"},
+    {file = "sklearn_compat-0.1.5.tar.gz", hash = "sha256:1a0c3a2f384100e034def49ee5a6cfe984a826f79d032eb559f10445e012b02c"},
+]
+
+[package.dependencies]
+scikit-learn = ">=1.2,<1.9"
+
+[package.extras]
+dev = ["ipython"]
+docs = ["mkdocs", "mkdocs-material"]
+lint = ["pre-commit"]
+tests = ["pandas", "polars", "pyarrow", "pytest", "pytest-cov", "pytest-xdist", "pytz"]
+
+[[package]]
 name = "soupsieve"
 version = "2.8.3"
 description = "A modern CSS selector implementation for Beautiful Soup."
@@ -4226,4 +4291,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.14"
-content-hash = "717e06d42d2d61bb67c601aa0b6b6c0ffe9b381591e2e212f7def4b57e7dc75e"
+content-hash = "76a4b4cf8aa4b64580328792cb61026c16af600f3984435bbd13bcb8b2a76b21"

@@ -1,14 +1,16 @@
 # Variables
-KAGGLE_DATASET = "your-kaggle-dataset-name"
-SCRIPTS_DIR = "scripts"
-SRC_DIR = "src"
-DATA_DIR = "data"
+SCRIPTS_DIR = scripts
+SRC_DIR = src
+DATA_DIR = data
 
-.PHONY: data merge preprocess pipeline test format lint check
+# EXPORT THE PROJECT ROOT TO PYTHON'S PATH
+export PYTHONPATH = .
+
+.PHONY: data merge validate_raw validate_preprocessed preprocess pipeline test format lint check
 
 data:
 	@echo "Fetching Kaggle dataset..."
-	poetry run python {SCRIPTS_DIR}/data/download_kaggle.py
+	poetry run python $(SCRIPTS_DIR)/data/download_kaggle.py
 	@echo "Running AutoScout24 scraper..."
 	poetry run bash scripts/data/scrape_data.sh
 	@echo "Data acquisition complete!"
@@ -17,7 +19,19 @@ merge:
 	@echo "Merging datasets..."
 	poetry run python scripts/data/merge_data.py
 
-preprocess:
+validate_raw:
+	@echo "Validating data..."
+	poetry run python scripts/data/validate_data.py raw
+
+validate_preprocessed:
+	@echo "Validating preprocessed data..."
+	poetry run python scripts/data/validate_data.py preprocessed
+
+clean:
+	@echo "Cleaning data..."
+	poetry run python scripts/data/clean_data.py
+
+delete:
 	@echo "Cleaning up intermediate files..."
 	rm -rf $(DATA_DIR)/iterim
 	rm -rf __pycache__ .pytest_cache dist build *.egg-info
@@ -41,5 +55,5 @@ test:
 check: format lint
 	@echo "Code quality checks passed!"
 
-pipeline: merge preprocess test check
+pipeline: merge validate_raw clean test check delete
 	@echo "Full data pipeline executed successfully!"
