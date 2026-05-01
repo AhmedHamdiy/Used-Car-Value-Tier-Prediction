@@ -1,10 +1,12 @@
 # Variables
-KAGGLE_DATASET = "your-kaggle-dataset-name"
-SCRIPTS_DIR = "scripts"
-SRC_DIR = "src"
-DATA_DIR = "data"
+SCRIPTS_DIR = scripts
+SRC_DIR = src
+DATA_DIR = data
 
-.PHONY: data merge preprocess pipeline train test format lint check
+# EXPORT THE PROJECT ROOT TO PYTHON'S PATH
+export PYTHONPATH = .
+
+.PHONY: data merge validate_raw validate_preprocessed preprocess pipeline test format lint check
 
 data:
 	@echo "Fetching Kaggle dataset..."
@@ -17,14 +19,21 @@ merge:
 	@echo "Merging datasets..."
 	poetry run python $(SCRIPTS_DIR)/data/merge_data.py
 	@echo "Running preprocessing pipeline..."
-	poetry run python drafts/run_preprocessing.py
+	poetry run python scripts/run_preprocessing.py
 
-train:
-	@echo "Training models and logging to MLflow..."
-	poetry run python -m src.models.train --strategy none
-	@echo "Training complete! Results in reports/results/"
+validate_raw:
+	@echo "Validating data..."
+	poetry run python scripts/data/validate_data.py raw
 
-preprocess:
+validate_preprocessed:
+	@echo "Validating preprocessed data..."
+	poetry run python scripts/data/validate_data.py preprocessed
+
+clean:
+	@echo "Cleaning data..."
+	poetry run python scripts/data/clean_data.py
+
+delete:
 	@echo "Cleaning up intermediate files..."
 	rm -rf $(DATA_DIR)/iterim
 	rm -rf __pycache__ .pytest_cache dist build *.egg-info
@@ -48,5 +57,5 @@ test:
 check: format lint
 	@echo "Code quality checks passed!"
 
-pipeline: merge preprocess test check
+pipeline: merge validate_raw clean check delete
 	@echo "Full data pipeline executed successfully!"

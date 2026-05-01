@@ -36,7 +36,7 @@ class CarsSpider(scrapy.Spider):
     name = "cars"
     base_url = "https://www.autoscout24.com"
     start_page = 1
-    total_pages = 200   # ← adjust as needed
+    total_pages = 200  # ← adjust as needed
     use_splash_for_listings = True
 
     custom_settings = {
@@ -57,7 +57,7 @@ class CarsSpider(scrapy.Spider):
 
     def start_requests(self):
         """Kick off by requesting listing pages (Splash for listing,
-          plain HTTP for details)."""
+        plain HTTP for details)."""
         for page in range(self.start_page, self.total_pages + 1):
             url = f"{self.base_url}/lst?page={page}"
             if self.use_splash_for_listings:
@@ -94,8 +94,7 @@ class CarsSpider(scrapy.Spider):
             try:
                 next_data = json.loads(next_data_text)
                 listings = (
-                    next_data.get("props", {})
-                    .get("pageProps", {})
+                    next_data.get("props", {}).get("pageProps", {})
                     .get("listings", [])
                 )
                 links = [
@@ -104,9 +103,8 @@ class CarsSpider(scrapy.Spider):
                     if isinstance(listing, dict) and listing.get("url")
                 ]
             except json.JSONDecodeError:
-                self.logger.warning(
-                    "Page %s: could not decode __NEXT_DATA__.", page
-                )
+                self.logger.warning("Page %s: could not decode"
+                                    "__NEXT_DATA__.", page)
 
         # Fallback strategy: parse rendered anchors
         if not links:
@@ -140,21 +138,28 @@ class CarsSpider(scrapy.Spider):
         item["url"] = response.meta["url"]
 
         # ── Brand ──────────────────────────────────────────
-        item["brand"] = response.css(
-            "span.StageTitle_boldClassifiedInfo__sQb0l::text"
-        ).get(default="").strip().split()[0]
+        item["brand"] = (
+            response.css("span.StageTitle_boldClassifiedInfo__sQb0l::text")
+            .get(default="")
+            .strip()
+            .split()[0]
+        )
 
         # ── Model ──────────────────────────────────────────
-        model_parts = response.css(
-            "span.StageTitle_boldClassifiedInfo__sQb0l::text"
-        ).get(default="").strip().split()[1:]
+        model_parts = (
+            response.css("span.StageTitle_boldClassifiedInfo__sQb0l::text")
+            .get(default="")
+            .strip()
+            .split()[1:]
+        )
         item["model"] = " ".join(model_parts)
 
         # ── Price ──────────────────────────────────────────
         # Remove the superscript footnote before grabbing text
-        item["price"] = response.css(
-            "span.PriceInfo_price__XU0aF::text"
-        ).get(default="").strip()
+        item["price"] = (
+            response.css("span.PriceInfo_price__XU0aF::text")
+            .get(default="").strip()
+        )
 
         # ── Overview quick-facts:
         # (mileage, gearbox, power, fuel, year, seller)
@@ -190,9 +195,11 @@ class CarsSpider(scrapy.Spider):
                 # The value div is the next sibling
                 # after the empty separator div
                 container = title.xpath("parent::div")
-                value = container.css(
-                    "div.VehicleOverview_itemText__AI4dA::text"
-                ).get(default="").strip()
+                value = (
+                    container.css("div.VehicleOverview_itemText__AI4dA::text")
+                    .get(default="")
+                    .strip()
+                )
                 return value
         return ""
 

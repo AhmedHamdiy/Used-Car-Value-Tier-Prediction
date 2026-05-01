@@ -5,20 +5,21 @@
     "success_rate": 11.11111111111111,
     "details": [
         {
-            "timestamp": "2026-04-30 03:17:23",
+            "timestamp": "2026-05-01 22:29:33",
             "check_type": "Schema",
             "passed": false,
             "issues": [
-                "Column 'yearOfRegistration': expected dtype 'int64', got 'float64'"
+                "Column 'yearOfRegistration': expected dtype 'int64', got 'float64'",
+                "Column 'price_reference_year': expected dtype 'int64', got 'float64'"
             ],
             "stats": {
-                "col_cnt": 10,
-                "expected_col_cnt": 10,
-                "dtype_checks": 10
+                "col_cnt": 12,
+                "expected_col_cnt": 12,
+                "dtype_checks": 12
             }
         },
         {
-            "timestamp": "2026-04-30 03:17:23",
+            "timestamp": "2026-05-01 22:29:33",
             "check_type": "Completeness",
             "passed": false,
             "issues": [
@@ -28,7 +29,7 @@
                 "Column 'fuelType': 8.93% missing (threshold 5%)"
             ],
             "stats": {
-                "completeness_score_pct": 97.0,
+                "completeness_score_pct": 97.5,
                 "column_detail": {
                     "brand": {
                         "missing_count": 0,
@@ -66,6 +67,14 @@
                         "missing_count": 0,
                         "missing_pct": 0.0
                     },
+                    "dataSource": {
+                        "missing_count": 0,
+                        "missing_pct": 0.0
+                    },
+                    "price_reference_year": {
+                        "missing_count": 0,
+                        "missing_pct": 0.0
+                    },
                     "price": {
                         "missing_count": 0,
                         "missing_pct": 0.0
@@ -74,7 +83,7 @@
             }
         },
         {
-            "timestamp": "2026-04-30 03:17:24",
+            "timestamp": "2026-05-01 22:29:33",
             "check_type": "Uniqueness",
             "passed": false,
             "issues": [
@@ -87,7 +96,7 @@
             }
         },
         {
-            "timestamp": "2026-04-30 03:17:24",
+            "timestamp": "2026-05-01 22:29:33",
             "check_type": "Validity",
             "passed": false,
             "issues": [
@@ -97,7 +106,11 @@
                 "Column 'power': 85 value(s) above max (5000)",
                 "Column 'kilometer': 13 value(s) above max (300000)",
                 "Column 'yearOfRegistration': 68 value(s) below min (1900)",
-                "Column 'yearOfRegistration': 114 value(s) above max (2026)"
+                "Column 'yearOfRegistration': 114 value(s) above max (2026)",
+                " Column 'seller': invalid categorical values,\n                found: ['gewerblich', 'privat']",
+                " Column 'gearbox': invalid categorical values,\n                found: ['automatik', 'manuell']",
+                " Column 'fuelType': invalid categorical values,\n                found: ['andere', 'benzin', 'electric/diesel', 'electric/gasoline', 'elektro']",
+                " Column 'vehicleType': invalid categorical values,\n                found: ['andere', 'bus', 'cabrio', 'kleinwagen', 'kombi', 'limousine', 'station wagon', 'suv/off-road/pick-up']"
             ],
             "stats": {
                 "range_checks": {
@@ -127,18 +140,35 @@
                             "above_max": 114
                         },
                         "accuracy_score_pct": 99.95
+                    },
+                    "price_reference_year": {
+                        "violations": {},
+                        "accuracy_score_pct": 100.0
                     }
                 },
                 "categorical_checks": {
                     "seller": {
-                        "invalid_values": [],
+                        "invalid_values": [
+                            "gewerblich",
+                            "privat"
+                        ],
                         "allowed_values": [
                             "dealer",
                             "private"
                         ]
                     },
-                    "gearbox": {
+                    "dataSource": {
                         "invalid_values": [],
+                        "allowed_values": [
+                            "crawled",
+                            "kaggle"
+                        ]
+                    },
+                    "gearbox": {
+                        "invalid_values": [
+                            "automatik",
+                            "manuell"
+                        ],
                         "allowed_values": [
                             "automatic",
                             "manual",
@@ -146,7 +176,13 @@
                         ]
                     },
                     "fuelType": {
-                        "invalid_values": [],
+                        "invalid_values": [
+                            "andere",
+                            "benzin",
+                            "electric/diesel",
+                            "electric/gasoline",
+                            "elektro"
+                        ],
                         "allowed_values": [
                             "cng",
                             "diesel",
@@ -158,7 +194,16 @@
                         ]
                     },
                     "vehicleType": {
-                        "invalid_values": [],
+                        "invalid_values": [
+                            "andere",
+                            "bus",
+                            "cabrio",
+                            "kleinwagen",
+                            "kombi",
+                            "limousine",
+                            "station wagon",
+                            "suv/off-road/pick-up"
+                        ],
                         "allowed_values": [
                             "compact",
                             "convertible",
@@ -174,14 +219,15 @@
             }
         },
         {
-            "timestamp": "2026-04-30 03:17:25",
+            "timestamp": "2026-05-01 22:29:33",
             "check_type": "Outliers_ZScore",
             "passed": false,
             "issues": [
                 "Column 'price': 40 Z-Score outlier(s) (|z| > 3.0) \u2014 0.01% of values",
                 "Column 'power': 385 Z-Score outlier(s) (|z| > 3.0) \u2014 0.10% of values",
                 "Column 'kilometer': 290 Z-Score outlier(s) (|z| > 3.0) \u2014 0.08% of values",
-                "Column 'yearOfRegistration': 173 Z-Score outlier(s) (|z| > 3.0) \u2014 0.05% of values"
+                "Column 'yearOfRegistration': 173 Z-Score outlier(s) (|z| > 3.0) \u2014 0.05% of values",
+                "Column 'price_reference_year': 2507 Z-Score outlier(s) (|z| > 3.0) \u2014 0.67% of values"
             ],
             "stats": {
                 "column_detail": {
@@ -204,19 +250,25 @@
                         "outlier_count": 173,
                         "outlier_pct": 0.0463,
                         "quality_score_pct": 99.95
+                    },
+                    "price_reference_year": {
+                        "outlier_count": 2507,
+                        "outlier_pct": 0.6703,
+                        "quality_score_pct": 99.33
                     }
                 }
             }
         },
         {
-            "timestamp": "2026-04-30 03:17:25",
+            "timestamp": "2026-05-01 22:29:33",
             "check_type": "Outliers_IQR",
             "passed": false,
             "issues": [
                 "Column 'price': 28424 IQR outlier(s) (outside [-8150.0, 16650.0]) -> 7.60%",
                 "Column 'power': 11035 IQR outlier(s) (outside [-50.0, 270.0]) -> 2.95%",
                 "Column 'kilometer': 15397 IQR outlier(s) (outside [25000.0, 225000.0]) -> 4.12%",
-                "Column 'yearOfRegistration': 8289 IQR outlier(s) (outside [1985.5, 2021.5]) -> 2.22%"
+                "Column 'yearOfRegistration': 8289 IQR outlier(s) (outside [1985.5, 2021.5]) -> 2.22%",
+                "Column 'price_reference_year': 2507 IQR outlier(s) (outside [2016.0, 2016.0]) -> 0.67%"
             ],
             "stats": {
                 "column_detail": {
@@ -259,40 +311,52 @@
                         "outlier_count": 8289,
                         "outlier_pct": 2.2165,
                         "quality_score_pct": 97.78
+                    },
+                    "price_reference_year": {
+                        "Q1": 2016.0,
+                        "Q3": 2016.0,
+                        "IQR": 0.0,
+                        "lower_fence": 2016.0,
+                        "upper_fence": 2016.0,
+                        "outlier_count": 2507,
+                        "outlier_pct": 0.6703,
+                        "quality_score_pct": 99.33
                     }
                 }
             }
         },
         {
-            "timestamp": "2026-04-30 03:17:25",
+            "timestamp": "2026-05-01 22:29:34",
             "check_type": "Outliers_IsolationForest",
             "passed": false,
             "issues": [
-                "Isolation Forest detected 44875 outlier(s) (12.00%) across ['price', 'power', 'kilometer', 'yearOfRegistration']"
+                "Isolation Forest detected 44872 outlier(s) (12.00%) across ['price', 'power', 'kilometer', 'yearOfRegistration', 'price_reference_year']"
             ],
             "stats": {
                 "features_used": [
                     "price",
                     "power",
                     "kilometer",
-                    "yearOfRegistration"
+                    "yearOfRegistration",
+                    "price_reference_year"
                 ],
                 "total_rows_evaluated": 373956,
-                "outlier_count": 44875,
-                "outlier_pct": 12.0001,
+                "outlier_count": 44872,
+                "outlier_pct": 11.9993,
                 "quality_score_pct": 88.0,
                 "contamination_param": 0.12
             }
         },
         {
-            "timestamp": "2026-04-30 03:17:31",
+            "timestamp": "2026-05-01 22:29:37",
             "check_type": "Distribution",
             "passed": false,
             "issues": [
                 "Column 'price': KS test p=0.0000 < 0.05(distribution differs from normal)",
                 "Column 'power': KS test p=0.0000 < 0.05(distribution differs from normal)",
                 "Column 'kilometer': KS test p=0.0000 < 0.05(distribution differs from normal)",
-                "Column 'yearOfRegistration': KS test p=0.0000 < 0.05(distribution differs from normal)"
+                "Column 'yearOfRegistration': KS test p=0.0000 < 0.05(distribution differs from normal)",
+                "Column 'price_reference_year': KS test p=0.0000 < 0.05(distribution differs from normal)"
             ],
             "stats": {
                 "column_detail": {
@@ -379,12 +443,33 @@
                         "ks_statistic": 0.4379,
                         "ks_pvalue": 0.0,
                         "ks_normality": "Reject normality (p < 0.05)"
+                    },
+                    "price_reference_year": {
+                        "mean": 2016.0603,
+                        "median": 2016.0,
+                        "mode": 2016.0,
+                        "std": 0.7344,
+                        "min": 2016.0,
+                        "max": 2025.0,
+                        "Q1": 2016.0,
+                        "Q3": 2016.0,
+                        "skewness": 12.0914,
+                        "skewness_label": "Positive Skew (right tail)",
+                        "kurtosis_excess": 144.203,
+                        "kurtosis_label": "Leptokurtic (heavy tails)",
+                        "mean_bounds": [
+                            2014,
+                            2026
+                        ],
+                        "ks_statistic": 0.526,
+                        "ks_pvalue": 0.0,
+                        "ks_normality": "Reject normality (p < 0.05)"
                     }
                 }
             }
         },
         {
-            "timestamp": "2026-04-30 03:17:32",
+            "timestamp": "2026-05-01 22:29:37",
             "check_type": "Relationships",
             "passed": true,
             "issues": [],
@@ -394,25 +479,36 @@
                         "price": 1.0,
                         "power": 0.0069,
                         "kilometer": -0.0007,
-                        "yearOfRegistration": -0.0002
+                        "yearOfRegistration": -0.0002,
+                        "price_reference_year": 0.0002
                     },
                     "power": {
                         "price": 0.0069,
                         "power": 1.0,
                         "kilometer": -0.0139,
-                        "yearOfRegistration": 0.0007
+                        "yearOfRegistration": 0.0007,
+                        "price_reference_year": 0.0266
                     },
                     "kilometer": {
                         "price": -0.0007,
                         "power": -0.0139,
                         "kilometer": 1.0,
-                        "yearOfRegistration": -0.0563
+                        "yearOfRegistration": -0.0563,
+                        "price_reference_year": -0.0927
                     },
                     "yearOfRegistration": {
                         "price": -0.0002,
                         "power": 0.0007,
                         "kilometer": -0.0563,
-                        "yearOfRegistration": 1.0
+                        "yearOfRegistration": 1.0,
+                        "price_reference_year": 0.0131
+                    },
+                    "price_reference_year": {
+                        "price": 0.0002,
+                        "power": 0.0266,
+                        "kilometer": -0.0927,
+                        "yearOfRegistration": 0.0131,
+                        "price_reference_year": 1.0
                     }
                 },
                 "spearman_matrix": {
@@ -420,32 +516,44 @@
                         "price": 1.0,
                         "power": 0.5548,
                         "kilometer": -0.379,
-                        "yearOfRegistration": 0.5684
+                        "yearOfRegistration": 0.5684,
+                        "price_reference_year": 0.1131
                     },
                     "power": {
                         "price": 0.5548,
                         "power": 1.0,
                         "kilometer": 0.0029,
-                        "yearOfRegistration": 0.2071
+                        "yearOfRegistration": 0.2071,
+                        "price_reference_year": 0.0593
                     },
                     "kilometer": {
                         "price": -0.379,
                         "power": 0.0029,
                         "kilometer": 1.0,
-                        "yearOfRegistration": -0.3404
+                        "yearOfRegistration": -0.3404,
+                        "price_reference_year": -0.0829
                     },
                     "yearOfRegistration": {
                         "price": 0.5684,
                         "power": 0.2071,
                         "kilometer": -0.3404,
-                        "yearOfRegistration": 1.0
+                        "yearOfRegistration": 1.0,
+                        "price_reference_year": 0.1288
+                    },
+                    "price_reference_year": {
+                        "price": 0.1131,
+                        "power": 0.0593,
+                        "kilometer": -0.0829,
+                        "yearOfRegistration": 0.1288,
+                        "price_reference_year": 1.0
                     }
                 },
                 "columns_used": [
                     "price",
                     "power",
                     "kilometer",
-                    "yearOfRegistration"
+                    "yearOfRegistration",
+                    "price_reference_year"
                 ],
                 "expected_correlation_checks": {
                     "kilometer_vs_yearOfRegistration": {
