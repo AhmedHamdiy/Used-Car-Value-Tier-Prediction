@@ -2,9 +2,7 @@ import kagglehub
 import shutil
 import os
 
-dataset_name = (
-    "thedevastator/uncovering-factors-that-affect-used-car-prices"
-)
+dataset_name = "thedevastator/uncovering-factors-that-affect-used-car-prices"
 cache_path = kagglehub.dataset_download(dataset_name)
 target_path = "./data/raw"
 
