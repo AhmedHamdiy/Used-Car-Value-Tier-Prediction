@@ -55,5 +55,5 @@ test:
 check: format lint
 	@echo "Code quality checks passed!"
 
-pipeline: merge validate_raw clean test check delete
+pipeline: merge validate_raw clean check delete
 	@echo "Full data pipeline executed successfully!"

@@ -35,39 +35,6 @@ PLACEHOLDERS: set[str] = {
     "nan",
 }
 
-# Mapping dictionaries
-FUEL_MAP: dict[str, str] = {
-    "Gasoline": "gasoline",
-    "benzin": "gasoline",
-    "diesel": "diesel",
-    "Electric": "electric",
-    "elektro": "electric",
-    "Electric/Gasoline": "hybrid",
-    "Electric/Diesel": "hybrid",
-    "hybrid": "hybrid",
-    "lpg": "lpg",
-    "cng": "cng",
-    "andere": "other",
-}
-
-VEHICLE_MAP: dict[str, str] = {
-    "Compact": "compact",
-    "kleinwagen": "compact",
-    "Station Wagon": "station_wagon",
-    "kombi": "station_wagon",
-    "SUV/Off-Road/Pick-Up": "suv",
-    "suv": "suv",
-    "Sedan": "sedan",
-    "limousine": "sedan",
-    "Van": "van",
-    "bus": "van",
-    "Convertible": "convertible",
-    "cabrio": "convertible",
-    "coupe": "coupe",
-    "Other": "other",
-    "andere": "other",
-}
-
 # brand mapping
 BRAND_ALIASES: dict[str, str] = {
     "alfa": "alfa-romeo",
@@ -118,8 +85,8 @@ MODELS_TO_DROP: set[str] = {
 FUEL_ALIASES: dict[str, str] = {
     "benzin": "gasoline",
     "elektro": "electric",
-    "Electric/Gasoline": "hybrid",
-    "Electric/Diesel": "hybrid",
+    "electric/gasoline": "hybrid",
+    "electric/diesel": "hybrid",
     "andere": "other",
 }
 
@@ -130,7 +97,7 @@ VT_ALIASES: dict[str, str] = {
     "Station Wagon": "station-wagon",
     "bus": "van",
     "cabrio": "convertible",
-    "SUV/Off-Road/Pick-Up": "suv",
+    "suv/off-road/pick-up": "suv",
     "andere": "other",
 }
 
@@ -242,7 +209,7 @@ def clean_brand(series: pd.Series) -> pd.Series:
             return np.nan
         s = str(val).strip().lower()
         s = re.sub(r"[-_]", "-", s)
-
+        s = re.sub(r"[^\w\-]", "", s)
         # drop explicitly unwanted brands
         if s in BRANDS_TO_DROP:
             return np.nan
@@ -392,17 +359,14 @@ def load_and_coerce(path: str | Path) -> pd.DataFrame:
         df[col] = pd.to_numeric(df[col], errors="coerce")
 
     # yearOfRegistration -> nullable integer
-    df["yearOfRegistration"] = (
-        df["yearOfRegistration"].fillna(-1).astype("int64").replace(-1, np.nan)
-    )
+    df["yearOfRegistration"] = df["yearOfRegistration"].astype("Int64")
 
     # String columns – strip whitespace, lower-case, replace placeholders
     for col in CATEGORICAL_COLS:
         if col in df.columns:
             df[col] = (
                 df[col].astype(str).str
-                .strip().str.lower()
-                .replace("nan", np.nan))
+                .strip().str.lower())
             df[col] = replace_placeholders(df[col])
 
     _log_ok("Schema coercion and placeholder replacement complete.")
@@ -529,6 +493,10 @@ def cap_outliers_iqr(df: pd.DataFrame, cols: list[str]) -> pd.DataFrame:
         else:
             lower = 0.0
 
+        if pd.api.types.is_integer_dtype(df[col]):
+            lower = int(np.floor(lower))
+            upper = int(np.ceil(upper))
+
         before_lower = (df[col] < lower).sum()
         before_upper = (df[col] > upper).sum()
         df[col] = df[col].clip(lower=lower, upper=upper)
@@ -587,17 +555,17 @@ def clean_data(
     # Step 2 – Remove invalid rows
     df = remove_invalid_rows(df)
 
-    # Step 3 – Drop exact duplicates
-    df = drop_duplicates(df)
-
-    # Step 4 – Impute missing categoricals (also cleans brand/model)
+    # Step 3 – Impute missing categoricals (also cleans brand/model)
     df = impute_categoricals(df)
 
-    # Step 5 – Outlier handling
+    # Step 4 – Outlier handling
     df = cap_outliers_fixed(df)
 
     if use_iqr_capping:
         df = cap_outliers_iqr(df, ["power", "kilometer", "yearOfRegistration"])
+
+    # Step 5 – Drop exact duplicates
+    df = drop_duplicates(df)
 
     # Step 6 – Remove Nan rows
     df = df.dropna().reset_index(drop=True)
