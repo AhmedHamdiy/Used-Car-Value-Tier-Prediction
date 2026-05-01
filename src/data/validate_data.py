@@ -37,16 +37,17 @@ EXPECTED_COLUMNS: list[str] = [
 ]
 
 EXPECTED_DTYPES: dict[str, str] = {
-    "brand": "str",
-    "model": "str",
-    "vehicleType": "str",
+    # Pandas typically represents string columns as dtype=object.
+    "brand": "object",
+    "model": "object",
+    "vehicleType": "object",
     "power": "float64",
-    "gearbox": "str",
+    "gearbox": "object",
     "kilometer": "float64",
-    "fuelType": "str",
+    "fuelType": "object",
     "yearOfRegistration": "int64",
-    "seller": "str",
-    "price": "int64"
+    "seller": "object",
+    "price": "int64",
 }
 
 RANGE_RULES: dict[str, dict[str, float]] = {
@@ -59,15 +60,28 @@ RANGE_RULES: dict[str, dict[str, float]] = {
 CATEGORICAL_RULES: dict[str, list[str]] = {
     "seller": ["private", "dealer"],
     "gearbox": ["manual", "automatic", "semi-automatic"],
-    "fuelType": ["gasoline", "diesel", "lpg",
-                 "cng", "hybrid", "electric", "other"],
-    "vehicleType": ["sedan", "compact", "station_wagon", "van",
-                    "convertible", "coupe", "suv", "other"],
+    "fuelType": ["gasoline", "diesel", "lpg", "cng", "hybrid", "electric", "other"],
+    "vehicleType": [
+        "sedan",
+        "compact",
+        "station_wagon",
+        "van",
+        "convertible",
+        "coupe",
+        "suv",
+        "other",
+    ],
 }
 
 REQUIRED_COLUMNS: list[str] = [
-    "price", "yearOfRegistration", "power", "kilometer",
-    "model", "vehicleType", "fuelType", "gearbox"
+    "price",
+    "yearOfRegistration",
+    "power",
+    "kilometer",
+    "model",
+    "vehicleType",
+    "fuelType",
+    "gearbox",
 ]
 
 FRESHNESS_THRESHOLD_DAYS = 365 * 2  # warn if newest record > 2 years old
@@ -76,8 +90,8 @@ EXPECTED_FREQ_DAYS = 7  # expect at least one record per 7 days gap
 NUMERIC_COLS: list[str] = ["price", "power", "kilometer", "yearOfRegistration"]
 
 MEAN_BOUNDS: dict[str, tuple[float, float]] = {
-    "price": (500,  30_000),
-    "power": (50,   250),
+    "price": (500, 30_000),
+    "power": (50, 250),
     "kilometer": (10_000, 150_000),
     "yearOfRegistration": (1990, 2020),
 }
@@ -120,7 +134,6 @@ class DataValidator:
         self,
         df: pd.DataFrame,
     ) -> dict[str, Any]:
-
         report = self._make_report("Schema")
 
         # 1a. Missing columns
@@ -235,10 +248,7 @@ class DataValidator:
     # Dim 4 — Validity / Accuracy
     # ------------------------------------------------------------------
 
-    def validate_validity(
-        self,
-        df: pd.DataFrame
-    ) -> dict[str, Any]:
+    def validate_validity(self, df: pd.DataFrame) -> dict[str, Any]:
         report = self._make_report("Validity")
 
         range_stats: dict[str, dict] = {}
@@ -488,8 +498,7 @@ class DataValidator:
                     outside expected bounds [{lo}, {hi}]"""
                 self._fail(report, fail_line)
             # KS test against normal distribution
-            ks_stat, ks_p = stats.kstest(series,
-                                         "norm", args=(mean_val, std_val))
+            ks_stat, ks_p = stats.kstest(series, "norm", args=(mean_val, std_val))
             col_stat["ks_statistic"] = round(ks_stat, 4)
             col_stat["ks_pvalue"] = round(ks_p, 4)
             if ks_p < 0.05:
@@ -510,10 +519,7 @@ class DataValidator:
     # Dim 8 — Relationships
     # ------------------------------------------------------------------
 
-    def validate_relationships(
-        self,
-        df: pd.DataFrame
-    ) -> dict[str, Any]:
+    def validate_relationships(self, df: pd.DataFrame) -> dict[str, Any]:
         report = self._make_report("Relationships")
         feature_df = df[NUMERIC_COLS].dropna()
 
@@ -553,9 +559,9 @@ class DataValidator:
     # Report generation
     # -------------------------------
 
-    def generate_report(self,
-                        output_prefix: str = "validation_report"
-                        ) -> dict[str, Any]:
+    def generate_report(
+        self, output_prefix: str = "validation_report"
+    ) -> dict[str, Any]:
         total = len(self.validation_results)
         passed = sum(1 for r in self.validation_results if r["passed"])
         failed = total - passed
@@ -579,34 +585,33 @@ class DataValidator:
             output_lines.append(status_l + " " + ckeck_l)
             is_completness = result["check_type"] == "Completeness"
             if is_completness and "column_detail" in result["stats"]:
-                all_score = (result["stats"]
-                             .get("completeness_score_pct", 0))
+                all_score = result["stats"].get("completeness_score_pct", 0)
                 output_lines.append(f" 📊 Overall Completeness: {all_score}%")
                 output_lines.append(" 📊 Column-level Completeness:")
                 for c, s in result["stats"]["column_detail"].items():
-                    miss = s.get('missing_pct', 0.0)
-                    comp = s.get('completeness_pct', 100.0 - miss)
+                    miss = s.get("missing_pct", 0.0)
+                    comp = s.get("completeness_pct", 100.0 - miss)
                     complete_l = f" - {c}: {comp:.2f}% complete"
                     missing_l = f" ({miss:.2f}% missing)"
                     output_lines.append(complete_l + missing_l)
 
             # Format distribution statistics cleanly
             is_distribution = result["check_type"] == "Distribution"
-            if (is_distribution and "column_detail" in result["stats"]):
+            if is_distribution and "column_detail" in result["stats"]:
                 for c, s in result["stats"]["column_detail"].items():
                     output_lines.append(f"📊 Stats for {c}:")
                     mean_l = f" Mean: {s.get('mean')}"
                     median_l = f"Median: {s.get('median')}"
                     mode_l = f"Mode: {s.get('mode')}"
                     std_l = f"Std: {s.get('std')}"
-                    fst_line = (mean_l + " | " + median_l + " | " +
-                                mode_l + " | " + std_l)
+                    fst_line = (
+                        mean_l + " | " + median_l + " | " + mode_l + " | " + std_l
+                    )
                     q1_l = f"Q1: {s.get('Q1')}"
                     q3_l = f"Q3: {s.get('Q3')}"
                     min_l = f"Min: {s.get('min')}"
                     max_l = f"Max: {s.get('max')}"
-                    scnd_line = (q1_l + " | " + q3_l + " | " +
-                                 min_l + " | " + max_l)
+                    scnd_line = q1_l + " | " + q3_l + " | " + min_l + " | " + max_l
                     skew_l = f"Skewness: {s.get('skewness')}"
                     skw_lbl_l = f"({s.get('skewness_label')})"
                     thrd_line = skew_l + " " + skw_lbl_l
@@ -650,11 +655,7 @@ class DataValidator:
 
         return report_dict
 
-    def run_all(
-        self,
-        df: pd.DataFrame,
-        output_file: str
-    ) -> dict[str, Any]:
+    def run_all(self, df: pd.DataFrame, output_file: str) -> dict[str, Any]:
         self.validate_schema(df)
         self.validate_completeness(df)
         self.validate_uniqueness(df)

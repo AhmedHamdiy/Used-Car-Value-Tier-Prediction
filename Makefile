@@ -4,20 +4,25 @@ SCRIPTS_DIR = "scripts"
 SRC_DIR = "src"
 DATA_DIR = "data"
 
-.PHONY: data merge preprocess pipeline test format lint check
+.PHONY: data merge preprocess pipeline train test format lint check
 
 data:
 	@echo "Fetching Kaggle dataset..."
-	poetry run python {SCRIPTS_DIR}/data/download_kaggle.py
+	poetry run python $(SCRIPTS_DIR)/data/download_kaggle.py
 	@echo "Running AutoScout24 scraper..."
 	poetry run bash scripts/data/scrape_data.sh
 	@echo "Data acquisition complete!"
 
 merge:
 	@echo "Merging datasets..."
-	poetry run python scripts/merge_data.py
+	poetry run python $(SCRIPTS_DIR)/data/merge_data.py
 	@echo "Running preprocessing pipeline..."
-	poetry run python scripts/run_preprocessing.py
+	poetry run python drafts/run_preprocessing.py
+
+train:
+	@echo "Training models and logging to MLflow..."
+	poetry run python -m src.models.train --strategy none
+	@echo "Training complete! Results in reports/results/"
 
 preprocess:
 	@echo "Cleaning up intermediate files..."
