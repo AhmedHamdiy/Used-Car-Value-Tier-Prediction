@@ -32,7 +32,7 @@
 - [ ] Cleaning steps with justification and outlier handling [cite: 53, 54].
 - [ ] Feature transformation (encoding, normalization) with rationale [cite: 55].
 - [ ] Feature selection and engineering details [cite: 56, 57].
-- [ ] Train/validation/test split procedure and data balancing strategy [cite: 58, 59].
+- [x] Train/validation/test split procedure and data balancing strategy [cite: 58, 59].
 
 ### 4.2 Exploratory Data Analysis (EDA)
 - [x] At least five major meaningful visualizations with interpretation [cite: 62].
@@ -41,12 +41,12 @@
 - [ ] Dashboard featuring EDA, model comparisons, and business insights [cite: 65, 124].
 
 ### 4.3 Model Development & Experiment Tracking
-- [ ] Build at least **five classification models**, including one baseline [cite: 8, 67].
+- [x] Build at least **five classification models**, including one baseline [cite: 8, 67].
 - [ ] Provide rationale for model selection [cite: 68].
 - [ ] MLflow Integration:
-    - [ ] Log all runs (metrics, hyperparameters, artifacts, versions) [cite: 9, 70, 71].
-    - [ ] Log at least 2 standard metrics and 2 business-related metrics per run [cite: 72].
-    - [ ] Save trained models as MLflow artifacts [cite: 73].
+    - [x] Log all runs (metrics, hyperparameters, artifacts, versions) [cite: 9, 70, 71].
+    - [x] Log at least 2 standard metrics and 2 business-related metrics per run [cite: 72].
+    - [x] Save trained models as MLflow artifacts [cite: 73].
     - [ ] Include screenshot of MLflow experiment comparison in report [cite: 74].
 
 ### 4.4 Testing & Automation

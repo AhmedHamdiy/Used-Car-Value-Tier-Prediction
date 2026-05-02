@@ -137,7 +137,6 @@ class DataValidator:
         self,
         df: pd.DataFrame,
     ) -> dict[str, Any]:
-
         report = self._make_report("Schema")
 
         # 1a. Missing columns
