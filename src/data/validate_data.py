@@ -37,15 +37,15 @@ EXPECTED_COLUMNS: list[str] = [
 ]
 
 EXPECTED_DTYPES: dict[str, str] = {
-    "brand": "str",
-    "model": "str",
-    "vehicleType": "str",
+    "brand": "object",
+    "model": "object",
+    "vehicleType": "object",
     "power": "float64",
-    "gearbox": "str",
+    "gearbox": "object",
     "kilometer": "float64",
-    "fuelType": "str",
+    "fuelType": "object",
     "yearOfRegistration": "int64",
-    "seller": "str",
+    "seller": "object",
     "price": "int64"
 }
 
