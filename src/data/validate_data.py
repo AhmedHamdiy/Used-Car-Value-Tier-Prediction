@@ -38,7 +38,7 @@ EXPECTED_DTYPES: dict[str, str] = {
     "fuelType": "object",
     "yearOfRegistration": "int64",
     "seller": "object",
-    "price": "int64"
+    "price": "int64",
     "dataSource": "object",
     "price_reference_year": "int64",
     "price": "int64",
