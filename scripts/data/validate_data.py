@@ -26,4 +26,5 @@ if __name__ == "__main__":
 
     print(f"Loaded dataset: {df.shape[0]:,} rows, {df.shape[1]} columns\n")
     validator = DataValidator()
+    df['kilometer'] = df['kilometer'].astype(float)
     validator.run_all(df, output_file=VALIDATION_REPORT_PATH)

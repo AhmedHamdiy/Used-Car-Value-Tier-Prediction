@@ -271,7 +271,7 @@ class DataValidator:
             line_2 = f" with {len(col_clean)} non-null values..."
             print(line_1 + line_2)
 
-            below = int((col_clean < rules["min"]).sum())
+            below = int((col_clean.astype(float) < rules["min"]).sum())
             if below > 0:
                 violations["below_min"] = below
                 fst_l = f"Column '{col}': {below} value(s)"
@@ -279,7 +279,7 @@ class DataValidator:
                 fail_line = fst_l + " " + scnd_l
                 self._fail(report, fail_line)
 
-            above = int((col_clean > rules["max"]).sum())
+            above = int((col_clean.astype(float) > rules["max"]).sum())
             if above > 0:
                 violations["above_max"] = above
                 fst_l = f"Column '{col}': {above} value(s)"
@@ -336,7 +336,7 @@ class DataValidator:
             series = df[col].dropna()
             if len(series) < 2:
                 continue
-            z_scores = np.abs(stats.zscore(series))
+            z_scores = np.abs(stats.zscore(series.astype(float)))
             outlier_count = int((z_scores > 3.0).sum())
             outlier_pct = round(outlier_count / len(series) * 100, 4)
             quality_score = round(100.0 - outlier_pct, 2)
