@@ -12,7 +12,7 @@
 ## 2. Team & Administrative Requirements
 - [x] Form a team of 4 students [cite: 15].
 - [x] Include assigned team number in all submissions [cite: 16].
-- [ ] Document individual member contributions in the final report [cite: 17, 105].
+- [x] Document individual member contributions in the final report [cite: 17, 105].
 
 ## 3. Phase 1: Proposal & Dataset Validation (25%)
 - [x] **Proposal Report (PDF)** [cite: 31]:
@@ -27,11 +27,11 @@
 - [x] **Repository Requirements**: Code, `pyproject.toml`, `poetry.lock`, and `README.md` [cite: 39].
 
 ### 4.1 Data Acquisition & Preprocessing
-- [ ] Snapshot of acquisition pipeline in report [cite: 44].
-- [ ] Document merge strategy between sources with row counts before/after [cite: 46].
-- [ ] Cleaning steps with justification and outlier handling [cite: 53, 54].
-- [ ] Feature transformation (encoding, normalization) with rationale [cite: 55].
-- [ ] Feature selection and engineering details [cite: 56, 57].
+- [x] Snapshot of acquisition pipeline in report [cite: 44].
+- [x] Document merge strategy between sources with row counts before/after [cite: 46].
+- [x] Cleaning steps with justification and outlier handling [cite: 53, 54].
+- [x] Feature transformation (encoding, normalization) with rationale [cite: 55].
+- [x] Feature selection and engineering details [cite: 56, 57].
 - [x] Train/validation/test split procedure and data balancing strategy [cite: 58, 59].
 
 ### 4.2 Exploratory Data Analysis (EDA)
@@ -42,7 +42,7 @@
 
 ### 4.3 Model Development & Experiment Tracking
 - [x] Build at least **five classification models**, including one baseline [cite: 8, 67].
-- [ ] Provide rationale for model selection [cite: 68].
+- [x] Provide rationale for model selection [cite: 68].
 - [ ] MLflow Integration:
     - [x] Log all runs (metrics, hyperparameters, artifacts, versions) [cite: 9, 70, 71].
     - [x] Log at least 2 standard metrics and 2 business-related metrics per run [cite: 72].
@@ -50,13 +50,13 @@
     - [ ] Include screenshot of MLflow experiment comparison in report [cite: 74].
 
 ### 4.4 Testing & Automation
-- [ ] Develop unit tests for critical functions and modules [cite: 77].
-- [ ] Implement integration tests for component interaction and data flow [cite: 80].
+- [x] Develop unit tests for critical functions and modules [cite: 77].
+- [x] Implement integration tests for component interaction and data flow [cite: 80].
 - [ ] Report test coverage statistics and results [cite: 81, 82].
 - [ ] **Code Automation**:
-    - [ ] Use **Makefiles** for preprocessing, training, evaluation, and testing [cite: 92, 115].
+    - [x] Use **Makefiles** for preprocessing, training, evaluation, and testing [cite: 92, 115].
     - [x] Use `.env` files for secure configuration (API keys, credentials) [cite: 93, 115].
-- [ ] **Continuous Integration (CI)**:
+- [x] **Continuous Integration (CI)**:
     - [x] Implement **GitHub Actions** for build, test (unit/integration), and linting [cite: 12, 98, 99, 100].
 
 ### 4.5 Results, Evaluation & Documentation
