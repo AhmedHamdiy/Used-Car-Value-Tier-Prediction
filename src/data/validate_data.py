@@ -24,8 +24,8 @@ EXPECTED_COLUMNS: list[str] = [
     "yearOfRegistration",
     "seller",
     "dataSource",
-    "price_reference_year",
     "price",
+    "price_tier",
 ]
 
 EXPECTED_DTYPES: dict[str, str] = {
@@ -37,11 +37,10 @@ EXPECTED_DTYPES: dict[str, str] = {
     "kilometer": "float64",
     "fuelType": "object",
     "yearOfRegistration": "int64",
-    "seller": "object",
+    "seller": "str",
+    "dataSource": "str",
     "price": "int64",
-    "dataSource": "object",
-    "price_reference_year": "int64",
-    "price": "int64",
+    "price_tier": "str",
 }
 
 RANGE_RULES: dict[str, dict[str, float]] = {
@@ -49,15 +48,14 @@ RANGE_RULES: dict[str, dict[str, float]] = {
     "power": {"min": 5, "max": 5_000},
     "kilometer": {"min": 0, "max": 300_000},
     "yearOfRegistration": {"min": 1900, "max": 2026},
-    "price_reference_year": {"min": 2014, "max": 2026},
 }
 
 CATEGORICAL_RULES: dict[str, list[str]] = {
     "seller": ["private", "dealer"],
     "dataSource": ["kaggle", "crawled"],
     "gearbox": ["manual", "automatic", "semi-automatic"],
-    "fuelType": ["gasoline", "diesel", "lpg",
-                 "cng", "hybrid", "electric", "other"],
+    "fuelType": ["gasoline", "diesel", "lpg", "cng",
+                 "hybrid", "electric", "other"],
     "vehicleType": [
         "sedan",
         "compact",
@@ -68,6 +66,7 @@ CATEGORICAL_RULES: dict[str, list[str]] = {
         "suv",
         "other",
     ],
+    "price_tier": ["budget", "mid-range", "luxury"],
 }
 
 REQUIRED_COLUMNS: list[str] = [
@@ -80,7 +79,7 @@ REQUIRED_COLUMNS: list[str] = [
     "fuelType",
     "gearbox",
     "dataSource",
-    "price_reference_year",
+    "price_tier" "seller",
 ]
 
 FRESHNESS_THRESHOLD_DAYS = 365 * 2  # warn if newest record > 2 years old
@@ -91,7 +90,6 @@ NUMERIC_COLS: list[str] = [
     "power",
     "kilometer",
     "yearOfRegistration",
-    "price_reference_year",
 ]
 
 MEAN_BOUNDS: dict[str, tuple[float, float]] = {
@@ -99,7 +97,6 @@ MEAN_BOUNDS: dict[str, tuple[float, float]] = {
     "power": (50, 250),
     "kilometer": (10_000, 150_000),
     "yearOfRegistration": (1990, 2020),
-    "price_reference_year": (2014, 2026),
 }
 
 EXPECTED_CORRELATIONS: list[tuple[str, str, float, float]] = [
@@ -625,10 +622,8 @@ class DataValidator:
                     q3_l = f"Q3: {s.get('Q3')}"
                     min_l = f"Min: {s.get('min')}"
                     max_l = f"Max: {s.get('max')}"
-                    scnd_line = (
-                        q1_l + " | " + q3_l + " | "
-                        + min_l + " | " + max_l
-                    )
+                    scnd_line = (q1_l + " | " + q3_l + " | "
+                                 + min_l + " | " + max_l)
                     skew_l = f"Skewness: {s.get('skewness')}"
                     skw_lbl_l = f"({s.get('skewness_label')})"
                     thrd_line = skew_l + " " + skw_lbl_l

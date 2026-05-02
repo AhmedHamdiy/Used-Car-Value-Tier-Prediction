@@ -10,7 +10,23 @@ KAGGLE_DATA_PATH = config["data"]["kaggle_raw_data_path"]
 SCRAPED_DATA_PATH = config["data"]["scraped_raw_data_path"]
 MERGED_DATA_PATH = config["data"]["merged_data_path"]
 
-REFERENCE_YEAR: int = 2025
+CPI_USED_CARS: dict[int, float] = {
+    2014: 99.5,
+    2015: 100.0,
+    2016: 100.5,
+    2017: 102.0,
+    2018: 103.8,
+    2019: 105.3,
+    2020: 100.0,
+    2021: 109.1,
+    2022: 128.5,
+    2023: 138.9,
+    2024: 145.3,
+    2025: 147.1,
+    2026: 147.9,
+}
+
+REFERENCE_YEAR: int = 2026
 
 TARGET_COLS: list[str] = [
     "brand",
@@ -23,9 +39,31 @@ TARGET_COLS: list[str] = [
     "yearOfRegistration",
     "seller",
     "dataSource",
-    "price_reference_year",
     "price",
+    "price_tier",
 ]
+
+
+def normalize_price(price: float, source_year: int) -> float:
+    if source_year not in CPI_USED_CARS:
+        raise ValueError(f"No CPI entry for year {source_year}.")
+    return price * (CPI_USED_CARS[REFERENCE_YEAR] / CPI_USED_CARS[source_year])
+
+
+def extract_year(registration):
+    if pd.isna(registration):
+        return None
+    match = pd.Series(str(registration)).str.extract(r"(\d{4})")
+    return int(match[0]) if not match.empty else None
+
+
+def price_tier(price: float) -> str:
+    if price < 5000:
+        return "budget"
+    elif price < 15000:
+        return "mid-range"
+    else:
+        return "luxury"
 
 
 def _transform_kaggle(df: pd.DataFrame) -> pd.DataFrame:
@@ -33,27 +71,28 @@ def _transform_kaggle(df: pd.DataFrame) -> pd.DataFrame:
     df["dataSource"] = "kaggle"
 
     df = df.rename(columns={"powerPS": "power"})
+    df["yearCrawled"] = df["dateCrawled"].str[:4].astype(int)
+    df["price"] = df.apply(
+        lambda row: normalize_price(row["price"], row["yearCrawled"]), axis=1
+    )
 
-    df["price_reference_year"] = (
-        df["dateCrawled"].astype(str)
-        .str[:4].astype(float)
-        )
+    df["price_tier"] = df["price"].apply(price_tier)
 
     return df
 
 
 def _transform_crawled(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
-    df["price_reference_year"] = REFERENCE_YEAR
-    df["dataSource"] = "crawled"
 
+    df["dataSource"] = "crawled"
     df = df.rename(columns={"mileage": "kilometer"})
 
-    df["power"] = (df["power"].astype(str)
-                   .str.extract(r"\((\d+)\s*hp\)").astype(float))
+    df["power"] = (df["power"].astype(str).str
+                   .extract(r"\((\d+)\s*hp\)").astype(float))
     df["yearOfRegistration"] = (
         df["year"].astype(str).str.extract(r"(\d{4})").astype(float)
     )
+    df["price_tier"] = df["price"].apply(price_tier)
 
     return df
 
