@@ -78,9 +78,7 @@ MODEL_ALIASES: dict[str, str] = {
     "unknown": "other",
 }
 
-MODELS_TO_DROP: set[str] = {
-    "sonstige", "sonstige_autos", "keine_angabe"
-    }
+MODELS_TO_DROP: set[str] = {"sonstige", "sonstige_autos", "keine_angabe"}
 
 FUEL_ALIASES: dict[str, str] = {
     "benzin": "gasoline",
@@ -134,8 +132,8 @@ INPUT_COLS: list[str] = [
     "yearOfRegistration",
     "seller",
     "dataSource",
-    "price_reference_year",
     "price",
+    "price_tier",
 ]
 
 # Domain constraints (based on validation report)
@@ -364,9 +362,7 @@ def load_and_coerce(path: str | Path) -> pd.DataFrame:
     # String columns – strip whitespace, lower-case, replace placeholders
     for col in CATEGORICAL_COLS:
         if col in df.columns:
-            df[col] = (
-                df[col].astype(str).str
-                .strip().str.lower())
+            df[col] = df[col].astype(str).str.strip().str.lower()
             df[col] = replace_placeholders(df[col])
 
     _log_ok("Schema coercion and placeholder replacement complete.")
@@ -400,9 +396,9 @@ def remove_invalid_rows(df: pd.DataFrame) -> pd.DataFrame:
 
     # power
     power_valid = (
-        df["power"].notna() &
-        (df["power"] >= POWER_MIN) &
-        (df["power"] <= POWER_MAX)
+        df["power"].notna()
+        & (df["power"] >= POWER_MIN)
+        & (df["power"] <= POWER_MAX)
     )
     df = df[power_valid]
 
@@ -414,7 +410,7 @@ def remove_invalid_rows(df: pd.DataFrame) -> pd.DataFrame:
 
 def drop_duplicates(df: pd.DataFrame) -> pd.DataFrame:
     """Remove exact duplicate rows."""
-    _log_step("Dropping full‑row duplicates …")
+    _log_step("Dropping full-row duplicates …")
     before = len(df)
     df = df.drop_duplicates(keep="first")
     after = len(df)
@@ -527,9 +523,7 @@ def cap_outliers_fixed(df: pd.DataFrame) -> pd.DataFrame:
             df[col] = df[col].clip(lower=lower)
             capped += before
         values = "values " f"(upper={upper}, lower={lower})."
-        _log_ok(
-            f"'{col}': capped {capped:,} " + values
-        )
+        _log_ok(f"'{col}': capped {capped:,} " + values)
     return df
 
 

@@ -17,9 +17,7 @@ data:
 
 merge:
 	@echo "Merging datasets..."
-	poetry run python $(SCRIPTS_DIR)/data/merge_data.py
-	@echo "Running preprocessing pipeline..."
-	poetry run python scripts/run_preprocessing.py
+	poetry run python scripts/data/merge_data.py
 
 validate_raw:
 	@echo "Validating data..."
@@ -51,7 +49,7 @@ lint:
 
 test:
 	@echo "Running unit and integration tests with coverage..."
-	poetry run pytest tests/ --cov=src --cov-report=term-missing --cov-report=html
+	poetry run pytest tests/
 	@echo "Detailed coverage report generated in htmlcov/index.html"
 
 check: format lint

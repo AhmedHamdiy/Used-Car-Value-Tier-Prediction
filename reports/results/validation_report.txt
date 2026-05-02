@@ -9,8 +9,16 @@
 =================================================================
 
   [FAIL] ❌ Schema Check
+       ⚠️  Column 'brand': expected dtype 'str', got 'object'
+       ⚠️  Column 'model': expected dtype 'str', got 'object'
+       ⚠️  Column 'vehicleType': expected dtype 'str', got 'object'
+       ⚠️  Column 'gearbox': expected dtype 'str', got 'object'
+       ⚠️  Column 'fuelType': expected dtype 'str', got 'object'
        ⚠️  Column 'yearOfRegistration': expected dtype 'int64', got 'float64'
-       ⚠️  Column 'price_reference_year': expected dtype 'int64', got 'float64'
+       ⚠️  Column 'seller': expected dtype 'str', got 'object'
+       ⚠️  Column 'dataSource': expected dtype 'str', got 'object'
+       ⚠️  Column 'price': expected dtype 'int64', got 'float64'
+       ⚠️  Column 'price_tier': expected dtype 'str', got 'object'
 
   [FAIL] ❌ Completeness Check
  📊 Overall Completeness: 97.5%
@@ -25,8 +33,9 @@
  - yearOfRegistration: 99.98% complete (0.02% missing)
  - seller: 100.00% complete (0.00% missing)
  - dataSource: 100.00% complete (0.00% missing)
- - price_reference_year: 100.00% complete (0.00% missing)
  - price: 100.00% complete (0.00% missing)
+ - price_tier: 100.00% complete (0.00% missing)
+       ⚠️  Required column 'price_tierseller' is missing.
        ⚠️  Column 'model': 5.48% missing (threshold 5%)
        ⚠️  Column 'vehicleType': 10.12% missing (threshold 5%)
        ⚠️  Column 'gearbox': 5.40% missing (threshold 5%)
@@ -36,8 +45,8 @@
        ⚠️  Full-row duplicates: 57324 (15.33%)
 
   [FAIL] ❌ Validity Check
-       ⚠️  Column 'price': 36062 value(s) below min (500)
-       ⚠️  Column 'price': 52 value(s) above max (5000000)
+       ⚠️  Column 'price': 26219 value(s) below min (500)
+       ⚠️  Column 'price': 54 value(s) above max (5000000)
        ⚠️  Column 'power': 40903 value(s) below min (5)
        ⚠️  Column 'power': 85 value(s) above max (5000)
        ⚠️  Column 'kilometer': 13 value(s) above max (300000)
@@ -57,24 +66,22 @@
        ⚠️  Column 'power': 385 Z-Score outlier(s) (|z| > 3.0) — 0.10% of values
        ⚠️  Column 'kilometer': 290 Z-Score outlier(s) (|z| > 3.0) — 0.08% of values
        ⚠️  Column 'yearOfRegistration': 173 Z-Score outlier(s) (|z| > 3.0) — 0.05% of values
-       ⚠️  Column 'price_reference_year': 2507 Z-Score outlier(s) (|z| > 3.0) — 0.67% of values
 
   [FAIL] ❌ Outliers_IQR Check
-       ⚠️  Column 'price': 28424 IQR outlier(s) (outside [-8150.0, 16650.0]) -> 7.60%
+       ⚠️  Column 'price': 27980 IQR outlier(s) (outside [-11883.5, 24318.9]) -> 7.48%
        ⚠️  Column 'power': 11035 IQR outlier(s) (outside [-50.0, 270.0]) -> 2.95%
        ⚠️  Column 'kilometer': 15397 IQR outlier(s) (outside [25000.0, 225000.0]) -> 4.12%
        ⚠️  Column 'yearOfRegistration': 8289 IQR outlier(s) (outside [1985.5, 2021.5]) -> 2.22%
-       ⚠️  Column 'price_reference_year': 2507 IQR outlier(s) (outside [2016.0, 2016.0]) -> 0.67%
 
   [FAIL] ❌ Outliers_IsolationForest Check
-       ⚠️  Isolation Forest detected 44872 outlier(s) (12.00%) across ['price', 'power', 'kilometer', 'yearOfRegistration', 'price_reference_year']
+       ⚠️  Isolation Forest detected 44875 outlier(s) (12.00%) across ['price', 'power', 'kilometer', 'yearOfRegistration']
 
   [FAIL] ❌ Distribution Check
 📊 Stats for price:
- Mean: 17369.8683 | Median: 2990.0 | Mode: 0.0 | Std: 3575910.3847
-Q1: 1150.0 | Q3: 7350.0 | Min: 0.0 | Max: 2147483647.0
-Skewness: 580.0031 (Positive Skew (right tail))
-Kurtosis: 347759.0729 (Leptokurtic (heavy tails))
+ Mean: 25472.3063 | Median: 4400.209 | Mode: 0.0 | Std: 5262458.1676
+Q1: 1692.3881 | Q3: 10742.9851 | Min: 0.0 | Max: 3160326680.5104
+Skewness: 580.0035 (Positive Skew (right tail))
+Kurtosis: 347759.3757 (Leptokurtic (heavy tails))
 📊 Stats for power:
  Mean: 115.9785 | Median: 105.0 | Mode: 0.0 | Std: 191.7707
 Q1: 70.0 | Q3: 150.0 | Min: 0.0 | Max: 20000.0
@@ -90,16 +97,10 @@ Kurtosis: 1.7547 (Leptokurtic (heavy tails))
 Q1: 1999.0 | Q3: 2008.0 | Min: 1000.0 | Max: 9999.0
 Skewness: 72.3451 (Positive Skew (right tail))
 Kurtosis: 5702.44 (Leptokurtic (heavy tails))
-📊 Stats for price_reference_year:
- Mean: 2016.0603 | Median: 2016.0 | Mode: 2016.0 | Std: 0.7344
-Q1: 2016.0 | Q3: 2016.0 | Min: 2016.0 | Max: 2025.0
-Skewness: 12.0914 (Positive Skew (right tail))
-Kurtosis: 144.203 (Leptokurtic (heavy tails))
        ⚠️  Column 'price': KS test p=0.0000 < 0.05(distribution differs from normal)
        ⚠️  Column 'power': KS test p=0.0000 < 0.05(distribution differs from normal)
        ⚠️  Column 'kilometer': KS test p=0.0000 < 0.05(distribution differs from normal)
        ⚠️  Column 'yearOfRegistration': KS test p=0.0000 < 0.05(distribution differs from normal)
-       ⚠️  Column 'price_reference_year': KS test p=0.0000 < 0.05(distribution differs from normal)
 
   [PASS] ✅ Relationships Check
 
