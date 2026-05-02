@@ -10,9 +10,10 @@
 
   [FAIL] ❌ Schema Check
        ⚠️  Column 'yearOfRegistration': expected dtype 'int64', got 'float64'
+       ⚠️  Column 'price_reference_year': expected dtype 'int64', got 'float64'
 
   [FAIL] ❌ Completeness Check
- 📊 Overall Completeness: 97.0%
+ 📊 Overall Completeness: 97.5%
  📊 Column-level Completeness:
  - brand: 100.00% complete (0.00% missing)
  - model: 94.52% complete (5.48% missing)
@@ -23,6 +24,8 @@
  - fuelType: 91.07% complete (8.93% missing)
  - yearOfRegistration: 99.98% complete (0.02% missing)
  - seller: 100.00% complete (0.00% missing)
+ - dataSource: 100.00% complete (0.00% missing)
+ - price_reference_year: 100.00% complete (0.00% missing)
  - price: 100.00% complete (0.00% missing)
        ⚠️  Column 'model': 5.48% missing (threshold 5%)
        ⚠️  Column 'vehicleType': 10.12% missing (threshold 5%)
@@ -40,21 +43,31 @@
        ⚠️  Column 'kilometer': 13 value(s) above max (300000)
        ⚠️  Column 'yearOfRegistration': 68 value(s) below min (1900)
        ⚠️  Column 'yearOfRegistration': 114 value(s) above max (2026)
+       ⚠️   Column 'seller': invalid categorical values,
+                found: ['gewerblich', 'privat']
+       ⚠️   Column 'gearbox': invalid categorical values,
+                found: ['automatik', 'manuell']
+       ⚠️   Column 'fuelType': invalid categorical values,
+                found: ['andere', 'benzin', 'electric/diesel', 'electric/gasoline', 'elektro']
+       ⚠️   Column 'vehicleType': invalid categorical values,
+                found: ['andere', 'bus', 'cabrio', 'kleinwagen', 'kombi', 'limousine', 'station wagon', 'suv/off-road/pick-up']
 
   [FAIL] ❌ Outliers_ZScore Check
        ⚠️  Column 'price': 40 Z-Score outlier(s) (|z| > 3.0) — 0.01% of values
        ⚠️  Column 'power': 385 Z-Score outlier(s) (|z| > 3.0) — 0.10% of values
        ⚠️  Column 'kilometer': 290 Z-Score outlier(s) (|z| > 3.0) — 0.08% of values
        ⚠️  Column 'yearOfRegistration': 173 Z-Score outlier(s) (|z| > 3.0) — 0.05% of values
+       ⚠️  Column 'price_reference_year': 2507 Z-Score outlier(s) (|z| > 3.0) — 0.67% of values
 
   [FAIL] ❌ Outliers_IQR Check
        ⚠️  Column 'price': 28424 IQR outlier(s) (outside [-8150.0, 16650.0]) -> 7.60%
        ⚠️  Column 'power': 11035 IQR outlier(s) (outside [-50.0, 270.0]) -> 2.95%
        ⚠️  Column 'kilometer': 15397 IQR outlier(s) (outside [25000.0, 225000.0]) -> 4.12%
        ⚠️  Column 'yearOfRegistration': 8289 IQR outlier(s) (outside [1985.5, 2021.5]) -> 2.22%
+       ⚠️  Column 'price_reference_year': 2507 IQR outlier(s) (outside [2016.0, 2016.0]) -> 0.67%
 
   [FAIL] ❌ Outliers_IsolationForest Check
-       ⚠️  Isolation Forest detected 44875 outlier(s) (12.00%) across ['price', 'power', 'kilometer', 'yearOfRegistration']
+       ⚠️  Isolation Forest detected 44872 outlier(s) (12.00%) across ['price', 'power', 'kilometer', 'yearOfRegistration', 'price_reference_year']
 
   [FAIL] ❌ Distribution Check
 📊 Stats for price:
@@ -77,10 +90,16 @@ Kurtosis: 1.7547 (Leptokurtic (heavy tails))
 Q1: 1999.0 | Q3: 2008.0 | Min: 1000.0 | Max: 9999.0
 Skewness: 72.3451 (Positive Skew (right tail))
 Kurtosis: 5702.44 (Leptokurtic (heavy tails))
+📊 Stats for price_reference_year:
+ Mean: 2016.0603 | Median: 2016.0 | Mode: 2016.0 | Std: 0.7344
+Q1: 2016.0 | Q3: 2016.0 | Min: 2016.0 | Max: 2025.0
+Skewness: 12.0914 (Positive Skew (right tail))
+Kurtosis: 144.203 (Leptokurtic (heavy tails))
        ⚠️  Column 'price': KS test p=0.0000 < 0.05(distribution differs from normal)
        ⚠️  Column 'power': KS test p=0.0000 < 0.05(distribution differs from normal)
        ⚠️  Column 'kilometer': KS test p=0.0000 < 0.05(distribution differs from normal)
        ⚠️  Column 'yearOfRegistration': KS test p=0.0000 < 0.05(distribution differs from normal)
+       ⚠️  Column 'price_reference_year': KS test p=0.0000 < 0.05(distribution differs from normal)
 
   [PASS] ✅ Relationships Check
 

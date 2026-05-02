@@ -2,7 +2,7 @@
 kaggle_raw_data_path = 'data/raw/autos.csv'
 scraped_raw_data_path = 'data/raw/cars_dataset.csv'
 merged_data_path = 'data/interim/merged_data.csv'
-validated_data_path = 'data/processed/validated_data.csv'
+clean_data_path = 'data/processed/clean_data.csv'
 processed_data_path = 'data/processed/features.csv'
 validation_report_path = 'reports/results/validation_report'
 
