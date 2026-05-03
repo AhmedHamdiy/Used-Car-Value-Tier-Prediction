@@ -11,3 +11,10 @@ features_columns = ['']
 categorical_columns = ['']
 numerical_columns = ['']
 drop_columns = ['']
+
+[models]
+results_path = 'reports/model_comparison.csv'
+best_model_path = 'reports/best_model.json'
+selection_report_path = 'reports/model_selection_report.txt'
+experiment_name = 'used_car_price_tier'
+mlflow_tracking_uri = 'http://127.0.0.1:5000'
