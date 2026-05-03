@@ -2,14 +2,12 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import numpy as np
-import pickle
-# OR import joblib (depending on how you saved it)
+import joblib
 
 @st.cache_resource
 def load_model():
     # Update this path if your model is inside a specific folder, e.g., "models/model.pkl"
-    with open("models/best_model_for_production.pkl", "rb") as file:
-        model = pickle.load(file)
+    model = joblib.load("models/best_model_for_production.pkl")
     return model
 
 
