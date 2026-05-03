@@ -1,0 +1,55 @@
+================================================================================
+FEATURE IMPORTANCE REPORT
+================================================================================
+Strategy: xgboost
+Total features: 24
+Selected features: 17
+Selection rate: 70.8%
+
+TOP 30 FEATURES:
+--------------------------------------------------------------------------------
+ 1. [✓] km_power_ratio                           0.265396
+ 2. [✓] vehicleAge                               0.158862
+ 3. [✓] vehicleType_convertible                  0.079275
+ 4. [✓] power                                    0.053533
+ 5. [✓] seller_private                           0.051773
+ 6. [✓] fuelType_diesel                          0.049644
+ 7. [✓] vehicleType_suv                          0.048656
+ 8. [✓] vehicleType_van                          0.043679
+ 9. [✓] brand_freq                               0.041015
+10. [✓] fuelType_gasoline                        0.035261
+11. [✓] vehicleType_station-wagon                0.034066
+12. [✓] vehicleType_coupe                        0.024104
+13. [✓] kmPerYear                                0.020511
+14. [✓] model_freq                               0.018747
+15. [✓] kilometer                                0.018736
+16. [✓] vehicleType_sedan                        0.016896
+17. [✓] gearbox_manual                           0.013255
+18. [ ] dataSource_kaggle                        0.008679
+19. [ ] fuelType_hybrid                          0.007380
+20. [ ] fuelType_lpg                             0.005098
+21. [ ] fuelType_electric                        0.004394
+22. [ ] vehicleType_other                        0.001041
+23. [ ] log_km                                   0.000000
+24. [ ] gearbox_semi-automatic                   0.000000
+
+SELECTED FEATURES:
+--------------------------------------------------------------------------------
+ 1. km_power_ratio                           0.265396
+ 2. vehicleAge                               0.158862
+ 3. vehicleType_convertible                  0.079275
+ 4. power                                    0.053533
+ 5. seller_private                           0.051773
+ 6. fuelType_diesel                          0.049644
+ 7. vehicleType_suv                          0.048656
+ 8. vehicleType_van                          0.043679
+ 9. brand_freq                               0.041015
+10. fuelType_gasoline                        0.035261
+11. vehicleType_station-wagon                0.034066
+12. vehicleType_coupe                        0.024104
+13. kmPerYear                                0.020511
+14. model_freq                               0.018747
+15. kilometer                                0.018736
+16. vehicleType_sedan                        0.016896
+17. gearbox_manual                           0.013255
+================================================================================

@@ -1,0 +1,20 @@
+# Selected features
+# Strategy: xgboost
+# Total: 17
+km_power_ratio
+vehicleAge
+vehicleType_convertible
+power
+seller_private
+fuelType_diesel
+vehicleType_suv
+vehicleType_van
+brand_freq
+fuelType_gasoline
+vehicleType_station-wagon
+vehicleType_coupe
+kmPerYear
+model_freq
+kilometer
+vehicleType_sedan
+gearbox_manual
