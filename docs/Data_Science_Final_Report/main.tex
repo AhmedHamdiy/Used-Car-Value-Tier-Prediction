@@ -1394,8 +1394,40 @@ Testing focused on assessing model generalizability and detecting overfitting be
 \begin{itemize}
     \item \textbf{Unit Tests \& Justification}: We implemented targeted unit tests using \texttt{pytest} across all critical modules, justifying our test cases based on critical business logic and potential data failure points. Tests for the merge module verified CPI-based price normalization formulas and correct price tier assignments. Cleaning module tests guarded against missing required columns, placeholder replacements, and extreme value capping. Validation tests ensured completeness thresholds and anomaly detection algorithms (e.g., Isolation Forest) handled edge cases like all-NaN columns or boundary values gracefully.
     \item \textbf{Integration Tests}: To verify component interaction and data flow, we built end-to-end tests spanning the entire pipeline: \texttt{merge\_data} $\rightarrow$ \texttt{clean\_data} $\rightarrow$ \texttt{validate\_data}. These tests confirmed that prices normalized during the merge phase remain within acceptable bounds during cleaning, and that German alias resolutions correctly propagate downstream. Furthermore, the integration tests validated that duplicate rows are properly removed across module boundaries and that after outlier capping, the data successfully passes the stringent range checks enforced by the validation step.
-    \item \textbf{Coverage \& Reporting}: The test suite runs natively via \texttt{pytest}, which is configured to generate terminal and HTML coverage statistics to measure and report on untested portions of the codebase. Through rigorous testing, we proactively identified and documented edge cases---such as a \texttt{ZeroDivisionError} during IQR validation on all-NaN inputs---ensuring overall pipeline robustness.
+    \item \textbf{Coverage \& Reporting}: The test suite runs natively via \texttt{pytest}, which is configured to generate terminal and HTML coverage statistics to measure and report on untested portions of the codebase. Through rigorous testing, we proactively identified and documented edge cases---such as a \texttt{ZeroDivisionError} during IQR validation on all-NaN inputs---ensuring overall pipeline robustness. Table \ref{tab:code_coverage} summarizes the test coverage across the various modules in the \texttt{src} directory.
 \end{itemize}
+
+\begin{table}[ht]
+\centering
+\caption{Overall Code Coverage (\texttt{src/} directory)}
+\label{tab:code_coverage}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{l c c c}
+\rowcolor{slate}
+{\color{white}\small\bfseries Module} &
+{\color{white}\small\bfseries Statements} &
+{\color{white}\small\bfseries Missing} &
+{\color{white}\small\bfseries Coverage \%} \\
+\rowcolor{lightgray}
+\texttt{src/data/clean\_data.py} & 225 & 2 & 99\% \\
+\rowcolor{white}
+\texttt{src/data/merge\_data.py} & 56 & 0 & 100\% \\
+\rowcolor{lightgray}
+\texttt{src/data/validate\_data.py} & 328 & 10 & 97\% \\
+\rowcolor{white}
+\texttt{src/features/feature\_selection.py} & 133 & 25 & 81\% \\
+\rowcolor{lightgray}
+\texttt{src/models/predict.py} & 59 & 59 & 0\% \\
+\rowcolor{white}
+\texttt{src/models/select\_model.py} & 125 & 14 & 89\% \\
+\rowcolor{lightgray}
+\texttt{src/models/train\_model.py} & 233 & 98 & 58\% \\
+\rowcolor{white}
+\texttt{src/visualizations/visualize.py} & 126 & 126 & 0\% \\
+\hline
+\textbf{Overall Total} & \textbf{1285} & \textbf{334} & \textbf{74\%} \\
+\end{tabular}
+\end{table}
 
 \subsection{Model Testing: Generalization}
 \begin{itemize}
