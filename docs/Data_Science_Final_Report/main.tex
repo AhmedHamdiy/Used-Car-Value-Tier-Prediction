@@ -25,6 +25,8 @@
 \usepackage{colortbl}
 \usepackage{subcaption}
 \usepackage{tikz}
+\usepackage{textcomp}
+\usepackage{eurosym}
 \usetikzlibrary{shapes.geometric, arrows.meta, positioning}
 % ── Colours ───────────────────────────────────────────────────
 \definecolor{navy}{HTML}{0D1B2A}
@@ -854,8 +856,280 @@ An evaluation of the impact of each technique on both global performance metrics
 \end{tabular}
 \end{center}
 \newpage
-\section{Exploratory Data Analysis (EDA)}
+\section{Exploratory Data Analysis}
+ 
+\subsection{Overview \& Motivation}
+ 
+Before committing to any modelling strategy, we conducted a structured
+Exploratory Data Analysis (EDA) to build an evidence-based understanding
+of what drives a vehicle's value tier.  Used-car pricing is not random:
+dealerships and marketplaces rely on a handful of well-known market
+signals---vehicle age, accumulated mileage, engine specification, brand
+prestige, and body style---to position inventory.  Our EDA translated
+these market intuitions into testable hypotheses, then evaluated each
+hypothesis against the full dataset of \textbf{259,092 active listings}.
+ 
+The insights obtained here served two purposes.  First, they validated
+(or refined) our feature selection decisions.  Second, and crucially for
+modelling, they revealed that the relationship between the predictors and
+the price tier is \emph{non-linear and interaction-driven}---a finding
+that directly motivated the choice of tree-based ensemble methods over
+simpler parametric models.
+ 
+% ── Dashboard ─────────────────────────────────────────────────
 \subsection{EDA Dashboard}
+ 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth]{Dashboard.png}
+  \caption{Used Car Valuation \& Tier Analysis Dashboard --- a consolidated
+            view of the five hypothesis plots together with market-level KPIs
+            and model benchmark scores.}
+  \label{fig-dashboard}
+\end{figure}
+
+The dashboard in Figure~\ref{fig-dashboard} consolidates the key market
+metrics and the five hypothesis visualisations into a single executive
+view.  The headline KPIs---a median market price of \textbf{\euro{5,739}},
+a luxury share of \textbf{20.4\%}, and an average mileage of
+\textbf{122,871~km}---contextualise every chart that follows: the market
+is dominated by budget and mid-range vehicles, luxury inventory is a
+meaningful but minority segment, and mileage dispersion is wide enough to
+be an informative discriminator.
+ 
+% ── Hypotheses ────────────────────────────────────────────────
+\subsection{Hypothesis-Driven Analysis}
+ 
+Each hypothesis below was formed from domain knowledge about the
+European used-car market and then tested visually against the cleaned
+dataset.  Where a hypothesis was \emph{confirmed}, the plot is used as
+evidence to retain the corresponding feature.  Where it was only
+\emph{partially confirmed}, the nuance is noted and informs how the
+feature is engineered.
+ 
+% ── H1 ────────────────────────────────────────────────────────
+\subsubsection{Hypothesis 1 --- Vehicle Age and the Budget Tier}
+ 
+\textbf{Hypothesis:} Older vehicles are more likely to be classified as
+\emph{Budget}.
+ 
+\textbf{Business rationale.}  From a dealership perspective, vehicle age
+is one of the first proxies used during appraisal.  Depreciation in the
+European market is steep in the first three to five years and then
+flattens; by the time a car is more than ten years old it has typically
+exhausted most of its resale premium.  A systematic age-to-tier
+relationship would mean that \texttt{yearOfRegistration} (or its
+engineered derivative \texttt{vehicleAge}) is a reliable, low-cost
+signal for automated tier assignment.
+ 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.82\linewidth]{price-tier_vs_yearOfRegistration.png}
+  \caption{Tier vs.\ Vehicle Age --- box-plots of year of registration
+           by price tier.}
+  \label{fig:tier_age}
+\end{figure}
+ 
+\textbf{Finding.}  Figure~\ref{fig:tier_age} confirms the hypothesis.
+The interquartile range for the \emph{Budget} tier is centred around
+the year 2000, while the \emph{Mid-Range} and \emph{Luxury} boxes shift
+progressively towards more recent registration years, with \emph{Luxury}
+medians concentrated after 2008.  The tail of very old outliers
+(pre-1960) appears across all tiers, reflecting a small number of
+classic-car listings, but the core bulk of budget inventory is
+unmistakably older.  This confirms that \texttt{yearOfRegistration} is a
+meaningful predictor and should be retained---or re-expressed as
+\texttt{vehicleAge}---in the feature set.
+ 
+% ── H2 ────────────────────────────────────────────────────────
+\subsubsection{Hypothesis 2 --- Accumulated Mileage and Budget Classification}
+ 
+\textbf{Hypothesis:} Higher accumulated mileage pushes a vehicle towards
+the \emph{Budget} tier.
+ 
+\textbf{Business rationale.}  Mileage is perhaps the single most
+scrutinised figure in a used-car transaction.  High-mileage vehicles
+carry greater mechanical risk, command lower trade-in values, and are
+routinely priced at a discount.  Conversely, low-mileage luxury vehicles
+retain premium pricing because they signal careful, limited use.  If
+mileage reliably separates tiers, it justifies its inclusion as a
+first-class feature.
+ 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.82\linewidth]{price_tier_vs_kilometer.png}
+  \caption{Tier vs.\ Mileage Intensity --- box-plots of accumulated
+            kilometres by price tier.}
+  \label{fig:tier_km}
+\end{figure}
+ 
+\textbf{Finding.}  Figure~\ref{fig:tier_km} reveals a more nuanced
+picture than expected.  The \emph{Budget} tier shows an extremely
+compressed interquartile range sitting high at roughly 150,000~km,
+whereas \emph{Mid-Range} vehicles span a wide band from near zero to
+225,000~km and \emph{Luxury} vehicles cluster at a lower median of
+approximately 90,000~km with a similarly wide spread.  The hypothesis is
+\emph{partially confirmed}: high mileage is indeed concentrated in the
+budget segment, but the luxury tier does not display the very low mileage
+that a simplistic view would predict---many luxury cars in this market
+are pre-owned daily drivers, not garage queens.  The practical implication
+is that mileage alone does not linearly separate the tiers; it interacts
+with brand and vehicle age, reinforcing the need for a model capable of
+capturing such interactions.
+ 
+% ── H3 ────────────────────────────────────────────────────────
+\subsubsection{Hypothesis 3 --- Engine Power and the Luxury Tier}
+ 
+\textbf{Hypothesis:} Greater engine power increases the probability of a
+\emph{Luxury} classification.
+ 
+\textbf{Business rationale.}  Horsepower is a premium attribute in the
+European used-car market.  High-output engines are disproportionately
+found in sports cars, executive saloons, and SUVs---vehicle categories
+that command luxury pricing.  A strong power-to-tier relationship would
+validate engine power as a differentiating feature and support its use
+in automated valuation.
+ 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.82\linewidth]{price_tier_vs_power.png}
+  \caption{Engine Power Distribution by Tier --- violin plots of
+           horsepower across budget, mid-range, and luxury segments.}
+  \label{fig:tier_power}
+\end{figure}
+ 
+\textbf{Finding.}  Figure~\ref{fig:tier_power} strongly confirms the
+hypothesis.  The \emph{Budget} violin is narrow and densely concentrated
+below 130~hp, with a median near 100~hp.  The \emph{Mid-Range} violin
+widens and shifts upwards, with its median around 125~hp and notable mass
+extending towards 250~hp.  The \emph{Luxury} violin is the broadest of
+the three: its median sits above 170~hp and the distribution extends
+uniformly across the entire upper range, reflecting the presence of
+high-performance sports and super cars.  The multi-modal, notched shape
+of all three violins also confirms that power is not normally distributed
+within any tier---further evidence that a linear model would struggle to
+exploit this feature effectively.
+ 
+% ── H4 ────────────────────────────────────────────────────────
+\subsubsection{Hypothesis 4 --- Brand Prestige and Luxury Market Share}
+ 
+\textbf{Hypothesis:} Premium brands (BMW, Mercedes-Benz, Audi) carry a
+disproportionately high share of \emph{Luxury} listings.
+ 
+\textbf{Business rationale.}  Brand is arguably the strongest single
+heuristic that human appraisers apply.  A \emph{BMW 7 Series} or
+\emph{Mercedes-Benz S-Class} is almost always a luxury vehicle regardless
+of age or mileage, whereas a \emph{Volkswagen Polo} is almost never one.
+Quantifying brand-level tier composition allows dealerships to set
+brand-specific pricing floors and ceilings, and it validates the inclusion
+of a brand-derived feature---either as a raw categorical variable or as a
+frequency-encoded representation of its luxury share.
+ 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth]{price_tier_per_brand.png}
+  \caption{Brand Distribution across Price Tiers (Top 15 Brands) ---
+           stacked bar chart showing the absolute count of budget
+           (grey), mid-range (blue), and luxury (orange) vehicles per
+           brand.}
+  \label{fig:tier_brand}
+\end{figure}
+ 
+\textbf{Finding.}  Figure~\ref{fig:tier_brand} clearly confirms the
+hypothesis.  BMW and Mercedes-Benz display the largest orange (luxury)
+segments in both absolute count and as a proportion of their total bar.
+Audi follows closely.  By contrast, volume brands such as Opel, Renault,
+Ford, and Peugeot have negligible luxury fractions, with their bars
+dominated by budget and mid-range inventory.  Volkswagen, as the
+highest-volume brand in the dataset, exhibits a mixed profile---large
+absolute numbers in every tier---consistent with its broad product range.
+The chart also confirms that brand is a \emph{non-linear} signal: the
+luxury premium is not evenly distributed across the brand ladder but is
+concentrated in a handful of premium manufacturers, making it ideal
+territory for tree-based splits.
+ 
+% ── H5 ────────────────────────────────────────────────────────
+\subsubsection{Hypothesis 5 --- Vehicle Body Type and Tier Composition}
+ 
+\textbf{Hypothesis:} Vehicle body type influences tier classification,
+with certain body styles (convertibles, coupes) skewing towards
+\emph{Luxury} and others (compacts, vans) towards \emph{Budget}.
+ 
+\textbf{Business rationale.}  Body style encodes both the functional
+purpose and the target customer of a vehicle.  Convertibles and coupes
+are predominantly lifestyle or sports vehicles and are priced accordingly.
+Compact hatchbacks and vans are utility-oriented and occupy the budget end
+of the market.  If body style shows a statistically meaningful tier
+distribution, it can serve as a lightweight but powerful feature in the
+classifier.
+ 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.82\linewidth]{price_tier_vs_vehicleType.png}
+  \caption{Vehicle Type vs.\ Price Tier --- contingency table (heat
+            map) of absolute vehicle counts across body styles and price
+            tiers.}
+  \label{fig:tier_vehicletype}
+\end{figure}
+ 
+\textbf{Finding.}  Figure~\ref{fig:tier_vehicletype} confirms the
+hypothesis with a clear pattern.  Compact is the single most frequent
+body style and is heavily concentrated in the \emph{Budget} tier
+(38,529 units vs.\ only 2,937 in Luxury), confirming its budget
+orientation.  Sedan shows a more balanced split (36,273 Budget /
+27,010 Mid-Range) but still leans budget.  Convertible and coupe,
+however, distribute far more evenly across all three tiers---and
+convertibles actually show a higher count in Luxury than in Budget---
+consistent with their lifestyle and sports positioning.  SUVs and vans
+display their own distinct tier profiles.  These diverging patterns
+confirm that \texttt{vehicleType} carries independent predictive
+information that cannot be captured by brand or power alone, and it
+warrants explicit inclusion in the model.
+ 
+% ── Model Selection ───────────────────────────────────────────
+\subsection{From EDA Insights to Model Selection}
+ 
+The five hypotheses, taken together, paint a coherent picture of the
+used-car value market: \emph{price tier is determined by a combination
+of physical condition signals (age, mileage), performance attributes
+(engine power), brand prestige, and vehicle category---and these factors
+interact in complex, non-linear ways.}
+ 
+Several specific observations from the EDA ruled out simpler modelling
+approaches:
+ 
+\begin{itemize}
+  \item \textbf{Non-linearity.}  The multi-modal violin plots for engine
+        power and the compressed, asymmetric mileage distributions
+        demonstrate that no single linear boundary can cleanly separate
+        the tiers.
+  \item \textbf{Feature interactions.}  A high-mileage vehicle is
+        \emph{budget} if it is a Ford, but may still be \emph{mid-range}
+        if it is an Audi with a large engine.  Mileage, brand, and power
+        must be considered jointly, not independently.
+  \item \textbf{Categorical heterogeneity.}  Both brand and vehicle type
+        exhibit tier distributions that cannot be captured by a simple
+        ordinal encoding; the relationship is categorical and
+        context-dependent.
+  \item \textbf{Class imbalance.}  With a luxury share of 20.4\%, the
+        target is moderately imbalanced, requiring a model that does not
+        trivially favour the majority class.
+\end{itemize}
+ 
+These characteristics collectively point to \textbf{tree-based ensemble
+models}---specifically gradient-boosted decision trees---as the natural
+modelling choice.  Decision trees handle non-linearity and feature
+interactions natively through recursive binary splits; boosting reduces
+variance and corrects misclassification errors iteratively; and the
+ensemble structure is robust to the categorical heterogeneity observed
+across brands and body types.  Logistic Regression, as expected from
+these EDA insights, was subsequently evaluated and found to underfit
+significantly (F1 $\approx 0.66$), confirming that a non-linear model
+was essential.  \textbf{XGBoost} ultimately delivered the best
+performance, achieving a Test F1 of \textbf{0.859} with a severe-error
+rate of only \textbf{0.22\%}, validating both the EDA-driven feature set
+and the model family selection.
+
 \newpage
 \section{Model Development}
 We evaluated multiple model architectures to address the imbalanced 3-class target variable (budget, mid-range, luxury).
