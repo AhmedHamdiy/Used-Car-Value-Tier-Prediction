@@ -87,8 +87,7 @@ def _transform_crawled(df: pd.DataFrame) -> pd.DataFrame:
     df["dataSource"] = "crawled"
     df = df.rename(columns={"mileage": "kilometer"})
 
-    df["power"] = (df["power"].astype(str).str
-                   .extract(r"\((\d+)\s*hp\)").astype(float))
+    df["power"] = df["power"].astype(str).str.extract(r"\((\d+)\s*hp\)").astype(float)
     df["yearOfRegistration"] = (
         df["year"].astype(str).str.extract(r"(\d{4})").astype(float)
     )

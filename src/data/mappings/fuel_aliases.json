@@ -1,0 +1,7 @@
+{
+    "benzin": "gasoline",
+    "elektro": "electric",
+    "electric/gasoline": "hybrid",
+    "electric/diesel": "hybrid",
+    "andere": "other"
+}

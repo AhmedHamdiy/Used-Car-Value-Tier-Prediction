@@ -6,7 +6,7 @@ authors = [
     {name = "ahmed_hamdiy",email = "ahmed.hamdiy03@gmail.com"}
 ]
 readme = "README.md"
-requires-python = ">=3.11,<3.13"
+requires-python = ">=3.11"
 dependencies = [
     "pandas<3",
     "pygments>=2.20.0,<3.0.0",
