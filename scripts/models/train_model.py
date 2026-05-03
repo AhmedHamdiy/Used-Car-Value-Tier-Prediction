@@ -56,6 +56,31 @@ def main():
         default=None,
         help="List of dataset types (default: none smote undersample)",
     )
+    parser.add_argument(
+        "--feature-selection",
+        type=str,
+        default=None,
+        choices=["xgboost", "variance", "correlation", "k_best", "mutual_info"],
+        help="Feature selection strategy (optional)",
+    )
+    parser.add_argument(
+        "--feature-selection-threshold",
+        type=float,
+        default=None,
+        help="Threshold for feature selection (strategy-dependent)",
+    )
+    parser.add_argument(
+        "--feature-selection-k",
+        type=int,
+        default=None,
+        help="Number of features to select (for k_best, mutual_info strategies)",
+    )
+    parser.add_argument(
+        "--feature-selection-report",
+        type=str,
+        default="reports/selected_features.txt",
+        help="Path to save selected features report (default: reports/selected_features.txt)",
+    )
 
     args = parser.parse_args()
 
@@ -73,6 +98,12 @@ def main():
         print(f"Models: {', '.join(args.models)}")
     if args.datasets:
         print(f"Datasets: {', '.join(args.datasets)}")
+    if args.feature_selection:
+        print(f"Feature selection: {args.feature_selection}")
+        if args.feature_selection_threshold:
+            print(f"  Threshold: {args.feature_selection_threshold}")
+        if args.feature_selection_k:
+            print(f"  K: {args.feature_selection_k}")
     print("=" * 80)
 
     train_all_models(
@@ -82,6 +113,10 @@ def main():
         datasets=args.datasets,
         experiment_name=args.experiment_name,
         mlflow_tracking_uri=mlflow_uri,
+        feature_selection_strategy=args.feature_selection,
+        feature_selection_threshold=args.feature_selection_threshold,
+        feature_selection_k=args.feature_selection_k,
+        feature_selection_report_path=args.feature_selection_report,
     )
 
     print("\nTraining complete!")

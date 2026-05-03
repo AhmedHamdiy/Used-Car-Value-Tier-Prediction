@@ -6,7 +6,7 @@ DATA_DIR = data
 # EXPORT THE PROJECT ROOT TO PYTHON'S PATH
 export PYTHONPATH = .
 
-.PHONY: data merge validate_raw validate_preprocessed preprocess pipeline train train-no-mlflow select-model test format lint check
+.PHONY: data merge validate_raw validate_preprocessed preprocess pipeline train train-fs train-no-mlflow select-model select-features test format lint check
 
 data:
 	@echo "Fetching Kaggle dataset..."
@@ -63,6 +63,11 @@ train:
 	poetry run python $(SCRIPTS_DIR)/models/train_model.py --mlflow-uri http://127.0.0.1:5000
 	@echo "Model training complete!"
 
+train-fs:
+	@echo "Training models with feature selection..."
+	poetry run python $(SCRIPTS_DIR)/models/train_model.py --mlflow-uri http://127.0.0.1:5000 --feature-selection xgboost
+	@echo "Model training with feature selection complete!"
+
 train-no-mlflow:
 	@echo "Training models without MLflow..."
 	poetry run python $(SCRIPTS_DIR)/models/train_model.py --no-mlflow
@@ -73,5 +78,13 @@ select-model:
 	poetry run python $(SCRIPTS_DIR)/models/select_model.py
 	@echo "Model selection complete!"
 
+select-features:
+	@echo "Selecting features..."
+	poetry run python $(SCRIPTS_DIR)/features/select_features.py --strategy xgboost
+	@echo "Feature selection complete!"
+
 full-pipeline: merge validate_raw clean train select-model
 	@echo "Full ML pipeline executed successfully!"
+
+full-pipeline-fs: merge validate_raw clean select-features train-fs select-model
+	@echo "Full ML pipeline with feature selection executed successfully!"
