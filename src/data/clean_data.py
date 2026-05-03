@@ -24,6 +24,7 @@ def _log_ok(msg: str) -> None:
 def _log_warn(msg: str) -> None:
     print(f"  [WARN] {msg}")
 
+
 # ========================= CONFIGURATION =========================
 
 with open("src/data/mappings/missing_placeholders.json") as f:
@@ -87,8 +88,14 @@ INPUT_COLS: list[str] = [
 CAP_BOUNDS: dict[str, dict[str, float]] = {
     "power": {"lower": SCHEMA["power"]["min"], "upper": SCHEMA["power"]["max"]},
     "price": {"lower": SCHEMA["price"]["min"], "upper": SCHEMA["price"]["max"]},
-    "kilometer": {"lower": SCHEMA["kilometer"]["min"], "upper": SCHEMA["kilometer"]["max"]},
-    "yearOfRegistration": {"lower": SCHEMA["yearOfRegistration"]["min"], "upper": SCHEMA["yearOfRegistration"]["max"]},
+    "kilometer": {
+        "lower": SCHEMA["kilometer"]["min"],
+        "upper": SCHEMA["kilometer"]["max"],
+    },
+    "yearOfRegistration": {
+        "lower": SCHEMA["yearOfRegistration"]["min"],
+        "upper": SCHEMA["yearOfRegistration"]["max"],
+    },
 }
 
 # ========================= HELPER FUNCTIONS =========================
@@ -187,7 +194,6 @@ def validate_schema(df: pd.DataFrame, schema: dict) -> list[str]:
     return violations
 
 
-
 # ========================= CLEANING STEPS =========================
 
 
@@ -229,7 +235,10 @@ def remove_invalid_rows(df: pd.DataFrame) -> pd.DataFrame:
 
     # price
     df = df.dropna(subset=["price"])
-    df = df[(df["price"] >= SCHEMA["price"]["min"]) & (df["price"] <= SCHEMA["price"]["max"])]
+    df = df[
+        (df["price"] >= SCHEMA["price"]["min"])
+        & (df["price"] <= SCHEMA["price"]["max"])
+    ]
 
     # year
     year_valid = (
@@ -358,28 +367,6 @@ def cap_outliers_iqr(df: pd.DataFrame, cols: list[str]) -> pd.DataFrame:
     return df
 
 
-def cap_outliers_fixed(df: pd.DataFrame) -> pd.DataFrame:
-    """Cap outliers using fixed domain bounds."""
-    _log_step("Capping outliers with fixed bounds …")
-    for col, bounds in CAP_BOUNDS.items():
-        if col not in df.columns:
-            continue
-        upper = bounds.get("upper")
-        lower = bounds.get("lower")
-        capped = 0
-        if upper is not None:
-            before = (df[col] > upper).sum()
-            df[col] = df[col].clip(upper=upper)
-            capped += before
-        if lower is not None:
-            before = (df[col] < lower).sum()
-            df[col] = df[col].clip(lower=lower)
-            capped += before
-        values = "values " f"(upper={upper}, lower={lower})."
-        _log_ok(f"'{col}': capped {capped:,} " + values)
-    return df
-
-
 # ========================= MAIN CLEANING FUNCTION =========================
 
 
@@ -405,9 +392,7 @@ def clean_data(
     # Step 3 – Impute missing categoricals (also cleans brand/model)
     df = impute_categoricals(df)
 
-    # Step 4 – Outlier handling
-    df = cap_outliers_fixed(df)
-
+    # Step 4 – Outlier handling (IQR)
     if use_iqr_capping:
         df = cap_outliers_iqr(df, ["power", "kilometer", "yearOfRegistration"])
 
@@ -450,7 +435,6 @@ class DataCleaner:
         self, raw_path: str | Path, output_path: str | Path | None = None
     ) -> pd.DataFrame:
         self.cleaned_df = clean_data(
-            raw_path, use_iqr_capping=self.use_iqr_capping,
-            output_path=output_path
+            raw_path, use_iqr_capping=self.use_iqr_capping, output_path=output_path
         )
         return self.cleaned_df
