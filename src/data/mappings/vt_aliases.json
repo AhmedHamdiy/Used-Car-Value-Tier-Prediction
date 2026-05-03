@@ -1,0 +1,10 @@
+{
+    "limousine": "sedan",
+    "kleinwagen": "compact",
+    "kombi": "station-wagon",
+    "Station Wagon": "station-wagon",
+    "bus": "van",
+    "cabrio": "convertible",
+    "suv/off-road/pick-up": "suv",
+    "andere": "other"
+}

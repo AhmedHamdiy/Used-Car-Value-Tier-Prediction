@@ -6,7 +6,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-from src.models.train_model import train_all_models
+from src.models.train_model import train_all_models  # : E402
 
 
 def main():
@@ -106,7 +106,7 @@ def main():
             print(f"  K: {args.feature_selection_k}")
     print("=" * 80)
 
-    results_df = train_all_models(
+    train_all_models(
         data_path=args.data_path,
         output_path=args.output_path,
         models=args.models,

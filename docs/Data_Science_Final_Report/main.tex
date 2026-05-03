@@ -975,6 +975,24 @@ MLflow tracking provided several key benefits:
 \end{enumerate}
 
 \newpage
+\section{Testing}
+Testing focused on assessing model generalizability and detecting overfitting between the validation and test sets, alongside comprehensive software testing to ensure code correctness.
+
+\subsection{Software Testing: Unit and Integration}
+\begin{itemize}
+    \item \textbf{Unit Tests \& Justification}: We implemented targeted unit tests using \texttt{pytest} across all critical modules, justifying our test cases based on critical business logic and potential data failure points. Tests for the merge module verified CPI-based price normalization formulas and correct price tier assignments. Cleaning module tests guarded against missing required columns, placeholder replacements, and extreme value capping. Validation tests ensured completeness thresholds and anomaly detection algorithms (e.g., Isolation Forest) handled edge cases like all-NaN columns or boundary values gracefully.
+    \item \textbf{Integration Tests}: To verify component interaction and data flow, we built end-to-end tests spanning the entire pipeline: \texttt{merge\_data} $\rightarrow$ \texttt{clean\_data} $\rightarrow$ \texttt{validate\_data}. These tests confirmed that prices normalized during the merge phase remain within acceptable bounds during cleaning, and that German alias resolutions correctly propagate downstream. Furthermore, the integration tests validated that duplicate rows are properly removed across module boundaries and that after outlier capping, the data successfully passes the stringent range checks enforced by the validation step.
+    \item \textbf{Coverage \& Reporting}: The test suite runs natively via \texttt{pytest}, which is configured to generate terminal and HTML coverage statistics to measure and report on untested portions of the codebase. Through rigorous testing, we proactively identified and documented edge cases---such as a \texttt{ZeroDivisionError} during IQR validation on all-NaN inputs---ensuring overall pipeline robustness.
+\end{itemize}
+
+\subsection{Model Testing: Generalization}
+\begin{itemize}
+    \item \textbf{Validation Strategy}: Models are evaluated on the validation set during hyperparameter tuning, then final performance is assessed on the held-out test set.
+    \item \textbf{Overfitting Check}: Validation F1 and test F1 scores are compared to detect overfitting. A large gap indicates the model has overfit to the training data.
+    \item \textbf{Cross-Validation Alternative}: While not used for final model selection, 5-fold stratified cross-validation can provide more robust estimates of model performance on smaller datasets.
+\end{itemize}
+
+\newpage
 \section{Results \& Evaluation}
 The final model selection prioritized \textbf{luxury recall} as the primary business metric to ensure maximum detection of premium vehicles. The \textbf{XGBoost (undersampling)} model achieved the highest luxury recall (90.53\%) while maintaining strong overall performance.
 
@@ -1143,15 +1161,62 @@ This critical business metric measures Budget $\leftrightarrow$ Luxury errors, r
 
 \newpage
 \section{Code Automation}
+To ensure reproducibility and streamline the development workflow, we utilized \texttt{Make} as our primary automation tool. The \texttt{Makefile} is configured to automate various critical stages of the machine learning pipeline, abstracting complex commands into simple targets:
+\begin{itemize}
+    \item \textbf{Data Acquisition \& Preprocessing:} Targets such as \texttt{make merge}, \texttt{make validate\_raw}, and \texttt{make clean} automate the execution of Python and Bash scripts for merging sources, validating, and cleaning data.
+    \item \textbf{Data Validation:} The \texttt{make validate\_raw} and \texttt{make validate\_preprocessed} commands ensure data integrity at different pipeline stages.
+    \item \textbf{Code Quality:} We enforce clean code practices by automating formatting with Black (\texttt{make format}) and linting with Flake8 (\texttt{make lint}).
+    \item \textbf{Testing:} The \texttt{make test} target executes the Pytest suite, generating detailed terminal and HTML coverage reports.
+    \item \textbf{End-to-End Execution:} The \texttt{make pipeline} target runs the complete data preparation and quality check sequence (merge, validate, clean, check, and delete) sequentially, while \texttt{make check} bundles formatting and linting.
+\end{itemize}
+This structured automation simplifies team collaboration and integrates seamlessly with our continuous integration workflows.
 
 \newpage
-\section{Continous Integration}
+\section{Continuous Integration}
+We implemented a Continuous Integration (CI) pipeline using GitHub Actions to automatically enforce code quality, run testing suites, and ensure code robustness on every update. The pipeline is configured to trigger automatically on any \texttt{push} or \texttt{pull\_request} to the \texttt{main} branch.
 
-\newpage
-\section{Deployment \& Monitoring}
+The workflow is executed on an \texttt{ubuntu-latest} runner and consists of the following automated steps:
+\begin{itemize}
+    \item \textbf{Environment Setup:} Checks out the repository, initializes Python 3.14, and installs the Poetry package manager (version 2.1.1) to handle dependencies in an isolated virtual environment.
+    \item \textbf{Dependency Management:} Automatically generates the \texttt{poetry.lock} file and installs all project dependencies without interaction.
+    \item \textbf{Static Code Analysis (Linting):} Executes Flake8 via Poetry against the \texttt{src/} and \texttt{tests/} directories to ensure the codebase maintains clean code practices and formatting standards.
+    \item \textbf{Automated Testing \& Coverage:} Runs the comprehensive Pytest suite, generating both terminal and HTML coverage reports (\texttt{--cov-report=term-missing --cov-report=html}) to verify code correctness and identify untested logic.
+\end{itemize}
+This CI configuration prevents breaking changes from being merged into the main branch and guarantees that all integrated code meets the required quality thresholds outlined in the project requirements.
 
 \newpage
 \section{Interactive Dashboard}
+
+\subsection{Purpose \& Business Value}
+To ensure the machine learning model delivers practical value, an interactive web dashboard was developed. It bridges the gap between the complex predictive model and non-technical stakeholders.\\
+\\ It provides an intuitive interface that allows users to instantly classify incoming vehicle inventory into pricing tiers without requiring any programming knowledge.
+
+\subsection{Technology Stack}
+\begin{itemize}
+  \item \textbf{Web Framework:} Streamlit (chosen for its rapid UI development and seamless integration with Python data science libraries).
+  \item \textbf{Visualization:} Plotly Express (utilized for rendering interactive, stakeholder-friendly charts).
+  \item \textbf{Backend/Inference:} Pandas (for on-the-fly data manipulation) and the saved Machine Learning model (for real-time predictions).
+\end{itemize}
+
+\subsection{Key Dashboard Components}
+The dashboard is structurally designed to guide the stakeholder from high-level market metrics down to specific vehicle predictions and model explainability.
+
+\begin{enumerate}
+  \item \textbf{Executive Summary Metrics:}
+  The top of the dashboard displays dynamic, high-level KPIs, including the total volume of historical vehicles, average market price, and the current luxury market share. This provides immediate macro-level context.
+
+  \item \textbf{Interactive "What-If" Controls:}
+  A sidebar interface allows users to input specific vehicle parameters (Brand, Engine Power, Mileage, Registration Year, and Transmission Type). This acts as a sandbox for stakeholders to test hypothetical inventory scenarios.
+
+  \item \textbf{Live Prediction Engine:}
+  The core of the application captures the user's input, automatically replicates the exact feature engineering steps from the training phase (e.g., calculating \texttt{vehicleAge} and applying frequency encodings), and queries the trained model to output a real-time Value Tier prediction (Budget, Mid-Range, or Luxury).
+
+  \item \textbf{Model Insights \& Explainability:}
+  To prevent the model from acting as a "black box" and to build trust with business users, the dashboard features a dynamic Feature Importance chart. This visualizes exactly which vehicle attributes have the strongest influence on the algorithm's pricing decisions.
+
+    \item \textbf{Model Selection \& Comparasions:}
+    A comparison section allows users to view different model versions (e.g., with or without resampling) to see how their performance and predictions vary.
+\end{enumerate}
 
 \newpage
 \section{Limitations \& Future Work}

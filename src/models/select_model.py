@@ -8,10 +8,9 @@ This module provides functionality to:
 """
 
 import pandas as pd
-import numpy as np
 import json
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple, Any
+from typing import Dict, Optional, Any
 from dataclasses import dataclass
 
 
@@ -316,7 +315,8 @@ class ModelSelector:
                     f"    Validation F1:    {best['metrics']['val_f1']:.4f}",
                     f"    Test Balanced Acc: {best['metrics']['test_bal_acc']:.4f}",
                     f"    Luxury Recall:    {best['metrics']['luxury_recall']:.4f}",
-                    f"    Severe Misclass Rate: {best['metrics']['severe_misclassification_rate']:.4f}",
+                    f"    Severe Misclass Rate: "
+                    f"{best['metrics']['severe_misclassification_rate']:.4f}",
                     f"    Composite Score:  {best['metrics']['composite_score']:.4f}",
                 ]
             )
