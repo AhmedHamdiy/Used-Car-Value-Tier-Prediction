@@ -28,33 +28,41 @@ from src.data.clean_data import (
     FUEL_ALIASES,
     GEAR_ALIASES,
     INPUT_COLS,
-    KM_RANGE,
-    MAX_PRICE,
-    MIN_PRICE,
     MODEL_ALIASES,
     MODELS_TO_DROP,
     PLACEHOLDERS,
-    POWER_MAX,
-    POWER_MIN,
     SCHEMA,
     SELLER_ALIASES,
     VT_ALIASES,
-    YEAR_RANGE,
     DataCleaner,
     cap_outliers_iqr,
     clean_brand,
     clean_data,
-    clean_fuel_type,
-    clean_gearbox,
     clean_model,
-    clean_seller,
-    clean_vehicle_type,
+    clean_with_aliases,
     drop_duplicates,
     impute_categoricals,
     remove_invalid_rows,
     replace_placeholders,
     validate_schema,
 )
+
+# Compatibility aliases for constants refactored into SCHEMA
+MIN_PRICE = SCHEMA["price"]["min"]
+MAX_PRICE = SCHEMA["price"]["max"]
+POWER_MIN = SCHEMA["power"]["min"]
+POWER_MAX = SCHEMA["power"]["max"]
+KM_RANGE = (SCHEMA["kilometer"]["min"], SCHEMA["kilometer"]["max"])
+YEAR_RANGE = (
+    SCHEMA["yearOfRegistration"]["min"],
+    SCHEMA["yearOfRegistration"]["max"],
+)
+
+# Compatibility wrappers for categorical cleaners refactored into clean_with_aliases
+clean_fuel_type = lambda s: clean_with_aliases(s, FUEL_ALIASES)
+clean_gearbox = lambda s: clean_with_aliases(s, GEAR_ALIASES)
+clean_seller = lambda s: clean_with_aliases(s, SELLER_ALIASES)
+clean_vehicle_type = lambda s: clean_with_aliases(s, VT_ALIASES)
 
 
 # ─────────────────────────── helpers ────────────────────────────

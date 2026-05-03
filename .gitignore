@@ -212,3 +212,6 @@ __marimo__/
 drafts/
 mlartifacts/
 mlflow.db
+
+# Stakpak session files
+.stakpak/session*

@@ -33,7 +33,7 @@ clean:
 
 delete:
 	@echo "Cleaning up intermediate files..."
-	rm -rf $(DATA_DIR)/iterim
+	rm -rf $(DATA_DIR)/interim
 	rm -rf __pycache__ .pytest_cache dist build *.egg-info
 	@echo "Cleanup complete!"
 
@@ -44,7 +44,7 @@ format:
 
 lint:
 	@echo "Linting code with Flake8..."
-	poetry run flake8 $(SRC_DIR) $(SCRIPTS_DIR)
+	poetry run flake8 $(SRC_DIR) $(SCRIPTS_DIR) --max-line-length=100
 	@echo "Code linting complete!"
 
 test:

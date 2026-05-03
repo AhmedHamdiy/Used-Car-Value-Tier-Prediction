@@ -32,8 +32,8 @@ jobs:
         poetry lock
         poetry install --no-interaction --no-root
 
-    # - name: Run code quality checks (Linting)
-    #   run: poetry run flake8 src/ tests/
+    - name: Run code quality checks (Linting)
+      run: poetry run flake8 src/ --max-line-length=100
 
-    # - name: Run tests with coverage
-    #   run: poetry run pytest tests/ --cov=src --cov-report=term-missing --cov-report=html
+    - name: Run tests with coverage
+      run: poetry run pytest tests/ --cov=src --cov-report=term-missing --cov-report=html
