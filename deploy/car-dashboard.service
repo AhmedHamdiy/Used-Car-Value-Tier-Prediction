@@ -1,0 +1,31 @@
+[Unit]
+Description=Car Price Tier Prediction Dashboard
+Documentation=https://github.com/AhmedHamdiy/Used-Car-Value-Tier-Prediction
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/car-dashboard
+
+# Environment
+Environment="PATH=/home/ubuntu/.local/bin:/home/ubuntu/.cache/pypoetry/virtualenvs/used-car-value-tier-prediction-VOerWmrk-py3.11/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+Environment="PYTHONUNBUFFERED=1"
+Environment="STREAMLIT_SERVER_HEADLESS=true"
+
+# Command to start the app
+ExecStart=/home/ubuntu/.cache/pypoetry/virtualenvs/used-car-value-tier-prediction-VOerWmrk-py3.11/bin/streamlit run app.py --server.port=8501 --server.address=0.0.0.0
+
+# Restart policy
+Restart=always
+RestartSec=5
+StartLimitInterval=60s
+StartLimitBurst=3
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=car-dashboard
+
+[Install]
+WantedBy=multi-user.target
