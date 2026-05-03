@@ -13,45 +13,45 @@
 \contentsline {subsection}{\numberline {2.4}Feature Documentation (Core Fields)}{7}{subsection.2.4}%
 \contentsline {section}{\numberline {3}Data Validation \& Documentation}{8}{section.3}%
 \contentsline {subsection}{\numberline {3.1}Dataset Validation Pipeline}{8}{subsection.3.1}%
-\contentsline {subsection}{\numberline {3.2}Dataset Validation Report}{8}{subsection.3.2}%
-\contentsline {subsubsection}{\numberline {3.2.1}Completeness - Missing Values Analysis}{10}{subsubsection.3.2.1}%
-\contentsline {subsubsection}{\numberline {3.2.2}Descriptive Statistics (Numeric Columns)}{10}{subsubsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.2}Dataset Validation Report}{9}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.1}Completeness - Missing Values Analysis}{9}{subsubsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2}Descriptive Statistics (Numeric Columns)}{9}{subsubsection.3.2.2}%
 \contentsline {subsubsection}{\numberline {3.2.3}Distribution Checks}{10}{subsubsection.3.2.3}%
-\contentsline {subsubsection}{\numberline {3.2.4}Consistency - Schema \& Data Types}{11}{subsubsection.3.2.4}%
-\contentsline {subsubsection}{\numberline {3.2.5}Validity Checks}{11}{subsubsection.3.2.5}%
-\contentsline {subsubsection}{\numberline {3.2.6}Uniqueness - Duplicate Detection}{11}{subsubsection.3.2.6}%
+\contentsline {subsubsection}{\numberline {3.2.4}Consistency - Schema \& Data Types}{10}{subsubsection.3.2.4}%
+\contentsline {subsubsection}{\numberline {3.2.5}Validity Checks}{10}{subsubsection.3.2.5}%
+\contentsline {subsubsection}{\numberline {3.2.6}Uniqueness - Duplicate Detection}{10}{subsubsection.3.2.6}%
 \contentsline {subsubsection}{\numberline {3.2.7}Statistical Outlier Detection}{11}{subsubsection.3.2.7}%
-\contentsline {subsection}{\numberline {3.3}Quality Issues Summary}{12}{subsection.3.3}%
-\contentsline {subsection}{\numberline {3.4}Target Variable Definition}{12}{subsection.3.4}%
-\contentsline {section}{\numberline {4}Preprocessing, Transformation \& Engineering Data}{13}{section.4}%
-\contentsline {subsection}{\numberline {4.1}Cleaning Pipeline}{13}{subsection.4.1}%
-\contentsline {subsection}{\numberline {4.2}Cleaning Steps \& Justification}{13}{subsection.4.2}%
-\contentsline {subsection}{\numberline {4.3}Outlier Detection \& Handling}{13}{subsection.4.3}%
-\contentsline {subsection}{\numberline {4.4}Feature Transformation \& Justification}{15}{subsection.4.4}%
-\contentsline {subsection}{\numberline {4.5}Feature Engineering}{15}{subsection.4.5}%
-\contentsline {subsection}{\numberline {4.6}Feature Selection \& Justification}{15}{subsection.4.6}%
-\contentsline {subsection}{\numberline {4.7}Train-Validation-Test Split Procedure}{15}{subsection.4.7}%
-\contentsline {subsection}{\numberline {4.8}Data Balancing Strategy}{16}{subsection.4.8}%
-\contentsline {subsection}{\numberline {4.9}Preprocessing Summary}{16}{subsection.4.9}%
-\contentsline {subsection}{\numberline {4.10}Dataset After and Before Preprocessing}{16}{subsection.4.10}%
-\contentsline {section}{\numberline {5}Exploratory Data Analysis (EDA)}{17}{section.5}%
-\contentsline {subsection}{\numberline {5.1}EDA Dashboard}{17}{subsection.5.1}%
-\contentsline {section}{\numberline {6}Model Development}{18}{section.6}%
-\contentsline {section}{\numberline {7}Experiment Tracking with MLflow}{19}{section.7}%
-\contentsline {section}{\numberline {8}Testing}{20}{section.8}%
-\contentsline {subsection}{\numberline {8.1}Software Testing: Unit and Integration}{20}{subsection.8.1}%
-\contentsline {subsection}{\numberline {8.2}Model Testing: Generalization}{20}{subsection.8.2}%
-\contentsline {section}{\numberline {9}Results \& Evaluation}{21}{section.9}%
-\contentsline {subsection}{\numberline {9.1}Model Comparison}{21}{subsection.9.1}%
-\contentsline {subsection}{\numberline {9.2}Error Analysis}{21}{subsection.9.2}%
-\contentsline {subsection}{\numberline {9.3}Classification Report (Best Model)}{21}{subsection.9.3}%
-\contentsline {section}{\numberline {10}Code Automation}{22}{section.10}%
-\contentsline {section}{\numberline {11}Continuous Integration}{23}{section.11}%
-\contentsline {section}{\numberline {12}Interactive Dashboard}{24}{section.12}%
-\contentsline {subsection}{\numberline {12.1}Purpose \& Business Value}{24}{subsection.12.1}%
-\contentsline {subsection}{\numberline {12.2}Technology Stack}{24}{subsection.12.2}%
-\contentsline {subsection}{\numberline {12.3}Key Dashboard Components}{24}{subsection.12.3}%
-\contentsline {section}{\numberline {13}Limitations \& Future Work}{25}{section.13}%
-\contentsline {subsection}{\numberline {13.1}Limitations}{25}{subsection.13.1}%
-\contentsline {subsection}{\numberline {13.2}Future Work}{25}{subsection.13.2}%
-\contentsline {section}{\numberline {14}Team Contributions}{25}{section.14}%
+\contentsline {subsection}{\numberline {3.3}Quality Issues Summary}{11}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}Target Variable Definition}{11}{subsection.3.4}%
+\contentsline {section}{\numberline {4}Preprocessing, Transformation \& Engineering Data}{12}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Cleaning Pipeline}{12}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Cleaning Steps \& Justification}{12}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Outlier Detection \& Handling}{12}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Feature Transformation \& Justification}{14}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Feature Engineering}{14}{subsection.4.5}%
+\contentsline {subsection}{\numberline {4.6}Feature Selection \& Justification}{14}{subsection.4.6}%
+\contentsline {subsection}{\numberline {4.7}Train-Validation-Test Split Procedure}{14}{subsection.4.7}%
+\contentsline {subsection}{\numberline {4.8}Data Balancing Strategy}{15}{subsection.4.8}%
+\contentsline {subsection}{\numberline {4.9}Preprocessing Summary}{15}{subsection.4.9}%
+\contentsline {subsection}{\numberline {4.10}Dataset After and Before Preprocessing}{15}{subsection.4.10}%
+\contentsline {section}{\numberline {5}Exploratory Data Analysis (EDA)}{16}{section.5}%
+\contentsline {subsection}{\numberline {5.1}EDA Dashboard}{16}{subsection.5.1}%
+\contentsline {section}{\numberline {6}Model Development}{17}{section.6}%
+\contentsline {section}{\numberline {7}Experiment Tracking with MLflow}{18}{section.7}%
+\contentsline {section}{\numberline {8}Testing}{19}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Software Testing: Unit and Integration}{19}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Model Testing: Generalization}{19}{subsection.8.2}%
+\contentsline {section}{\numberline {9}Results \& Evaluation}{20}{section.9}%
+\contentsline {subsection}{\numberline {9.1}Model Comparison}{20}{subsection.9.1}%
+\contentsline {subsection}{\numberline {9.2}Error Analysis}{20}{subsection.9.2}%
+\contentsline {subsection}{\numberline {9.3}Classification Report (Best Model)}{20}{subsection.9.3}%
+\contentsline {section}{\numberline {10}Code Automation}{21}{section.10}%
+\contentsline {section}{\numberline {11}Continuous Integration}{22}{section.11}%
+\contentsline {section}{\numberline {12}Interactive Dashboard}{23}{section.12}%
+\contentsline {subsection}{\numberline {12.1}Purpose \& Business Value}{23}{subsection.12.1}%
+\contentsline {subsection}{\numberline {12.2}Technology Stack}{23}{subsection.12.2}%
+\contentsline {subsection}{\numberline {12.3}Key Dashboard Components}{23}{subsection.12.3}%
+\contentsline {section}{\numberline {13}Limitations \& Future Work}{24}{section.13}%
+\contentsline {subsection}{\numberline {13.1}Limitations}{24}{subsection.13.1}%
+\contentsline {subsection}{\numberline {13.2}Future Work}{24}{subsection.13.2}%
+\contentsline {section}{\numberline {14}Team Contributions}{24}{section.14}%

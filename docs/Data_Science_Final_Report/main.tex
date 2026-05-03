@@ -341,56 +341,12 @@ The accepted features to be used after the merging and removal of redundant feat
 \section{Data Validation \& Documentation}
 
 \subsection{Dataset Validation Pipeline}
-\begin{center}
-\renewcommand{\arraystretch}{1.4}
-\begin{tabular}{c c c c}
-  \rowcolor{slate}
-  {\color{white}\small\bfseries Step} &
-  {\color{white}\small\bfseries Description} &
-  {\color{white}\small\bfseries Outcome} \\
-  \rowcolor{lightgray}
-  1 & Schema Validation  & Data type report \\
-  \rowcolor{white}
-  2 & Completeness Check & Missing value report \\
-  \rowcolor{lightgray}
-  3 & Duplicate Detection & Duplicate count \\
-  \rowcolor{white}
-  4 & Descriptive Statistics & Summary stats \\
-  \rowcolor{lightgray}
-  5 & Range \& Outlier Checks & Violation report \\
-  \rowcolor{white}
-  6 & Categorical Analysis  & Category distribution \\
-  \rowcolor{lightgray}
-  7 & Distribution Checks & Distribution plots \\
-  \rowcolor{white}
-  8 & Outlier Analysis  & IQR \& Z-Score  \& Isolation Forest Outliers \\
-
-\end{tabular}
-\end{center}
-
-
-\subsection{Dataset Validation Report}
-\vspace{0.2cm}
-\begin{center}
-\renewcommand{\arraystretch}{1.4}
-\begin{tabular}{c c}
-  \rowcolor{slate}
-  {\color{white}\small\bfseries Metric} &
-  {\color{white}\small\bfseries Value} \\
-  \rowcolor{lightgray} Total checks & 9 \\
-  \rowcolor{white} Checks Passed & 1 \\
-  \rowcolor{lightgray} Checks FAILed & 8 \\
-  \rowcolor{white} Success Rate & 11.1\% \\
-  \rowcolor{lightgray} Full-row duplicates & 57,324 (15.33\%) \\
-\end{tabular}
-\end{center}
-\vspace{0.2cm}
 \begin{figure}[htpb]
 \centering
 \begin{tikzpicture}[
     node distance=0.5cm and 0cm,
     input/.style={cylinder, draw, shape border rotate=90, aspect=0.25, fill=blue!10, text width=4cm, align=center, minimum height=1.5cm, font=\sffamily\bfseries},
-    process/.style={rectangle, draw, fill=orange!10, text width=7.5cm, align=left, rounded corners, minimum height=1.2cm, inner sep=10pt, font=\sffamily},
+    process/.style={rectangle, draw, fill=orange!10, text width=15cm, align=left, rounded corners, minimum height=1.2cm, inner sep=10pt, font=\sffamily},
     output/.style={cylinder, draw, shape border rotate=90, aspect=0.25, fill=green!10, text width=4.5cm, align=center, minimum height=1.5cm, font=\sffamily\bfseries},
     arrow/.style={thick, -{Stealth[length=2.5mm]}}
 ]
@@ -441,7 +397,24 @@ The accepted features to be used after the merging and removal of redundant feat
 \caption{Data Validation Pipeline Execution Flow}
 \label{fig:validation_pipeline}
 \end{figure}
-\newpage
+
+
+\subsection{Dataset Validation Report}
+\vspace{0.2cm}
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{c c}
+  \rowcolor{slate}
+  {\color{white}\small\bfseries Metric} &
+  {\color{white}\small\bfseries Value} \\
+  \rowcolor{lightgray} Total checks & 9 \\
+  \rowcolor{white} Checks Passed & 1 \\
+  \rowcolor{lightgray} Checks FAILed & 8 \\
+  \rowcolor{white} Success Rate & 11.1\% \\
+  \rowcolor{lightgray} Full-row duplicates & 57,324 (15.33\%) \\
+\end{tabular}
+\end{center}
+\vspace{0.2cm}
 % ─────────────────────────────────────────────────────────────
 \subsubsection{Completeness - Missing Values Analysis}
 \vspace{0.2cm}
@@ -573,6 +546,7 @@ price & 25,472.31 & 5,262,458.17 & 0 & 0 & 1,692.39 & 4,400.21 & 10,742.99 & 3.1
 \end{itemize}
 % ─────────────────────────────────────────────────────────────
 
+\newpage
 
 % ─────────────────────────────────────────────────────────────
 \subsubsection{Statistical Outlier Detection}
@@ -646,7 +620,7 @@ PRICE\_TIER = value tier derived from listing \texttt{price}.
 \begin{tikzpicture}[
     node distance=0.8cm and 0cm,
     input/.style={cylinder, draw, shape border rotate=90, aspect=0.25, fill=blue!10, text width=4cm, align=center, minimum height=1.5cm, font=\sffamily\bfseries},
-    process/.style={rectangle, draw, fill=orange!10, text width=7.5cm, align=left, rounded corners, minimum height=1.2cm, inner sep=10pt, font=\sffamily},
+    process/.style={rectangle, draw, fill=orange!10, text width=10cm, align=left, rounded corners, minimum height=1.2cm, inner sep=10pt, font=\sffamily},
     output/.style={cylinder, draw, shape border rotate=90, aspect=0.25, fill=green!10, text width=4.5cm, align=center, minimum height=1.5cm, font=\sffamily\bfseries},
     arrow/.style={thick, -{Stealth[length=2.5mm]}}
 ]
