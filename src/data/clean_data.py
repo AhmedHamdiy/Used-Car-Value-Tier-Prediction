@@ -139,54 +139,15 @@ def clean_model(series: pd.Series) -> pd.Series:
     return series.apply(_clean_one)
 
 
-def clean_vehicle_type(series: pd.Series) -> pd.Series:
-    """Normalise vehicle types using aliases."""
+def clean_with_aliases(series: pd.Series, aliases: dict[str, str]) -> pd.Series:
+    """Normalise categorical values using a provided alias mapping."""
 
     def _clean_one(val):
         if pd.isna(val):
             return np.nan
         s = str(val).strip().lower()
         s = re.sub(r"[-_ ]", "-", s)
-        return VT_ALIASES.get(s, s)
-
-    return series.apply(_clean_one)
-
-
-def clean_fuel_type(series: pd.Series) -> pd.Series:
-    """Normalise fuel types using aliases."""
-
-    def _clean_one(val):
-        if pd.isna(val):
-            return np.nan
-        s = str(val).strip().lower()
-        s = re.sub(r"[-_ ]", "-", s)
-        return FUEL_ALIASES.get(s, s)
-
-    return series.apply(_clean_one)
-
-
-def clean_seller(series: pd.Series) -> pd.Series:
-    """Normalise seller types using aliases."""
-
-    def _clean_one(val):
-        if pd.isna(val):
-            return np.nan
-        s = str(val).strip().lower()
-        s = re.sub(r"[-_ ]", "-", s)
-        return SELLER_ALIASES.get(s, s)
-
-    return series.apply(_clean_one)
-
-
-def clean_gearbox(series: pd.Series) -> pd.Series:
-    """Normalise gearbox types using aliases."""
-
-    def _clean_one(val):
-        if pd.isna(val):
-            return np.nan
-        s = str(val).strip().lower()
-        s = re.sub(r"[-_ ]", "-", s)
-        return GEAR_ALIASES.get(s, s)
+        return aliases.get(s, s)
 
     return series.apply(_clean_one)
 
@@ -323,10 +284,10 @@ def impute_categoricals(df: pd.DataFrame) -> pd.DataFrame:
 
     df["brand"] = clean_brand(df["brand"])
     df["model"] = clean_model(df["model"])
-    df["vehicleType"] = clean_vehicle_type(df["vehicleType"])
-    df["fuelType"] = clean_fuel_type(df["fuelType"])
-    df["seller"] = clean_seller(df["seller"])
-    df["gearbox"] = clean_gearbox(df["gearbox"])
+    df["vehicleType"] = clean_with_aliases(df["vehicleType"], VT_ALIASES)
+    df["fuelType"] = clean_with_aliases(df["fuelType"], FUEL_ALIASES)
+    df["seller"] = clean_with_aliases(df["seller"], SELLER_ALIASES)
+    df["gearbox"] = clean_with_aliases(df["gearbox"], GEAR_ALIASES)
 
     impute_cols = [
         c for c in CATEGORICAL_COLS if c not in ("brand",) and c in df.columns
