@@ -12,6 +12,13 @@ categorical_columns = ['']
 numerical_columns = ['']
 drop_columns = ['']
 
+[features.selection]
+strategy = 'xgboost'
+threshold = 0.01
+k = 20
+report_path = 'reports/feature_importance_report.txt'
+selected_features_path = 'reports/selected_features.txt'
+
 [models]
 results_path = 'reports/model_comparison.csv'
 best_model_path = 'reports/best_model.json'

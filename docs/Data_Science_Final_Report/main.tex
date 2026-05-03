@@ -587,40 +587,110 @@ PRICE\_TIER = value tier derived from listing \texttt{price}.
 \subsection{Feature Transformation \& Justification}
 
 \begin{itemize}
-  \item \textbf{Numeric Imputation (median):} Robust to skewed distributions and outliers common in price.
-  \item \textbf{Categorical Imputation (most\_frequent):} Mode imputation provides a stable default without introducing new categories.
-  \item \textbf{Scaling (StandardScaler):} Improves optimization and comparability for linear models.
-  \item \textbf{One-Hot Encoding:} Strong baseline for mixed-type tabular data reducing collinearity.
-  \item \textbf{Frequency Encoding for brand/model:} Prevents dimensionality explosion from high-cardinality variables while preserving relative frequency information.
+  \item \textbf{Numeric Imputation (median):} Missing numeric values are imputed using the median, which is robust to skewed distributions and outliers common in automotive pricing data.
+  \item \textbf{Categorical Imputation (most\_frequent):} Mode imputation provides a stable default without introducing new categories, maintaining data consistency.
+  \item \textbf{Scaling (StandardScaler):} Numeric features are standardized to zero mean and unit variance, improving optimization convergence and comparability for linear models.
+  \item \textbf{One-Hot Encoding:} Applied to low-cardinality categorical variables to create binary indicator features, providing a strong baseline for mixed-type tabular data while reducing collinearity.
+  \item \textbf{Frequency Encoding:} High-cardinality categorical variables (brand, model) are encoded by their frequency of occurrence in the training set. This prevents dimensionality explosion while preserving relative popularity information that correlates with vehicle value.
 \end{itemize}
 
 \subsection{Feature Engineering}
-In addition to the core fields, we have engineered the following features:
+In addition to the core fields, we engineered the following domain-specific features to capture depreciation patterns and vehicle characteristics:
+
 \begin{itemize}
-  \item \textbf{vehicleAge}: Calculated as ($\text{current year} - \text{year of registration}$) to capture physical depreciation.
-  \item \textbf{kmPerYear}: Normalizes the mileage by the age of the vehicle to represent usage intensity.
-  \item \textbf{km\_power\_ratio}: A proxy for the interaction between usage and engine power to capture non-linear relationships.
-  \item \textbf{log\_kilometer} \& \textbf{log\_power}: Logarithmic transformations to compress right-skewed outliers.
-  \item \textbf{power\_per\_age}: Represents performance relative to the age of the vehicle.
-  \item \textbf{is\_vintage}: A binary indicator for vehicles exceeding the standard vintage age threshold.
-  \item \textbf{is\_automatic}: A direct binary feature extracted from the gearbox field.
+  \item \textbf{vehicleAge}: Calculated as ($\text{current year} - \text{year of registration}$) to capture physical depreciation over time.
+  \item \textbf{kmPerYear}: Annualized mileage ($\text{km} / (\text{age} + 1)$) representing usage intensity and wear patterns.
+  \item \textbf{km\_power\_ratio}: Interaction between mileage and engine power ($\text{km} / (\text{power} + 1)$) capturing the relationship between usage and engine capacity. This emerged as the most important feature (22.9\% importance) in the final model.
+  \item \textbf{log\_km}: Logarithmic transformation of mileage ($\log(1 + \text{km})$) to compress right-skewed outliers and normalize the distribution.
+  \item \textbf{brand\_freq} \& \textbf{model\_freq}: Frequency encoding of brand and model based on their occurrence in the training data, capturing market presence and popularity effects on pricing.
 \end{itemize}
 
+\textbf{Feature Engineering Impact}: The engineered features dominated the top feature importance rankings, with \texttt{km\_power\_ratio} and \texttt{vehicleAge} being the two most predictive features. This validates that domain-informed feature engineering significantly improved model performance by capturing automotive depreciation dynamics.
+
 \subsection{Feature Selection \& Justification}
+We implemented and evaluated five feature selection strategies to identify the optimal subset of predictive features:
+
+\textbf{Selection Strategies Evaluated}:
+\begin{enumerate}
+  \item \textbf{XGBoost Importance}: Model-based selection using XGBoost feature importance scores (threshold $\geq$ 0.01 or top 10 features).
+  \item \textbf{Variance Threshold}: Removes low-variance features (threshold $\geq$ 0.01) that provide minimal discriminative power.
+  \item \textbf{Correlation-based}: Selects features with strong absolute correlation to the target (threshold $\geq$ 0.05).
+  \item \textbf{SelectKBest (f\_classif)}: Statistical selection using ANOVA F-values to identify top k features.
+  \item \textbf{Mutual Information}: Information-theoretic selection capturing non-linear dependencies between features and target.
+\end{enumerate}
+
+\textbf{Feature Selection Comparison}: Figure \ref{fig:feature_selection} presents the MLflow comparison of different feature selection strategies applied to Random Forest with undersampling.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/feature_selection.png}
+\caption{Feature Selection Strategy Comparison (Random Forest Undersampling)}
+\label{fig:feature_selection}
+\end{figure}
+
+\textbf{Comparison Results}: Table \ref{tab:feature_selection_comparison} summarizes the performance of each feature selection strategy.
+
+\begin{table}[ht]
+\centering
+\caption{Feature Selection Strategy Performance Comparison}
+\label{tab:feature_selection_comparison}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{l c c c c c}
+\rowcolor{slate}
+{\color{white}\small\bfseries Selection Method} &
+{\color{white}\small\bfseries Luxury Recall} &
+{\color{white}\small\bfseries Val F1} &
+{\color{white}\small\bfseries Test F1} &
+{\color{white}\small\bfseries Severe Error} &
+{\color{white}\small\bfseries Features} \\
+\rowcolor{teal}
+\textbf{XGBoost Importance} & \textbf{0.8796} & 0.8425 & 0.8269 & 0.0044 & Reduced \\
+\rowcolor{white}
+None (All Features) & 0.8762 & 0.8414 & 0.8217 & 0.0053 & All \\
+\rowcolor{lightgray}
+Variance Threshold & 0.8745 & 0.8153 & 0.8130 & 0.0046 & Reduced \\
+\rowcolor{white}
+Correlation-based & 0.8667 & 0.8228 & 0.8147 & 0.0054 & Reduced \\
+\end{tabular}
+\end{table}
+
+\textbf{Key Findings}:
 \begin{itemize}
-  \item We applied a model-based feature selection method using a \textcolor{teal}{Random Forest} classifier to identify the most predictive features while accounting for non-linear relationships and interactions.
-  \item The threshold was set to the median importance to retain features that contribute above-average predictive power.
-  \item This method is more robust than simple variance or correlation-based filters, especially in the presence of engineered features that may have complex relationships with the target variable.
-  \item Outcome: The selection process resulted in the removal of low-importance features, reducing noise and improving model generalization.
+  \item \textbf{XGBoost Importance} achieved the highest luxury recall (87.96\%), outperforming using all features by 0.34 percentage points while reducing dimensionality.
+  \item \textbf{No Selection} (using all features) performed competitively with 87.62\% luxury recall, suggesting the model can handle the full feature set effectively.
+  \item \textbf{Variance Threshold} maintained strong performance (87.45\% luxury recall) with moderate feature reduction.
+  \item \textbf{Correlation-based} selection underperformed (86.67\% luxury recall), likely missing non-linear feature-target relationships critical for this problem.
 \end{itemize}
+
+\textbf{Conclusion}: Model-based feature selection using XGBoost importance was selected as the optimal strategy, providing the best balance of performance (highest luxury recall) and efficiency (reduced feature space). This approach effectively captures non-linear relationships and interactions that are critical for accurate price tier prediction, while removing noisy or redundant features that could degrade model generalization.
 
 
 \subsection{Train-Validation-Test Split Procedure}
+We employed a three-way data splitting strategy to ensure robust model development and unbiased evaluation:
+
 \begin{itemize}
-  \item \textbf{Train-Test Split:} An 80/20 stratified split was performed to ensure that the class distribution of the target variable is preserved across both sets, which is crucial for imbalanced classification tasks.
-  \item \textbf{Cross-Validation:} A 5-fold stratified cross-validation strategy was implemented on the training set to provide robust estimates of model performance and to mitigate variance in
-  \item the presence of class imbalance, ensuring that each fold maintains the same proportion of classes as the overall dataset.
+  \item \textbf{Initial Split (Train + Val vs Test):} The full dataset was split 80/20 using stratified sampling to create a training/validation set (80\%) and a held-out test set (20\%). Stratification ensures the class distribution (Budget: 45.17\%, Mid-Range: 34.42\%, Luxury: 20.41\%) is preserved across all splits, which is crucial for imbalanced classification tasks.
+  
+  \item \textbf{Secondary Split (Train vs Validation):} The 80\% training/validation portion was further split 75/25 to create the final training set (60\% of total data) and validation set (20\% of total data), again using stratified sampling.
+  
+  \item \textbf{Validation Strategy:} Models are trained on the training set, hyperparameters are tuned using the validation set, and final performance is evaluated on the held-out test set. This prevents data leakage and ensures unbiased estimates of generalization performance.
 \end{itemize}
+
+\textbf{Final Data Split Proportions}:
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{l c c}
+  \rowcolor{slate}
+  {\color{white}\small\bfseries Dataset} &
+  {\color{white}\small\bfseries Proportion} &
+  {\color{white}\small\bfseries Purpose} \\
+  \rowcolor{lightgray} Training Set & 60\% & Model training and fitting \\
+  \rowcolor{white} Validation Set & 20\% & Hyperparameter tuning and model selection \\
+  \rowcolor{lightgray} Test Set & 20\% & Final unbiased performance evaluation \\
+\end{tabular}
+\end{center}
+
+\textbf{Stratification Benefits}: By preserving the original class distribution across all splits, we ensure that minority class (Luxury) representation is maintained, preventing scenarios where rare classes might be underrepresented in any subset.
 
 \newpage
 \subsection{Data Balancing Strategy}
