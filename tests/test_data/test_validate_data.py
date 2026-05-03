@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from validate_data import (
+from src.data.validate_data import (
     CATEGORICAL_RULES,
     EXPECTED_COLUMNS,
     EXPECTED_DTYPES,
