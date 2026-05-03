@@ -9,16 +9,11 @@
 =================================================================
 
   [FAIL] ❌ Schema Check
-       ⚠️  Column 'brand': expected dtype 'str', got 'object'
-       ⚠️  Column 'model': expected dtype 'str', got 'object'
-       ⚠️  Column 'vehicleType': expected dtype 'str', got 'object'
-       ⚠️  Column 'gearbox': expected dtype 'str', got 'object'
-       ⚠️  Column 'fuelType': expected dtype 'str', got 'object'
-       ⚠️  Column 'yearOfRegistration': expected dtype 'int64', got 'float64'
-       ⚠️  Column 'seller': expected dtype 'str', got 'object'
-       ⚠️  Column 'dataSource': expected dtype 'str', got 'object'
-       ⚠️  Column 'price': expected dtype 'int64', got 'float64'
-       ⚠️  Column 'price_tier': expected dtype 'str', got 'object'
+       [WARN]  Column 'yearOfRegistration': expected dtype 'int64', got 'float64'
+       [WARN]  Column 'seller': expected dtype 'str', got 'object'
+       [WARN]  Column 'dataSource': expected dtype 'str', got 'object'
+       [WARN]  Column 'price': expected dtype 'int64', got 'float64'
+       [WARN]  Column 'price_tier': expected dtype 'str', got 'object'
 
   [FAIL] ❌ Completeness Check
  📊 Overall Completeness: 97.5%
@@ -35,46 +30,45 @@
  - dataSource: 100.00% complete (0.00% missing)
  - price: 100.00% complete (0.00% missing)
  - price_tier: 100.00% complete (0.00% missing)
-       ⚠️  Required column 'price_tierseller' is missing.
-       ⚠️  Column 'model': 5.48% missing (threshold 5%)
-       ⚠️  Column 'vehicleType': 10.12% missing (threshold 5%)
-       ⚠️  Column 'gearbox': 5.40% missing (threshold 5%)
-       ⚠️  Column 'fuelType': 8.93% missing (threshold 5%)
+       [WARN]  Column 'model': 5.48% missing (threshold 5%)
+       [WARN]  Column 'vehicleType': 10.12% missing (threshold 5%)
+       [WARN]  Column 'gearbox': 5.40% missing (threshold 5%)
+       [WARN]  Column 'fuelType': 8.93% missing (threshold 5%)
 
   [FAIL] ❌ Uniqueness Check
-       ⚠️  Full-row duplicates: 57324 (15.33%)
+       [WARN]  Full-row duplicates: 57324 (15.33%)
 
   [FAIL] ❌ Validity Check
-       ⚠️  Column 'price': 26219 value(s) below min (500)
-       ⚠️  Column 'price': 54 value(s) above max (5000000)
-       ⚠️  Column 'power': 40903 value(s) below min (5)
-       ⚠️  Column 'power': 85 value(s) above max (5000)
-       ⚠️  Column 'kilometer': 13 value(s) above max (300000)
-       ⚠️  Column 'yearOfRegistration': 68 value(s) below min (1900)
-       ⚠️  Column 'yearOfRegistration': 114 value(s) above max (2026)
-       ⚠️   Column 'seller': invalid categorical values,
+       [WARN]  Column 'price': 26219 value(s) below min (500)
+       [WARN]  Column 'price': 54 value(s) above max (5000000)
+       [WARN]  Column 'power': 40903 value(s) below min (5)
+       [WARN]  Column 'power': 85 value(s) above max (5000)
+       [WARN]  Column 'kilometer': 13 value(s) above max (300000)
+       [WARN]  Column 'yearOfRegistration': 68 value(s) below min (1900)
+       [WARN]  Column 'yearOfRegistration': 114 value(s) above max (2026)
+       [WARN]   Column 'seller': invalid categorical values,
                 found: ['gewerblich', 'privat']
-       ⚠️   Column 'gearbox': invalid categorical values,
+       [WARN]   Column 'gearbox': invalid categorical values,
                 found: ['automatik', 'manuell']
-       ⚠️   Column 'fuelType': invalid categorical values,
+       [WARN]   Column 'fuelType': invalid categorical values,
                 found: ['andere', 'benzin', 'electric/diesel', 'electric/gasoline', 'elektro']
-       ⚠️   Column 'vehicleType': invalid categorical values,
+       [WARN]   Column 'vehicleType': invalid categorical values,
                 found: ['andere', 'bus', 'cabrio', 'kleinwagen', 'kombi', 'limousine', 'station wagon', 'suv/off-road/pick-up']
 
   [FAIL] ❌ Outliers_ZScore Check
-       ⚠️  Column 'price': 40 Z-Score outlier(s) (|z| > 3.0) — 0.01% of values
-       ⚠️  Column 'power': 385 Z-Score outlier(s) (|z| > 3.0) — 0.10% of values
-       ⚠️  Column 'kilometer': 290 Z-Score outlier(s) (|z| > 3.0) — 0.08% of values
-       ⚠️  Column 'yearOfRegistration': 173 Z-Score outlier(s) (|z| > 3.0) — 0.05% of values
+       [WARN]  Column 'price': 40 Z-Score outlier(s) (|z| > 3.0) — 0.01% of values
+       [WARN]  Column 'power': 385 Z-Score outlier(s) (|z| > 3.0) — 0.10% of values
+       [WARN]  Column 'kilometer': 290 Z-Score outlier(s) (|z| > 3.0) — 0.08% of values
+       [WARN]  Column 'yearOfRegistration': 173 Z-Score outlier(s) (|z| > 3.0) — 0.05% of values
 
   [FAIL] ❌ Outliers_IQR Check
-       ⚠️  Column 'price': 27980 IQR outlier(s) (outside [-11883.5, 24318.9]) -> 7.48%
-       ⚠️  Column 'power': 11035 IQR outlier(s) (outside [-50.0, 270.0]) -> 2.95%
-       ⚠️  Column 'kilometer': 15397 IQR outlier(s) (outside [25000.0, 225000.0]) -> 4.12%
-       ⚠️  Column 'yearOfRegistration': 8289 IQR outlier(s) (outside [1985.5, 2021.5]) -> 2.22%
+       [WARN]  Column 'price': 27980 IQR outlier(s) (outside [-11883.5, 24318.9]) -> 7.48%
+       [WARN]  Column 'power': 11035 IQR outlier(s) (outside [-50.0, 270.0]) -> 2.95%
+       [WARN]  Column 'kilometer': 15397 IQR outlier(s) (outside [25000.0, 225000.0]) -> 4.12%
+       [WARN]  Column 'yearOfRegistration': 8289 IQR outlier(s) (outside [1985.5, 2021.5]) -> 2.22%
 
   [FAIL] ❌ Outliers_IsolationForest Check
-       ⚠️  Isolation Forest detected 44875 outlier(s) (12.00%) across ['price', 'power', 'kilometer', 'yearOfRegistration']
+       [WARN]  Isolation Forest detected 44875 outlier(s) (12.00%) across ['price', 'power', 'kilometer', 'yearOfRegistration']
 
   [FAIL] ❌ Distribution Check
 📊 Stats for price:
@@ -97,10 +91,10 @@ Kurtosis: 1.7547 (Leptokurtic (heavy tails))
 Q1: 1999.0 | Q3: 2008.0 | Min: 1000.0 | Max: 9999.0
 Skewness: 72.3451 (Positive Skew (right tail))
 Kurtosis: 5702.44 (Leptokurtic (heavy tails))
-       ⚠️  Column 'price': KS test p=0.0000 < 0.05(distribution differs from normal)
-       ⚠️  Column 'power': KS test p=0.0000 < 0.05(distribution differs from normal)
-       ⚠️  Column 'kilometer': KS test p=0.0000 < 0.05(distribution differs from normal)
-       ⚠️  Column 'yearOfRegistration': KS test p=0.0000 < 0.05(distribution differs from normal)
+       [WARN]  Column 'price': KS test p=0.0000 < 0.05(distribution differs from normal)
+       [WARN]  Column 'power': KS test p=0.0000 < 0.05(distribution differs from normal)
+       [WARN]  Column 'kilometer': KS test p=0.0000 < 0.05(distribution differs from normal)
+       [WARN]  Column 'yearOfRegistration': KS test p=0.0000 < 0.05(distribution differs from normal)
 
   [PASS] ✅ Relationships Check
 

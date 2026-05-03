@@ -11,7 +11,10 @@ MERGED_DATA_PATH = config["data"]["merged_data_path"]
 
 CLEAN_DATA_PATH = config["data"]["clean_data_path"]
 
-VALIDATION_REPORT_PATH = config["data"]["validation_report_path"]
+RAW_VALIDATION_REPORT_PATH = config["data"]["raw_validation_report_path"]
+PREPROCESSED_VALIDATION_REPORT_PATH = config["data"][
+    "preprocessed_validation_report_path"
+]
 
 
 if __name__ == "__main__":
@@ -27,4 +30,7 @@ if __name__ == "__main__":
     print(f"Loaded dataset: {df.shape[0]:,} rows, {df.shape[1]} columns\n")
     validator = DataValidator()
     df["kilometer"] = df["kilometer"].astype(float)
-    validator.run_all(df, output_file=VALIDATION_REPORT_PATH)
+    if args[0] == "raw":
+        validator.run_all(df, output_file=RAW_VALIDATION_REPORT_PATH)
+    elif args[0] == "clean":
+        validator.run_all(df, output_file=PREPROCESSED_VALIDATION_REPORT_PATH)

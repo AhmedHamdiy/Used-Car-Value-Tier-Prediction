@@ -47,7 +47,6 @@ from src.data.clean_data import (
     validate_schema,
 )
 
-# Re-create constants to satisfy existing tests
 MIN_PRICE = SCHEMA["price"]["min"]
 MAX_PRICE = SCHEMA["price"]["max"]
 POWER_MIN = SCHEMA["power"]["min"]
@@ -60,6 +59,7 @@ def clean_fuel_type(series): return clean_with_aliases(series, FUEL_ALIASES)
 def clean_gearbox(series): return clean_with_aliases(series, GEAR_ALIASES)
 def clean_seller(series): return clean_with_aliases(series, SELLER_ALIASES)
 def clean_vehicle_type(series): return clean_with_aliases(series, VT_ALIASES)
+
 
 
 # ─────────────────────────── helpers ────────────────────────────
