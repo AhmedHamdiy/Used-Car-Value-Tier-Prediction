@@ -94,8 +94,7 @@ class CarsSpider(scrapy.Spider):
             try:
                 next_data = json.loads(next_data_text)
                 listings = (
-                    next_data.get("props", {}).get("pageProps", {})
-                    .get("listings", [])
+                    next_data.get("props", {}).get("pageProps", {}).get("listings", [])
                 )
                 links = [
                     listing.get("url", "")
@@ -103,8 +102,7 @@ class CarsSpider(scrapy.Spider):
                     if isinstance(listing, dict) and listing.get("url")
                 ]
             except json.JSONDecodeError:
-                self.logger.warning("Page %s: could not decode"
-                                    "__NEXT_DATA__.", page)
+                self.logger.warning("Page %s: could not decode" "__NEXT_DATA__.", page)
 
         # Fallback strategy: parse rendered anchors
         if not links:
@@ -157,8 +155,7 @@ class CarsSpider(scrapy.Spider):
         # ── Price ──────────────────────────────────────────
         # Remove the superscript footnote before grabbing text
         item["price"] = (
-            response.css("span.PriceInfo_price__XU0aF::text")
-            .get(default="").strip()
+            response.css("span.PriceInfo_price__XU0aF::text").get(default="").strip()
         )
 
         # ── Overview quick-facts:
@@ -175,8 +172,7 @@ class CarsSpider(scrapy.Spider):
 
         # Fallback: get year from detail section if overview missed it
         if not item.get("year"):
-            item["year"] = self._get_detail_field(response,
-                                                  "First registration")
+            item["year"] = self._get_detail_field(response, "First registration")
 
         yield item
 
