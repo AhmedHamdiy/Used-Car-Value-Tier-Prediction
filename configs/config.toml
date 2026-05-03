@@ -7,10 +7,41 @@ processed_data_path = 'data/processed/features.csv'
 validation_report_path = 'reports/results/validation_report'
 
 [features]
-features_columns = ['']
-categorical_columns = ['']
-numerical_columns = ['']
-drop_columns = ['']
+features_columns = [
+    "power",
+    "kilometer",
+    "vehicleAge",
+    "kmPerYear",
+    "km_power_ratio",
+    "log_km",
+    "brand_freq",
+    "model_freq",
+]
+categorical_columns = [
+    "vehicleType",
+    "gearbox",
+    "fuelType",
+    "seller",
+    "dataSource",
+]
+numerical_columns = [
+    "power",
+    "kilometer",
+    "vehicleAge",
+    "kmPerYear",
+    "km_power_ratio",
+    "log_km",
+    "brand_freq",
+    "model_freq",
+]
+drop_columns = ["brand", "model", "yearOfRegistration", "price", "price_tier"]
+
+[features.selection]
+strategy = 'xgboost'
+threshold = 0.01
+k = 20
+report_path = 'reports/feature_importance_report.txt'
+selected_features_path = 'reports/selected_features.txt'
 
 [models]
 results_path = 'reports/model_comparison.csv'

@@ -15,10 +15,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-from src.models.select_model import (
+from src.models.select_model import (  # noqa: E402
     ModelSelector,
     SelectionCriteria,
-    select_best_model_from_results,
 )
 
 
@@ -207,7 +206,7 @@ def main():
         print(f"{'=' * 80}")
         print(f"Model: {best['model_name']}")
         print(f"Dataset: {best['dataset_type']}")
-        print(f"\nMetrics:")
+        print("\nMetrics:")
         for metric, value in best["metrics"].items():
             print(f"  {metric:25s}: {value:.4f}")
         print(f"{'=' * 80}")

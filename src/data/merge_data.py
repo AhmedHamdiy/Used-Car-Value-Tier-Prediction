@@ -54,7 +54,7 @@ def extract_year(registration):
     if pd.isna(registration):
         return None
     match = pd.Series(str(registration)).str.extract(r"(\d{4})")
-    return int(match[0]) if not match.empty else None
+    return int(match.iloc[0, 0]) if not match.empty else None
 
 
 def price_tier(price: float) -> str:

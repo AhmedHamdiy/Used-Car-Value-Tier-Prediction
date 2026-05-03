@@ -78,7 +78,8 @@ REQUIRED_COLUMNS: list[str] = [
     "fuelType",
     "gearbox",
     "dataSource",
-    "price_tier" "seller",
+    "price_tier",
+    "seller",
 ]
 
 FRESHNESS_THRESHOLD_DAYS = 365 * 2  # warn if newest record > 2 years old

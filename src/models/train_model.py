@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pd
 import warnings
 from datetime import datetime
-from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 from sklearn.model_selection import train_test_split, ParameterSampler
@@ -476,6 +475,10 @@ def train_all_models(
     datasets: Optional[List[str]] = None,
     experiment_name: str = "used_car_price_tier",
     mlflow_tracking_uri: Optional[str] = None,
+    feature_selection_strategy: Optional[str] = None,
+    feature_selection_threshold: Optional[float] = None,
+    feature_selection_k: Optional[int] = None,
+    feature_selection_report_path: Optional[str] = None,
 ) -> pd.DataFrame:
     """
     Train all specified models on all specified datasets.
@@ -487,6 +490,11 @@ def train_all_models(
         datasets: List of dataset types (default: ["none", "smote", "undersample"])
         experiment_name: MLflow experiment name
         mlflow_tracking_uri: MLflow tracking URI
+        feature_selection_strategy: Feature selection strategy
+            (xgboost, variance, correlation, k_best, mutual_info)
+        feature_selection_threshold: Threshold for feature selection
+        feature_selection_k: Number of features to select (for k_best, mutual_info)
+        feature_selection_report_path: Path to save feature selection report
 
     Returns:
         DataFrame with all results
@@ -499,6 +507,37 @@ def train_all_models(
     # Prepare data
     print("Preparing data...")
     X_train, X_val, X_test, y_train, y_val, y_test = prepare_data(df)
+
+    # Apply feature selection if requested
+    feature_selector = None
+    if feature_selection_strategy:
+        try:
+            from src.features.feature_selection import select_features
+
+            print(f"\nApplying feature selection: {feature_selection_strategy}")
+            X_train, X_val, X_test, feature_selector = select_features(
+                X_train=X_train,
+                y_train=y_train,
+                X_val=X_val,
+                X_test=X_test,
+                strategy=feature_selection_strategy,
+                threshold=feature_selection_threshold,
+                k=feature_selection_k,
+                random_state=42,
+            )
+
+            # Generate and save feature selection report
+            if feature_selector:
+                report = feature_selector.get_feature_importance_report()
+                print(report)
+
+                if feature_selection_report_path:
+                    feature_selector.export_selected_features(
+                        feature_selection_report_path
+                    )
+        except Exception as e:
+            print(f"Warning: Feature selection failed: {e}")
+            print("Continuing without feature selection...")
 
     # Create resampled datasets
     print("Creating resampled datasets...")
