@@ -70,7 +70,7 @@
 
 ## 5. Bonus Opportunities (10%)
 - [ ] Deploy model to a public endpoint (5%) [cite: 124].
-- [ ] Deliver an interactive dashboard (Streamlit, Power BI, etc.) for stakeholders (5%) [cite: 124].
+- [x] Deliver an interactive dashboard (Streamlit, Power BI, etc.) for stakeholders (5%) [cite: 124].
 
 ## 6. Technical Stack Requirements
 - [x] Language: **Python** [cite: 107].
