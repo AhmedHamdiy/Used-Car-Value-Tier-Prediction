@@ -49,7 +49,7 @@ lint:
 
 test:
 	@echo "Running unit and integration tests with coverage..."
-	poetry run pytest tests/
+	poetry run pytest tests/ --cov=src --cov-report=term-missing --cov-report=html
 	@echo "Detailed coverage report generated in htmlcov/index.html"
 
 check: format lint

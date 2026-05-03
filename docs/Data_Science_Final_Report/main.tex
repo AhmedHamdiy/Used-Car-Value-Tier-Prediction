@@ -747,6 +747,37 @@ The standard XGBoost model achieved an overall accuracy of 86\% on a test suppor
 \newpage
 \section{Interactive Dashboard}
 
+\subsection{Purpose \& Business Value}
+To ensure the machine learning model delivers practical value, an interactive web dashboard was developed. It bridges the gap between the complex predictive model and non-technical stakeholders.\\
+\\ It provides an intuitive interface that allows users to instantly classify incoming vehicle inventory into pricing tiers without requiring any programming knowledge.
+
+\subsection{Technology Stack}
+\begin{itemize}
+  \item \textbf{Web Framework:} Streamlit (chosen for its rapid UI development and seamless integration with Python data science libraries).
+  \item \textbf{Visualization:} Plotly Express (utilized for rendering interactive, stakeholder-friendly charts).
+  \item \textbf{Backend/Inference:} Pandas (for on-the-fly data manipulation) and the saved Machine Learning model (for real-time predictions).
+\end{itemize}
+
+\subsection{Key Dashboard Components}
+The dashboard is structurally designed to guide the stakeholder from high-level market metrics down to specific vehicle predictions and model explainability.
+
+\begin{enumerate}
+  \item \textbf{Executive Summary Metrics:}
+  The top of the dashboard displays dynamic, high-level KPIs, including the total volume of historical vehicles, average market price, and the current luxury market share. This provides immediate macro-level context.
+
+  \item \textbf{Interactive "What-If" Controls:}
+  A sidebar interface allows users to input specific vehicle parameters (Brand, Engine Power, Mileage, Registration Year, and Transmission Type). This acts as a sandbox for stakeholders to test hypothetical inventory scenarios.
+
+  \item \textbf{Live Prediction Engine:}
+  The core of the application captures the user's input, automatically replicates the exact feature engineering steps from the training phase (e.g., calculating \texttt{vehicleAge} and applying frequency encodings), and queries the trained model to output a real-time Value Tier prediction (Budget, Mid-Range, or Luxury).
+
+  \item \textbf{Model Insights \& Explainability:}
+  To prevent the model from acting as a "black box" and to build trust with business users, the dashboard features a dynamic Feature Importance chart. This visualizes exactly which vehicle attributes have the strongest influence on the algorithm's pricing decisions.
+
+    \item \textbf{Model Selection \& Comparasions:}
+    A comparison section allows users to view different model versions (e.g., with or without resampling) to see how their performance and predictions vary.
+\end{enumerate}
+
 \newpage
 \section{Limitations \& Future Work}
 \subsection{Limitations}

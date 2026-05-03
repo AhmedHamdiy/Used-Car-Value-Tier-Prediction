@@ -30,10 +30,17 @@ def load_feature_importance():
     # We sort ascending=True because Plotly builds horizontal bar charts from the bottom up
     return df.sort_values(by="importance", ascending=True)
 
+@st.cache_data
+def load_model_comparisons():
+    # Update the path if your CSV is in a different folder
+    df = pd.read_csv("reports/model_comparison.csv")
+    return df
 
+# Load the comparison data alongside your other data
 df = load_data()
 model = load_model()
 fi_df = load_feature_importance()
+comp_df = load_model_comparisons()
 
 # -----------------------------------------------------------------------------
 # 2. The Sidebar: Interactive "What-If" Controls
@@ -194,14 +201,13 @@ plot_df = df[df['brand'] == input_brand]
 if plot_df.empty:
     st.warning(f"No pricing data available in the dataset for {input_brand.title()}.")
 else:
-    # 3. THE FIX: Sample the data!
     # Take a maximum of 1,500 points. This keeps the dashboard lightning fast
     # and prevents the browser's graphing engine from silently crashing.
     sample_size = min(1500, len(plot_df))
     plot_df = plot_df.sample(n=sample_size, random_state=42)
 
     try:
-        # 4. Create the chart
+        # 3. Create the chart
         # Note: If you renamed these columns in Phase 1 (e.g., to 'kilometers' or 'price_log'),
         # update x="kilometer" and y="price" to match your CSV perfectly.
         fig = px.scatter(
@@ -214,7 +220,7 @@ else:
             opacity=0.6
         )
 
-        # 5. Render the chart
+        # 4. Render the chart
         st.plotly_chart(fig, width='stretch', key="unique_chart_name_here")
 
     except Exception as e:
@@ -262,3 +268,78 @@ fig_importance.update_layout(coloraxis_showscale=False)
 
 # Render the chart
 st.plotly_chart(fig_importance, width='stretch')
+
+# -----------------------------------------------------------------------------
+# 7. Model Selection & Business Performance
+# -----------------------------------------------------------------------------
+st.divider()
+st.subheader("🏆 Model Selection & Business Impact")
+
+st.markdown("""
+To ensure the most accurate pricing predictions, we evaluated several machine learning algorithms.
+Beyond standard accuracy, we optimized for two critical business metrics:
+* **Luxury Detection Rate:** The model's ability to successfully identify high-margin premium vehicles.
+* **Critical Error Rate:** The percentage of severe pricing mistakes (e.g., misclassifying a 'Luxury' car as 'Budget').
+""")
+
+# 1. Map technical terms to business-friendly language
+model_map = {
+    'xgboost': 'XGBoost (Advanced Ensemble)',
+    'decision_tree': 'Decision Tree',
+    'random_forest': 'Random Forest',
+    'log_reg': 'Logistic Regression',
+    'baseline': 'Baseline (Manual Rule)'
+}
+data_map = {
+    'none': 'Standard',
+    'smote': 'AI Augmented (SMOTE)',
+    'undersample': 'Balanced Data'
+}
+
+# 2. Apply mappings and convert decimals to percentages
+comp_df['Algorithm'] = comp_df['model'].map(model_map)
+comp_df['Data Strategy'] = comp_df['dataset'].map(data_map)
+comp_df['Overall Accuracy'] = comp_df['test_f1'] * 100
+comp_df['Luxury Detection Rate'] = comp_df['luxury_recall'] * 100
+comp_df['Critical Error Rate'] = comp_df['severe_misclassification_rate'] * 100
+
+# 3. Sort so the best models appear first
+comp_df = comp_df.sort_values('Overall Accuracy', ascending=False)
+
+# Create two columns layout
+col_chart, col_table = st.columns([1.2, 1])
+
+with col_chart:
+    # Grouped bar chart comparing the algorithms
+    fig_comp = px.bar(
+        comp_df,
+        x="Algorithm",
+        y="Overall Accuracy",
+        color="Data Strategy",
+        barmode="group",
+        title="Predictive Accuracy by Algorithm",
+        labels={"Overall Accuracy": "Overall Accuracy (%)"},
+        text_auto='.1f' # Display 1 decimal place on bars
+    )
+
+    # Set Y-axis to 100% and move the legend inside the chart to save space
+    fig_comp.update_layout(
+        yaxis_range=[0, 100],
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+    )
+
+    st.plotly_chart(fig_comp, width='stretch', key="business_model_comparison")
+
+with col_table:
+    st.write("**Detailed Business Metrics**")
+
+    # Isolate only the clean, business-friendly columns for the table
+    display_df = comp_df[['Algorithm', 'Data Strategy', 'Overall Accuracy', 'Luxury Detection Rate', 'Critical Error Rate']].copy()
+
+    # Format as clean string percentages (e.g., "85.9%")
+    display_df['Overall Accuracy'] = display_df['Overall Accuracy'].map("{:.1f}%".format)
+    display_df['Luxury Detection Rate'] = display_df['Luxury Detection Rate'].map("{:.1f}%".format)
+    display_df['Critical Error Rate'] = display_df['Critical Error Rate'].map("{:.2f}%".format)
+
+    # Display the final pristine table
+    st.dataframe(display_df, width='stretch', hide_index=True)
