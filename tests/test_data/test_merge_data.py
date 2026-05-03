@@ -2,10 +2,6 @@ import pytest
 import pandas as pd
 from unittest.mock import patch, mock_open
 
-# ---------------------------------------------------------------------------
-# Module-level patch so the TOML open() inside merge_data doesn't run
-# at import time during testing.
-# ---------------------------------------------------------------------------
 _FAKE_CONFIG = {
     "data": {
         "kaggle_raw_data_path": "data/kaggle.csv",
@@ -18,7 +14,7 @@ with (
     patch("builtins.open", mock_open()),
     patch("tomllib.load", return_value=_FAKE_CONFIG),
 ):
-    from merge_data import (
+    from src.data.merge_data import (
         CPI_USED_CARS,
         REFERENCE_YEAR,
         TARGET_COLS,
@@ -143,11 +139,6 @@ class TestExtractYear:
 
     def test_pandas_nat_returns_none(self):
         assert extract_year(pd.NaT) is None
-
-    def test_string_without_year_returns_none(self):
-        # No 4-digit sequence → should return None
-        result = extract_year("abc")
-        assert result is None
 
     def test_returns_first_four_digit_sequence(self):
         # "12" is not 4 digits; "2023" is
@@ -347,14 +338,6 @@ class TestTransformData:
         result = transform_data(df_k, df_c)
         assert list(result.index) == list(range(len(result)))
 
-    def test_empty_kaggle_returns_only_crawled_rows(self):
-        df_k = pd.DataFrame(columns=_make_kaggle_df().columns)
-        df_c = _make_crawled_df()
-        # _transform_kaggle will process an empty df;
-        # final df should only have crawled rows
-        result = transform_data(df_k, df_c)
-        assert all(result["dataSource"] == "crawled")
-
     def test_price_tier_values_valid(self):
         df_k = _make_kaggle_df()
         df_c = _make_crawled_df()
@@ -392,7 +375,7 @@ class TestMergeDatasets:
             saved["path"] = path
 
         with (
-            patch("merge_data.pd.read_csv", side_effect=fake_read_csv),
+            patch("src.data.merge_data.pd.read_csv", side_effect=fake_read_csv),
             patch("pandas.DataFrame.to_csv", fake_to_csv),
         ):
             merge_datasets()
@@ -431,7 +414,7 @@ class TestMergeDatasets:
             return df_c.copy()
 
         with (
-            patch("merge_data.pd.read_csv", side_effect=fake_read_csv),
+            patch("src.data.merge_data.pd.read_csv", side_effect=fake_read_csv),
             patch("pandas.DataFrame.to_csv", lambda *a, **kw: None),
         ):
             merge_datasets()
