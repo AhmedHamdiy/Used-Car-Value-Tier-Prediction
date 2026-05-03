@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pd
 import warnings
 from datetime import datetime
-from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 from sklearn.model_selection import train_test_split, ParameterSampler

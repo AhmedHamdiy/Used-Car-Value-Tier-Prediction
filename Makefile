@@ -44,7 +44,7 @@ format:
 
 lint:
 	@echo "Linting code with Flake8..."
-	poetry run flake8 $(SRC_DIR) $(SCRIPTS_DIR)
+	poetry run flake8 $(SRC_DIR) $(SCRIPTS_DIR) --max-line-length=100
 	@echo "Code linting complete!"
 
 test:
