@@ -25,7 +25,7 @@ validate_raw:
 
 validate_preprocessed:
 	@echo "Validating preprocessed data..."
-	poetry run python scripts/data/validate_data.py preprocessed
+	poetry run python scripts/data/validate_data.py clean
 
 clean:
 	@echo "Cleaning data..."
@@ -55,7 +55,7 @@ test:
 check: format lint
 	@echo "Code quality checks passed!"
 
-pipeline: merge validate_raw clean check delete
+pipeline: merge validate_raw clean validate_preprocessed check delete
 	@echo "Full data pipeline executed successfully!"
 
 train:
@@ -83,8 +83,8 @@ select-features:
 	poetry run python $(SCRIPTS_DIR)/features/select_features.py --strategy xgboost
 	@echo "Feature selection complete!"
 
-full-pipeline: merge validate_raw clean train select-model
+full-pipeline: merge validate_raw clean validate_preprocessed train select-model
 	@echo "Full ML pipeline executed successfully!"
 
-full-pipeline-fs: merge validate_raw clean select-features train-fs select-model
+full-pipeline-fs: merge validate_raw clean validate_preprocessed select-features train-fs select-model
 	@echo "Full ML pipeline with feature selection executed successfully!"

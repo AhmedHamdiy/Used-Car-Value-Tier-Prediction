@@ -1,0 +1,101 @@
+
+=================================================================
+  DATA VALIDATION REPORT
+=================================================================
+  Total checks : 9
+  Passed       : 1
+  Failed       : 8
+  Success rate : 11.1%
+=================================================================
+
+  [FAIL] ❌ Schema Check
+       [WARN]  Column 'yearOfRegistration': expected dtype 'int64', got 'float64'
+       [WARN]  Column 'seller': expected dtype 'str', got 'object'
+       [WARN]  Column 'dataSource': expected dtype 'str', got 'object'
+       [WARN]  Column 'price': expected dtype 'int64', got 'float64'
+       [WARN]  Column 'price_tier': expected dtype 'str', got 'object'
+
+  [FAIL] ❌ Completeness Check
+ 📊 Overall Completeness: 97.5%
+ 📊 Column-level Completeness:
+ - brand: 100.00% complete (0.00% missing)
+ - model: 94.52% complete (5.48% missing)
+ - vehicleType: 89.88% complete (10.12% missing)
+ - power: 100.00% complete (0.00% missing)
+ - gearbox: 94.60% complete (5.40% missing)
+ - kilometer: 99.99% complete (0.01% missing)
+ - fuelType: 91.07% complete (8.93% missing)
+ - yearOfRegistration: 99.98% complete (0.02% missing)
+ - seller: 100.00% complete (0.00% missing)
+ - dataSource: 100.00% complete (0.00% missing)
+ - price: 100.00% complete (0.00% missing)
+ - price_tier: 100.00% complete (0.00% missing)
+       [WARN]  Column 'model': 5.48% missing (threshold 5%)
+       [WARN]  Column 'vehicleType': 10.12% missing (threshold 5%)
+       [WARN]  Column 'gearbox': 5.40% missing (threshold 5%)
+       [WARN]  Column 'fuelType': 8.93% missing (threshold 5%)
+
+  [FAIL] ❌ Uniqueness Check
+       [WARN]  Full-row duplicates: 57324 (15.33%)
+
+  [FAIL] ❌ Validity Check
+       [WARN]  Column 'price': 26219 value(s) below min (500)
+       [WARN]  Column 'price': 54 value(s) above max (5000000)
+       [WARN]  Column 'power': 40903 value(s) below min (5)
+       [WARN]  Column 'power': 85 value(s) above max (5000)
+       [WARN]  Column 'kilometer': 13 value(s) above max (300000)
+       [WARN]  Column 'yearOfRegistration': 68 value(s) below min (1900)
+       [WARN]  Column 'yearOfRegistration': 114 value(s) above max (2026)
+       [WARN]   Column 'seller': invalid categorical values,
+                found: ['gewerblich', 'privat']
+       [WARN]   Column 'gearbox': invalid categorical values,
+                found: ['automatik', 'manuell']
+       [WARN]   Column 'fuelType': invalid categorical values,
+                found: ['andere', 'benzin', 'electric/diesel', 'electric/gasoline', 'elektro']
+       [WARN]   Column 'vehicleType': invalid categorical values,
+                found: ['andere', 'bus', 'cabrio', 'kleinwagen', 'kombi', 'limousine', 'station wagon', 'suv/off-road/pick-up']
+
+  [FAIL] ❌ Outliers_ZScore Check
+       [WARN]  Column 'price': 40 Z-Score outlier(s) (|z| > 3.0) — 0.01% of values
+       [WARN]  Column 'power': 385 Z-Score outlier(s) (|z| > 3.0) — 0.10% of values
+       [WARN]  Column 'kilometer': 290 Z-Score outlier(s) (|z| > 3.0) — 0.08% of values
+       [WARN]  Column 'yearOfRegistration': 173 Z-Score outlier(s) (|z| > 3.0) — 0.05% of values
+
+  [FAIL] ❌ Outliers_IQR Check
+       [WARN]  Column 'price': 27980 IQR outlier(s) (outside [-11883.5, 24318.9]) -> 7.48%
+       [WARN]  Column 'power': 11035 IQR outlier(s) (outside [-50.0, 270.0]) -> 2.95%
+       [WARN]  Column 'kilometer': 15397 IQR outlier(s) (outside [25000.0, 225000.0]) -> 4.12%
+       [WARN]  Column 'yearOfRegistration': 8289 IQR outlier(s) (outside [1985.5, 2021.5]) -> 2.22%
+
+  [FAIL] ❌ Outliers_IsolationForest Check
+       [WARN]  Isolation Forest detected 44875 outlier(s) (12.00%) across ['price', 'power', 'kilometer', 'yearOfRegistration']
+
+  [FAIL] ❌ Distribution Check
+📊 Stats for price:
+ Mean: 25472.3063 | Median: 4400.209 | Mode: 0.0 | Std: 5262458.1676
+Q1: 1692.3881 | Q3: 10742.9851 | Min: 0.0 | Max: 3160326680.5104
+Skewness: 580.0035 (Positive Skew (right tail))
+Kurtosis: 347759.3757 (Leptokurtic (heavy tails))
+📊 Stats for power:
+ Mean: 115.9785 | Median: 105.0 | Mode: 0.0 | Std: 191.7707
+Q1: 70.0 | Q3: 150.0 | Min: 0.0 | Max: 20000.0
+Skewness: 58.1434 (Positive Skew (right tail))
+Kurtosis: 4428.0992 (Leptokurtic (heavy tails))
+📊 Stats for kilometer:
+ Mean: 125298.6512 | Median: 150000.0 | Mode: 150000.0 | Std: 40548.4379
+Q1: 100000.0 | Q3: 150000.0 | Min: 0.0 | Max: 999999.0
+Skewness: -1.4837 (Negative Skew (left tail))
+Kurtosis: 1.7547 (Leptokurtic (heavy tails))
+📊 Stats for yearOfRegistration:
+ Mean: 2004.6766 | Median: 2003.0 | Mode: 2000.0 | Std: 92.5725
+Q1: 1999.0 | Q3: 2008.0 | Min: 1000.0 | Max: 9999.0
+Skewness: 72.3451 (Positive Skew (right tail))
+Kurtosis: 5702.44 (Leptokurtic (heavy tails))
+       [WARN]  Column 'price': KS test p=0.0000 < 0.05(distribution differs from normal)
+       [WARN]  Column 'power': KS test p=0.0000 < 0.05(distribution differs from normal)
+       [WARN]  Column 'kilometer': KS test p=0.0000 < 0.05(distribution differs from normal)
+       [WARN]  Column 'yearOfRegistration': KS test p=0.0000 < 0.05(distribution differs from normal)
+
+  [PASS] ✅ Relationships Check
+
+=================================================================

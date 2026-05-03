@@ -4,7 +4,8 @@ scraped_raw_data_path = 'data/raw/cars_dataset.csv'
 merged_data_path = 'data/interim/merged_data.csv'
 clean_data_path = 'data/processed/clean_data.csv'
 processed_data_path = 'data/processed/features.csv'
-validation_report_path = 'reports/results/validation_report'
+raw_validation_report_path = 'reports/results/raw_validation_report'
+preprocessed_validation_report_path = 'reports/results/preprocessed_validation_report'
 
 [features]
 features_columns = [

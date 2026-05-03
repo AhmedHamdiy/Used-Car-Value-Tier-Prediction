@@ -1,22 +1,14 @@
 #!/usr/bin/env python3
-"""
-CLI script for feature selection analysis.
-
-Usage:
-    python scripts/features/select_features.py
-    python scripts/features/select_features.py --data data/processed/clean_data.csv --strategy xgboost
-    python scripts/features/select_features.py --strategy variance --threshold 0.01
-"""
 
 import sys
 import argparse
 from pathlib import Path
+import pandas as pd
+
+from src.features.feature_selection import select_features
+from src.models.train_model import prepare_data
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-
-from src.features.feature_selection import FeatureSelector, select_features
-from src.models.train_model import prepare_data
-import pandas as pd
 
 
 def main():
@@ -58,7 +50,10 @@ def main():
         "--report",
         type=str,
         default="reports/feature_importance_report.txt",
-        help="Path to save feature importance report (default: reports/feature_importance_report.txt)",
+        help=(
+            "Path to save feature importance report "
+            + "(default: reports/feature_importance_report.txt)"
+        ),
     )
     parser.add_argument(
         "--export-data",
@@ -127,7 +122,7 @@ def main():
 
         # Export data if requested
         if args.export_data:
-            print(f"\nExporting selected feature data...")
+            print("\nExporting selected feature data...")
             Path(args.export_data).parent.mkdir(parents=True, exist_ok=True)
 
             # Combine with target for training data

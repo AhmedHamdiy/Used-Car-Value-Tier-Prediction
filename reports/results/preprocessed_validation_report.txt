@@ -1,0 +1,80 @@
+
+=================================================================
+  DATA VALIDATION REPORT
+=================================================================
+  Total checks : 9
+  Passed       : 3
+  Failed       : 6
+  Success rate : 33.3%
+=================================================================
+
+  [FAIL] ❌ Schema Check
+       [WARN]  Column 'seller': expected dtype 'str', got 'object'
+       [WARN]  Column 'dataSource': expected dtype 'str', got 'object'
+       [WARN]  Column 'price': expected dtype 'int64', got 'float64'
+       [WARN]  Column 'price_tier': expected dtype 'str', got 'object'
+
+  [PASS] ✅ Completeness Check
+ 📊 Overall Completeness: 100.0%
+ 📊 Column-level Completeness:
+ - brand: 100.00% complete (0.00% missing)
+ - model: 100.00% complete (0.00% missing)
+ - vehicleType: 100.00% complete (0.00% missing)
+ - power: 100.00% complete (0.00% missing)
+ - gearbox: 100.00% complete (0.00% missing)
+ - kilometer: 100.00% complete (0.00% missing)
+ - fuelType: 100.00% complete (0.00% missing)
+ - yearOfRegistration: 100.00% complete (0.00% missing)
+ - seller: 100.00% complete (0.00% missing)
+ - dataSource: 100.00% complete (0.00% missing)
+ - price: 100.00% complete (0.00% missing)
+ - price_tier: 100.00% complete (0.00% missing)
+
+  [PASS] ✅ Uniqueness Check
+
+  [FAIL] ❌ Validity Check
+       [WARN]   Column 'vehicleType': invalid categorical values,
+                found: ['station-wagon']
+
+  [FAIL] ❌ Outliers_ZScore Check
+       [WARN]  Column 'price': 1625 Z-Score outlier(s) (|z| > 3.0) — 0.63% of values
+       [WARN]  Column 'kilometer': 131 Z-Score outlier(s) (|z| > 3.0) — 0.05% of values
+       [WARN]  Column 'yearOfRegistration': 2766 Z-Score outlier(s) (|z| > 3.0) — 1.07% of values
+
+  [FAIL] ❌ Outliers_IQR Check
+       [WARN]  Column 'price': 17517 IQR outlier(s) (outside [-13134.4, 28365.9]) -> 6.76%
+       [WARN]  Column 'kilometer': 9490 IQR outlier(s) (outside [25000.0, 225000.0]) -> 3.66%
+       [WARN]  Column 'yearOfRegistration': 5031 IQR outlier(s) (outside [1986.5, 2022.5]) -> 1.94%
+
+  [FAIL] ❌ Outliers_IsolationForest Check
+       [WARN]  Isolation Forest detected 31087 outlier(s) (12.00%) across ['price', 'power', 'kilometer', 'yearOfRegistration']
+
+  [FAIL] ❌ Distribution Check
+📊 Stats for price:
+ Mean: 10210.9358 | Median: 5739.403 | Mode: 2207.4627 | Std: 19211.3711
+Q1: 2428.209 | Q3: 12803.2836 | Min: 500.3582 | Max: 1839552.2388
+Skewness: 37.2819 (Positive Skew (right tail))
+Kurtosis: 2633.0754 (Leptokurtic (heavy tails))
+📊 Stats for power:
+ Mean: 127.0991 | Median: 116.0 | Mode: 75.0 | Std: 52.8519
+Q1: 87.0 | Q3: 159.0 | Min: 5.0 | Max: 252.0
+Skewness: 0.6733 (Positive Skew (right tail))
+Kurtosis: -0.1733 (Mesokurtic (normal))
+📊 Stats for kilometer:
+ Mean: 122871.1175 | Median: 150000.0 | Mode: 150000.0 | Std: 40816.8973
+Q1: 100000.0 | Q3: 150000.0 | Min: 0.0 | Max: 225000.0
+Skewness: -1.3205 (Negative Skew (left tail))
+Kurtosis: 0.5339 (Leptokurtic (heavy tails))
+📊 Stats for yearOfRegistration:
+ Mean: 2004.1823 | Median: 2004.0 | Mode: 2005.0 | Std: 7.3315
+Q1: 2000.0 | Q3: 2009.0 | Min: 1910.0 | Max: 2023.0
+Skewness: -0.9882 (Negative Skew (left tail))
+Kurtosis: 5.0447 (Leptokurtic (heavy tails))
+       [WARN]  Column 'price': KS test p=0.0000 < 0.05(distribution differs from normal)
+       [WARN]  Column 'power': KS test p=0.0000 < 0.05(distribution differs from normal)
+       [WARN]  Column 'kilometer': KS test p=0.0000 < 0.05(distribution differs from normal)
+       [WARN]  Column 'yearOfRegistration': KS test p=0.0000 < 0.05(distribution differs from normal)
+
+  [PASS] ✅ Relationships Check
+
+=================================================================

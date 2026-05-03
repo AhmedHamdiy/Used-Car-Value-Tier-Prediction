@@ -1,0 +1,493 @@
+{
+    "total": 9,
+    "passed": 3,
+    "failed": 6,
+    "success_rate": 33.33333333333333,
+    "details": [
+        {
+            "timestamp": "2026-05-03 22:53:53",
+            "check_type": "Schema",
+            "passed": false,
+            "issues": [
+                "Column 'seller': expected dtype 'str', got 'object'",
+                "Column 'dataSource': expected dtype 'str', got 'object'",
+                "Column 'price': expected dtype 'int64', got 'float64'",
+                "Column 'price_tier': expected dtype 'str', got 'object'"
+            ],
+            "stats": {
+                "col_cnt": 12,
+                "expected_col_cnt": 12,
+                "dtype_checks": 12
+            }
+        },
+        {
+            "timestamp": "2026-05-03 22:53:53",
+            "check_type": "Completeness",
+            "passed": true,
+            "issues": [],
+            "stats": {
+                "completeness_score_pct": 100.0,
+                "column_detail": {
+                    "brand": {
+                        "missing_count": 0,
+                        "missing_pct": 0.0
+                    },
+                    "model": {
+                        "missing_count": 0,
+                        "missing_pct": 0.0
+                    },
+                    "vehicleType": {
+                        "missing_count": 0,
+                        "missing_pct": 0.0
+                    },
+                    "power": {
+                        "missing_count": 0,
+                        "missing_pct": 0.0
+                    },
+                    "gearbox": {
+                        "missing_count": 0,
+                        "missing_pct": 0.0
+                    },
+                    "kilometer": {
+                        "missing_count": 0,
+                        "missing_pct": 0.0
+                    },
+                    "fuelType": {
+                        "missing_count": 0,
+                        "missing_pct": 0.0
+                    },
+                    "yearOfRegistration": {
+                        "missing_count": 0,
+                        "missing_pct": 0.0
+                    },
+                    "seller": {
+                        "missing_count": 0,
+                        "missing_pct": 0.0
+                    },
+                    "dataSource": {
+                        "missing_count": 0,
+                        "missing_pct": 0.0
+                    },
+                    "price": {
+                        "missing_count": 0,
+                        "missing_pct": 0.0
+                    },
+                    "price_tier": {
+                        "missing_count": 0,
+                        "missing_pct": 0.0
+                    }
+                }
+            }
+        },
+        {
+            "timestamp": "2026-05-03 22:53:53",
+            "check_type": "Uniqueness",
+            "passed": true,
+            "issues": [],
+            "stats": {
+                "duplicate_rows": 0,
+                "duplicate_rows_pct": 0.0,
+                "uniqueness_score_pct": 100.0
+            }
+        },
+        {
+            "timestamp": "2026-05-03 22:53:53",
+            "check_type": "Validity",
+            "passed": false,
+            "issues": [
+                " Column 'vehicleType': invalid categorical values,\n                found: ['station-wagon']"
+            ],
+            "stats": {
+                "range_checks": {
+                    "price": {
+                        "violations": {},
+                        "accuracy_score_pct": 100.0
+                    },
+                    "power": {
+                        "violations": {},
+                        "accuracy_score_pct": 100.0
+                    },
+                    "kilometer": {
+                        "violations": {},
+                        "accuracy_score_pct": 100.0
+                    },
+                    "yearOfRegistration": {
+                        "violations": {},
+                        "accuracy_score_pct": 100.0
+                    }
+                },
+                "categorical_checks": {
+                    "seller": {
+                        "invalid_values": [],
+                        "allowed_values": [
+                            "dealer",
+                            "private"
+                        ]
+                    },
+                    "dataSource": {
+                        "invalid_values": [],
+                        "allowed_values": [
+                            "crawled",
+                            "kaggle"
+                        ]
+                    },
+                    "gearbox": {
+                        "invalid_values": [],
+                        "allowed_values": [
+                            "automatic",
+                            "manual",
+                            "semi-automatic"
+                        ]
+                    },
+                    "fuelType": {
+                        "invalid_values": [],
+                        "allowed_values": [
+                            "cng",
+                            "diesel",
+                            "electric",
+                            "gasoline",
+                            "hybrid",
+                            "lpg",
+                            "other"
+                        ]
+                    },
+                    "vehicleType": {
+                        "invalid_values": [
+                            "station-wagon"
+                        ],
+                        "allowed_values": [
+                            "compact",
+                            "convertible",
+                            "coupe",
+                            "other",
+                            "sedan",
+                            "station_wagon",
+                            "suv",
+                            "van"
+                        ]
+                    },
+                    "price_tier": {
+                        "invalid_values": [],
+                        "allowed_values": [
+                            "budget",
+                            "luxury",
+                            "mid-range"
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "timestamp": "2026-05-03 22:53:53",
+            "check_type": "Outliers_ZScore",
+            "passed": false,
+            "issues": [
+                "Column 'price': 1625 Z-Score outlier(s) (|z| > 3.0) \u2014 0.63% of values",
+                "Column 'kilometer': 131 Z-Score outlier(s) (|z| > 3.0) \u2014 0.05% of values",
+                "Column 'yearOfRegistration': 2766 Z-Score outlier(s) (|z| > 3.0) \u2014 1.07% of values"
+            ],
+            "stats": {
+                "column_detail": {
+                    "price": {
+                        "outlier_count": 1625,
+                        "outlier_pct": 0.6272,
+                        "quality_score_pct": 99.37
+                    },
+                    "power": {
+                        "outlier_count": 0,
+                        "outlier_pct": 0.0,
+                        "quality_score_pct": 100.0
+                    },
+                    "kilometer": {
+                        "outlier_count": 131,
+                        "outlier_pct": 0.0506,
+                        "quality_score_pct": 99.95
+                    },
+                    "yearOfRegistration": {
+                        "outlier_count": 2766,
+                        "outlier_pct": 1.0676,
+                        "quality_score_pct": 98.93
+                    }
+                }
+            }
+        },
+        {
+            "timestamp": "2026-05-03 22:53:53",
+            "check_type": "Outliers_IQR",
+            "passed": false,
+            "issues": [
+                "Column 'price': 17517 IQR outlier(s) (outside [-13134.4, 28365.9]) -> 6.76%",
+                "Column 'kilometer': 9490 IQR outlier(s) (outside [25000.0, 225000.0]) -> 3.66%",
+                "Column 'yearOfRegistration': 5031 IQR outlier(s) (outside [1986.5, 2022.5]) -> 1.94%"
+            ],
+            "stats": {
+                "column_detail": {
+                    "price": {
+                        "Q1": 2428.2089552238804,
+                        "Q3": 12803.283582089553,
+                        "IQR": 10375.074626865673,
+                        "lower_fence": -13134.40298507463,
+                        "upper_fence": 28365.895522388062,
+                        "outlier_count": 17517,
+                        "outlier_pct": 6.7609,
+                        "quality_score_pct": 93.24
+                    },
+                    "power": {
+                        "Q1": 87.0,
+                        "Q3": 159.0,
+                        "IQR": 72.0,
+                        "lower_fence": -21.0,
+                        "upper_fence": 267.0,
+                        "outlier_count": 0,
+                        "outlier_pct": 0.0,
+                        "quality_score_pct": 100.0
+                    },
+                    "kilometer": {
+                        "Q1": 100000.0,
+                        "Q3": 150000.0,
+                        "IQR": 50000.0,
+                        "lower_fence": 25000.0,
+                        "upper_fence": 225000.0,
+                        "outlier_count": 9490,
+                        "outlier_pct": 3.6628,
+                        "quality_score_pct": 96.34
+                    },
+                    "yearOfRegistration": {
+                        "Q1": 2000.0,
+                        "Q3": 2009.0,
+                        "IQR": 9.0,
+                        "lower_fence": 1986.5,
+                        "upper_fence": 2022.5,
+                        "outlier_count": 5031,
+                        "outlier_pct": 1.9418,
+                        "quality_score_pct": 98.06
+                    }
+                }
+            }
+        },
+        {
+            "timestamp": "2026-05-03 22:53:53",
+            "check_type": "Outliers_IsolationForest",
+            "passed": false,
+            "issues": [
+                "Isolation Forest detected 31087 outlier(s) (12.00%) across ['price', 'power', 'kilometer', 'yearOfRegistration']"
+            ],
+            "stats": {
+                "features_used": [
+                    "price",
+                    "power",
+                    "kilometer",
+                    "yearOfRegistration"
+                ],
+                "total_rows_evaluated": 259092,
+                "outlier_count": 31087,
+                "outlier_pct": 11.9984,
+                "quality_score_pct": 88.0,
+                "contamination_param": 0.12
+            }
+        },
+        {
+            "timestamp": "2026-05-03 22:53:55",
+            "check_type": "Distribution",
+            "passed": false,
+            "issues": [
+                "Column 'price': KS test p=0.0000 < 0.05(distribution differs from normal)",
+                "Column 'power': KS test p=0.0000 < 0.05(distribution differs from normal)",
+                "Column 'kilometer': KS test p=0.0000 < 0.05(distribution differs from normal)",
+                "Column 'yearOfRegistration': KS test p=0.0000 < 0.05(distribution differs from normal)"
+            ],
+            "stats": {
+                "column_detail": {
+                    "price": {
+                        "mean": 10210.9358,
+                        "median": 5739.403,
+                        "mode": 2207.4627,
+                        "std": 19211.3711,
+                        "min": 500.3582,
+                        "max": 1839552.2388,
+                        "Q1": 2428.209,
+                        "Q3": 12803.2836,
+                        "skewness": 37.2819,
+                        "skewness_label": "Positive Skew (right tail)",
+                        "kurtosis_excess": 2633.0754,
+                        "kurtosis_label": "Leptokurtic (heavy tails)",
+                        "mean_bounds": [
+                            500,
+                            30000
+                        ],
+                        "ks_statistic": 0.3067,
+                        "ks_pvalue": 0.0,
+                        "ks_normality": "Reject normality (p < 0.05)"
+                    },
+                    "power": {
+                        "mean": 127.0991,
+                        "median": 116.0,
+                        "mode": 75.0,
+                        "std": 52.8519,
+                        "min": 5.0,
+                        "max": 252.0,
+                        "Q1": 87.0,
+                        "Q3": 159.0,
+                        "skewness": 0.6733,
+                        "skewness_label": "Positive Skew (right tail)",
+                        "kurtosis_excess": -0.1733,
+                        "kurtosis_label": "Mesokurtic (normal)",
+                        "mean_bounds": [
+                            50,
+                            250
+                        ],
+                        "ks_statistic": 0.0885,
+                        "ks_pvalue": 0.0,
+                        "ks_normality": "Reject normality (p < 0.05)"
+                    },
+                    "kilometer": {
+                        "mean": 122871.1175,
+                        "median": 150000.0,
+                        "mode": 150000.0,
+                        "std": 40816.8973,
+                        "min": 0.0,
+                        "max": 225000.0,
+                        "Q1": 100000.0,
+                        "Q3": 150000.0,
+                        "skewness": -1.3205,
+                        "skewness_label": "Negative Skew (left tail)",
+                        "kurtosis_excess": 0.5339,
+                        "kurtosis_label": "Leptokurtic (heavy tails)",
+                        "mean_bounds": [
+                            10000,
+                            150000
+                        ],
+                        "ks_statistic": 0.3502,
+                        "ks_pvalue": 0.0,
+                        "ks_normality": "Reject normality (p < 0.05)"
+                    },
+                    "yearOfRegistration": {
+                        "mean": 2004.1823,
+                        "median": 2004.0,
+                        "mode": 2005.0,
+                        "std": 7.3315,
+                        "min": 1910.0,
+                        "max": 2023.0,
+                        "Q1": 2000.0,
+                        "Q3": 2009.0,
+                        "skewness": -0.9882,
+                        "skewness_label": "Negative Skew (left tail)",
+                        "kurtosis_excess": 5.0447,
+                        "kurtosis_label": "Leptokurtic (heavy tails)",
+                        "mean_bounds": [
+                            1990,
+                            2020
+                        ],
+                        "ks_statistic": 0.0608,
+                        "ks_pvalue": 0.0,
+                        "ks_normality": "Reject normality (p < 0.05)"
+                    }
+                }
+            }
+        },
+        {
+            "timestamp": "2026-05-03 22:53:56",
+            "check_type": "Relationships",
+            "passed": true,
+            "issues": [],
+            "stats": {
+                "pearson_matrix": {
+                    "price": {
+                        "price": 1.0,
+                        "power": 0.359,
+                        "kilometer": -0.3036,
+                        "yearOfRegistration": 0.2197
+                    },
+                    "power": {
+                        "price": 0.359,
+                        "power": 1.0,
+                        "kilometer": 0.0202,
+                        "yearOfRegistration": 0.1511
+                    },
+                    "kilometer": {
+                        "price": -0.3036,
+                        "power": 0.0202,
+                        "kilometer": 1.0,
+                        "yearOfRegistration": -0.3159
+                    },
+                    "yearOfRegistration": {
+                        "price": 0.2197,
+                        "power": 0.1511,
+                        "kilometer": -0.3159,
+                        "yearOfRegistration": 1.0
+                    }
+                },
+                "spearman_matrix": {
+                    "price": {
+                        "price": 1.0,
+                        "power": 0.5433,
+                        "kilometer": -0.428,
+                        "yearOfRegistration": 0.6142
+                    },
+                    "power": {
+                        "price": 0.5433,
+                        "power": 1.0,
+                        "kilometer": 0.0616,
+                        "yearOfRegistration": 0.17
+                    },
+                    "kilometer": {
+                        "price": -0.428,
+                        "power": 0.0616,
+                        "kilometer": 1.0,
+                        "yearOfRegistration": -0.4029
+                    },
+                    "yearOfRegistration": {
+                        "price": 0.6142,
+                        "power": 0.17,
+                        "kilometer": -0.4029,
+                        "yearOfRegistration": 1.0
+                    }
+                },
+                "columns_used": [
+                    "price",
+                    "power",
+                    "kilometer",
+                    "yearOfRegistration"
+                ],
+                "expected_correlation_checks": {
+                    "kilometer_vs_yearOfRegistration": {
+                        "correlation": -0.4029,
+                        "expected_range": [
+                            -0.9,
+                            0.0
+                        ],
+                        "status": "within bounds",
+                        "method": "spearman"
+                    },
+                    "yearOfRegistration_vs_price": {
+                        "correlation": 0.6142,
+                        "expected_range": [
+                            0.0,
+                            0.9
+                        ],
+                        "status": "within bounds",
+                        "method": "spearman"
+                    },
+                    "kilometer_vs_price": {
+                        "correlation": -0.428,
+                        "expected_range": [
+                            -0.9,
+                            0.0
+                        ],
+                        "status": "within bounds",
+                        "method": "spearman"
+                    },
+                    "power_vs_price": {
+                        "correlation": 0.5433,
+                        "expected_range": [
+                            0.0,
+                            0.9
+                        ],
+                        "status": "within bounds",
+                        "method": "spearman"
+                    }
+                }
+            }
+        }
+    ]
+}

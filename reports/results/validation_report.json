@@ -5,15 +5,10 @@
     "success_rate": 11.11111111111111,
     "details": [
         {
-            "timestamp": "2026-05-02 13:53:41",
+            "timestamp": "2026-05-03 22:16:12",
             "check_type": "Schema",
             "passed": false,
             "issues": [
-                "Column 'brand': expected dtype 'str', got 'object'",
-                "Column 'model': expected dtype 'str', got 'object'",
-                "Column 'vehicleType': expected dtype 'str', got 'object'",
-                "Column 'gearbox': expected dtype 'str', got 'object'",
-                "Column 'fuelType': expected dtype 'str', got 'object'",
                 "Column 'yearOfRegistration': expected dtype 'int64', got 'float64'",
                 "Column 'seller': expected dtype 'str', got 'object'",
                 "Column 'dataSource': expected dtype 'str', got 'object'",
@@ -27,11 +22,10 @@
             }
         },
         {
-            "timestamp": "2026-05-02 13:53:41",
+            "timestamp": "2026-05-03 22:16:12",
             "check_type": "Completeness",
             "passed": false,
             "issues": [
-                "Required column 'price_tierseller' is missing.",
                 "Column 'model': 5.48% missing (threshold 5%)",
                 "Column 'vehicleType': 10.12% missing (threshold 5%)",
                 "Column 'gearbox': 5.40% missing (threshold 5%)",
@@ -92,7 +86,7 @@
             }
         },
         {
-            "timestamp": "2026-05-02 13:53:42",
+            "timestamp": "2026-05-03 22:16:12",
             "check_type": "Uniqueness",
             "passed": false,
             "issues": [
@@ -105,7 +99,7 @@
             }
         },
         {
-            "timestamp": "2026-05-02 13:53:42",
+            "timestamp": "2026-05-03 22:16:12",
             "check_type": "Validity",
             "passed": false,
             "issues": [
@@ -232,7 +226,7 @@
             }
         },
         {
-            "timestamp": "2026-05-02 13:53:42",
+            "timestamp": "2026-05-03 22:16:12",
             "check_type": "Outliers_ZScore",
             "passed": false,
             "issues": [
@@ -267,7 +261,7 @@
             }
         },
         {
-            "timestamp": "2026-05-02 13:53:42",
+            "timestamp": "2026-05-03 22:16:12",
             "check_type": "Outliers_IQR",
             "passed": false,
             "issues": [
@@ -322,7 +316,7 @@
             }
         },
         {
-            "timestamp": "2026-05-02 13:53:42",
+            "timestamp": "2026-05-03 22:16:12",
             "check_type": "Outliers_IsolationForest",
             "passed": false,
             "issues": [
@@ -343,7 +337,7 @@
             }
         },
         {
-            "timestamp": "2026-05-02 13:53:45",
+            "timestamp": "2026-05-03 22:16:14",
             "check_type": "Distribution",
             "passed": false,
             "issues": [
@@ -442,7 +436,7 @@
             }
         },
         {
-            "timestamp": "2026-05-02 13:53:45",
+            "timestamp": "2026-05-03 22:16:15",
             "check_type": "Relationships",
             "passed": true,
             "issues": [],
