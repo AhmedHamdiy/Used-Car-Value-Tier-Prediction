@@ -54,8 +54,7 @@ CATEGORICAL_RULES: dict[str, list[str]] = {
     "seller": ["private", "dealer"],
     "dataSource": ["kaggle", "crawled"],
     "gearbox": ["manual", "automatic", "semi-automatic"],
-    "fuelType": ["gasoline", "diesel", "lpg", "cng",
-                 "hybrid", "electric", "other"],
+    "fuelType": ["gasoline", "diesel", "lpg", "cng", "hybrid", "electric", "other"],
     "vehicleType": [
         "sedan",
         "compact",
@@ -504,8 +503,7 @@ class DataValidator:
                     outside expected bounds [{lo}, {hi}]"""
                 self._fail(report, fail_line)
             # KS test against normal distribution
-            ks_stat, ks_p = stats.kstest(series, "norm",
-                                         args=(mean_val, std_val))
+            ks_stat, ks_p = stats.kstest(series, "norm", args=(mean_val, std_val))
             col_stat["ks_statistic"] = round(ks_stat, 4)
             col_stat["ks_pvalue"] = round(ks_p, 4)
             if ks_p < 0.05:
@@ -614,15 +612,13 @@ class DataValidator:
                     mode_l = f"Mode: {s.get('mode')}"
                     std_l = f"Std: {s.get('std')}"
                     fst_line = (
-                        mean_l + " | " + median_l + " | "
-                        + mode_l + " | " + std_l
+                        mean_l + " | " + median_l + " | " + mode_l + " | " + std_l
                     )
                     q1_l = f"Q1: {s.get('Q1')}"
                     q3_l = f"Q3: {s.get('Q3')}"
                     min_l = f"Min: {s.get('min')}"
                     max_l = f"Max: {s.get('max')}"
-                    scnd_line = (q1_l + " | " + q3_l + " | "
-                                 + min_l + " | " + max_l)
+                    scnd_line = q1_l + " | " + q3_l + " | " + min_l + " | " + max_l
                     skew_l = f"Skewness: {s.get('skewness')}"
                     skw_lbl_l = f"({s.get('skewness_label')})"
                     thrd_line = skew_l + " " + skw_lbl_l
@@ -635,7 +631,7 @@ class DataValidator:
                     output_lines.append(frth_line)
 
             for issue in result["issues"]:
-                output_lines.append(f"       ⚠️  {issue}")
+                output_lines.append(f"       [WARN]  {issue}")
 
         output_lines.append("\n" + "=" * 65 + "\n")
         report_text = "\n".join(output_lines)

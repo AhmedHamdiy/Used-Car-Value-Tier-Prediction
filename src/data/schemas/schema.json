@@ -1,0 +1,54 @@
+{
+    "price": {
+        "dtype": "float64",
+        "nullable": false,
+        "min": 500.0,
+        "max": 3000000.0
+    },
+    "power": {
+        "dtype": "float64",
+        "nullable": false,
+        "min": 5.0,
+        "max": 3000.0
+    },
+    "kilometer": {
+        "dtype": "float64",
+        "nullable": false,
+        "min": 0.0,
+        "max": 300000.0
+    },
+    "yearOfRegistration": {
+        "dtype": "int64",
+        "nullable": false,
+        "min": 1900,
+        "max": 2026
+    },
+    "brand": {
+        "dtype": "object",
+        "nullable": false
+    },
+    "model": {
+        "dtype": "object",
+        "nullable": true
+    },
+    "vehicleType": {
+        "dtype": "object",
+        "nullable": true
+    },
+    "gearbox": {
+        "dtype": "object",
+        "nullable": true
+    },
+    "fuelType": {
+        "dtype": "object",
+        "nullable": true
+    },
+    "seller": {
+        "dtype": "object",
+        "nullable": true
+    },
+    "dataSource": {
+        "dtype": "object",
+        "nullable": true
+    }
+}

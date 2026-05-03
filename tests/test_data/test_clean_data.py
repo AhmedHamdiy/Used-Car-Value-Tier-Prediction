@@ -41,7 +41,6 @@ from src.data.clean_data import (
     VT_ALIASES,
     YEAR_RANGE,
     DataCleaner,
-    cap_outliers_fixed,
     cap_outliers_iqr,
     clean_brand,
     clean_data,
@@ -664,48 +663,7 @@ class TestCapOutliersIqr:
 
 
 # ═══════════════════════════════════════════════════════════════
-# 13. cap_outliers_fixed
-# ═══════════════════════════════════════════════════════════════
-
-class TestCapOutliersFixed:
-
-    def _df(self, **overrides) -> pd.DataFrame:
-        rows = [_valid_row(**overrides)]
-        df = pd.DataFrame(rows)
-        for col in ["price", "power", "kilometer"]:
-            df[col] = df[col].astype(float)
-        df["yearOfRegistration"] = pd.array([2015], dtype="Int64")
-        return df
-
-    def test_price_above_max_capped(self):
-        df = self._df(price=MAX_PRICE + 1_000_000)
-        result = cap_outliers_fixed(df)
-        assert result["price"].iloc[0] <= MAX_PRICE
-
-    def test_price_below_min_capped(self):
-        df = self._df(price=1.0)
-        result = cap_outliers_fixed(df)
-        assert result["price"].iloc[0] >= MIN_PRICE
-
-    def test_power_above_max_capped(self):
-        df = self._df(power=POWER_MAX + 10_000)
-        result = cap_outliers_fixed(df)
-        assert result["power"].iloc[0] <= POWER_MAX
-
-    def test_kilometer_above_max_capped(self):
-        df = self._df(kilometer=KM_RANGE[1] + 100_000)
-        result = cap_outliers_fixed(df)
-        assert result["kilometer"].iloc[0] <= KM_RANGE[1]
-
-    def test_valid_values_unchanged(self):
-        df = self._df()
-        result = cap_outliers_fixed(df)
-        assert result["price"].iloc[0] == pytest.approx(8_000.0)
-        assert result["power"].iloc[0] == pytest.approx(100.0)
-
-
-# ═══════════════════════════════════════════════════════════════
-# 14. clean_data (end-to-end) via CSV file
+# 13. clean_data (end-to-end) via CSV file
 # ═══════════════════════════════════════════════════════════════
 
 class TestCleanDataEndToEnd:
@@ -802,7 +760,7 @@ class TestCleanDataEndToEnd:
 
 
 # ═══════════════════════════════════════════════════════════════
-# 15. DataCleaner class
+# 14. DataCleaner class
 # ═══════════════════════════════════════════════════════════════
 
 class TestDataCleaner:
@@ -850,7 +808,7 @@ class TestDataCleaner:
 
 
 # ═══════════════════════════════════════════════════════════════
-# 16. Configuration / constant sanity checks
+# 15. Configuration / constant sanity checks
 # ═══════════════════════════════════════════════════════════════
 
 class TestConfiguration:
