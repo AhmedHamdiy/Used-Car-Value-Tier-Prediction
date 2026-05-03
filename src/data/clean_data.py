@@ -1,28 +1,18 @@
 from __future__ import annotations
 
+import json
+import logging
 import re
 import warnings
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterable
 
 import numpy as np
 import pandas as pd
 
-import json
-
 warnings.filterwarnings("ignore")
 
-
-def _log_step(msg: str) -> None:
-    print(f" [DEBUG] {msg}")
-
-
-def _log_ok(msg: str) -> None:
-    print(f"  [INFO] {msg}")
-
-
-def _log_warn(msg: str) -> None:
-    print(f"  [WARN] {msg}")
+logger = logging.getLogger(__name__)
 
 
 # ========================= CONFIGURATION =========================
@@ -159,7 +149,7 @@ def clean_with_aliases(series: pd.Series, aliases: dict[str, str]) -> pd.Series:
     return series.apply(_clean_one)
 
 
-def validate_schema(df: pd.DataFrame, schema: dict) -> list[str]:
+def validate_schema(df: pd.DataFrame, schema: dict[str, dict[str, Any]]) -> list[str]:
     """Validate a DataFrame against a schema (tutorial pattern)."""
     violations = []
     for col, rules in schema.items():
@@ -200,9 +190,9 @@ def validate_schema(df: pd.DataFrame, schema: dict) -> list[str]:
 def load_and_coerce(path: str | Path) -> pd.DataFrame:
     """Load CSV, keep only expected columns, coerce types, and clean
     strings."""
-    _log_step(f"Loading data from {path} …")
+    logger.debug(f"Loading data from {path} …")
     df = pd.read_csv(path, low_memory=False)
-    _log_ok(f"Loaded {len(df):,} rows × {len(df.columns)} columns.")
+    logger.info(f"Loaded {len(df):,} rows × {len(df.columns)} columns.")
 
     # Keep only expected columns
     missing_cols = set(INPUT_COLS) - set(df.columns)
@@ -224,13 +214,13 @@ def load_and_coerce(path: str | Path) -> pd.DataFrame:
             df[col] = df[col].astype(str).str.strip().str.lower()
             df[col] = replace_placeholders(df[col])
 
-    _log_ok("Schema coercion and placeholder replacement complete.")
+    logger.info("Schema coercion and placeholder replacement complete.")
     return df
 
 
 def remove_invalid_rows(df: pd.DataFrame) -> pd.DataFrame:
     """Remove rows with invalid values based on domain constraints."""
-    _log_step("Removing invalid rows …")
+    logger.debug("Removing invalid rows …")
     before = len(df)
 
     # price
@@ -266,18 +256,18 @@ def remove_invalid_rows(df: pd.DataFrame) -> pd.DataFrame:
 
     after = len(df)
     removed = before - after
-    _log_ok(f"Removed {removed:,} invalid rows. Remaining: {after:,}.")
+    logger.info(f"Removed {removed:,} invalid rows. Remaining: {after:,}.")
     return df.reset_index(drop=True)
 
 
 def drop_duplicates(df: pd.DataFrame) -> pd.DataFrame:
     """Remove exact duplicate rows."""
-    _log_step("Dropping full-row duplicates …")
+    logger.debug("Dropping full-row duplicates …")
     before = len(df)
     df = df.drop_duplicates(keep="first")
     after = len(df)
     removed = before - after
-    _log_ok(f"Dropped {removed:,} duplicate rows. Remaining: {after:,}.")
+    logger.info(f"Dropped {removed:,} duplicate rows. Remaining: {after:,}.")
     return df.reset_index(drop=True)
 
 
@@ -289,7 +279,7 @@ def _mode_or_fallback(series: pd.Series, fallback: str) -> str:
 def impute_categoricals(df: pd.DataFrame) -> pd.DataFrame:
     """Impute missing categorical values using brand-group mode,
     then a logical global fallback."""
-    _log_step("Imputing missing categorical values …")
+    logger.debug("Imputing missing categorical values …")
 
     df["brand"] = clean_brand(df["brand"])
     df["model"] = clean_model(df["model"])
@@ -318,7 +308,7 @@ def impute_categoricals(df: pd.DataFrame) -> pd.DataFrame:
                 global_fallback = _mode_or_fallback(df[col], "unknown")
 
             df[col] = df[col].fillna(global_fallback)
-            _log_warn(
+            logger.warning(
                 f"'{col}': residual NaN filled with "
                 f"global fallback '{global_fallback}'."
             )
@@ -328,15 +318,15 @@ def impute_categoricals(df: pd.DataFrame) -> pd.DataFrame:
         if df[num_col].isna().any():
             med = df[num_col].median()
             df[num_col] = df[num_col].fillna(med)
-            _log_warn(f"'{num_col}': NaN filled with median {med:.1f}.")
+            logger.warning(f"'{num_col}': NaN filled with median {med:.1f}.")
 
-    _log_ok("Categorical imputation complete.")
+    logger.info("Categorical imputation complete.")
     return df
 
 
-def cap_outliers_iqr(df: pd.DataFrame, cols: list[str]) -> pd.DataFrame:
+def cap_outliers_iqr(df: pd.DataFrame, cols: Iterable[str]) -> pd.DataFrame:
     """Cap outliers using the IQR rule."""
-    _log_step("Capping outliers using IQR …")
+    logger.debug("Capping outliers using IQR …")
     for col in cols:
         if col not in df.columns:
             continue
@@ -360,7 +350,7 @@ def cap_outliers_iqr(df: pd.DataFrame, cols: list[str]) -> pd.DataFrame:
         df[col] = df[col].clip(lower=lower, upper=upper)
         total = before_lower + before_upper
 
-        _log_ok(
+        logger.info(
             f"'{col}': capped {total:,} IQR outliers "
             f"(lower={lower:.1f}, upper={upper:.1f})."
         )
@@ -384,7 +374,7 @@ def clean_data(
     raw_shape = df.shape
     violations = validate_schema(df, SCHEMA)
     if violations:
-        _log_warn(f"Schema violations before cleaning: {violations}")
+        logger.warning(f"Schema violations before cleaning: {violations}")
 
     # Step 2 – Remove invalid rows
     df = remove_invalid_rows(df)
@@ -405,9 +395,9 @@ def clean_data(
     # Final validation
     final_violations = validate_schema(df, SCHEMA)
     if final_violations:
-        _log_warn(f"Post-cleaning schema violations: {final_violations}")
+        logger.warning(f"Post-cleaning schema violations: {final_violations}")
     else:
-        _log_ok("All schema checks passed after cleaning.")
+        logger.info("All schema checks passed after cleaning.")
 
     # Report
     print("\n" + "=" * 65)
@@ -420,7 +410,7 @@ def clean_data(
 
     if output_path:
         df.to_csv(output_path, index=False)
-        _log_ok(f"Cleaned data saved to {output_path}")
+        logger.info(f"Cleaned data saved to {output_path}")
 
     return df
 
