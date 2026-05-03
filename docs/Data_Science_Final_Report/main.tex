@@ -222,13 +222,13 @@ This problem is formulated as a \textbf{classification task}, where the goal is 
 \begin{figure}[htpb]
 \centering
 \begin{tikzpicture}[
-    node distance=1.5cm and 2cm,
-    source/.style={cylinder, draw, shape border rotate=90, aspect=0.25, fill=blue!10, text width=3.5cm, align=center, minimum height=1.5cm, font=\sffamily},
+    node distance=0.5cm and 0.5cm,
+    source/.style={cylinder, draw, shape border rotate=90, aspect=0.05, fill=blue!10, text width=2.5cm, align=center, minimum height=1.5cm, font=\sffamily},
     process/.style={rectangle, draw, fill=orange!10, text width=5cm, align=left, rounded corners, minimum height=1.5cm, inner sep=10pt, font=\sffamily},
-    filter/.style={rectangle, draw, fill=yellow!10, text width=3.5cm, align=center, rounded corners, minimum height=1cm, font=\sffamily},
+    filter/.style={rectangle, draw, fill=yellow!10, text width=3cm, align=center, rounded corners, minimum height=1cm, font=\sffamily},
     merge/.style={rectangle, draw, fill=green!10, text width=3cm, align=center, rounded corners, minimum height=1cm, font=\sffamily\bfseries},
-    output/.style={cylinder, draw, shape border rotate=90, aspect=0.25, fill=red!10, text width=3.5cm, align=center, minimum height=1.5cm, font=\sffamily\bfseries},
-    arrow/.style={thick, -{Stealth[length=2.5mm]}}
+    output/.style={cylinder, draw, shape border rotate=90, aspect=0.05, fill=red!10, text width=2cm, align=center, minimum height=1.5cm, font=\sffamily\bfseries},
+    arrow/.style={thick, -{Stealth[length=2mm]}}
 ]
 
 % Data Sources
@@ -237,7 +237,7 @@ This problem is formulated as a \textbf{classification task}, where the goal is 
 
 % Transformations
 \node (transform_k) [process, right=of kaggle] {
-    \textbf{Transform Kaggle} \\[0.5em]
+    \textbf{Transform Kaggle} \\[0.3em]
     $\bullet$ Set \texttt{dataSource} \\
     $\bullet$ Rename \texttt{powerPS} $\rightarrow$ \texttt{power} \\
     $\bullet$ Normalize \texttt{price} (CPI 2026) \\
@@ -245,7 +245,7 @@ This problem is formulated as a \textbf{classification task}, where the goal is 
 };
 
 \node (transform_c) [process, right=of autoscout] {
-    \textbf{Transform Crawled} \\[0.5em]
+    \textbf{Transform Crawled} \\[0.3em]
     $\bullet$ Set \texttt{dataSource} \\
     $\bullet$ Rename \texttt{mileage} $\rightarrow$ \texttt{kilometer} \\
     $\bullet$ Extract \texttt{power} \& \texttt{yearOfRegistration} \\
@@ -257,7 +257,7 @@ This problem is formulated as a \textbf{classification task}, where the goal is 
 \node (target_c) [filter, right=of transform_c] {Filter \\ \texttt{TARGET\_COLS}};
 
 % Merge and Output
-\node (concat) [merge, right=1.5cm of target_k, yshift=-2.25cm] {Concat DataFrames};
+\node (concat) [merge, right=0.5cm of target_k, yshift=-2.25cm] {Concat DataFrames};
 \node (final) [output, right=of concat] {Merged Data};
 
 % Connecting Arrows
