@@ -3,6 +3,7 @@ import pandas as pd
 import plotly.express as px
 import numpy as np
 import joblib
+from datetime import datetime
 
 @st.cache_resource
 def load_model():
@@ -110,21 +111,61 @@ try:
     df_processed['kilometer'] = user_input['kilometer']
 
     # Engineered Features
-    current_year = 2026 # Or whatever year you used in training
+    current_year = datetime.now().year
     df_processed['vehicleAge'] = current_year - user_input['yearOfRegistration']
     df_processed['kmPerYear'] = user_input['kilometer'] / (df_processed['vehicleAge'] + 1)
     df_processed['km_power_ratio'] = user_input['kilometer'] / (user_input['power'] + 1)
     df_processed['log_km'] = np.log1p(user_input['kilometer'])
 
-    # Frequency Encodings (You MUST use the exact same frequencies from your training data)
-    # If you didn't save these mappings, you'll need to use placeholder averages for now,
-    # but ideally, you save a dictionary of these frequencies during training and load them here.
-    brand_freq_map = {'volkswagen': 0.2, 'bmw': 0.1} # REPLACE WITH REAL MAPPINGS
-    model_freq_map = {'golf': 0.05, '3-series': 0.03} # REPLACE WITH REAL MAPPINGS
+    # Frequency Encodings - computed from training data
+    BRAND_FREQ = {
+        "volkswagen": 0.200091,
+        "bmw": 0.113960,
+        "mercedes-benz": 0.104804,
+        "opel": 0.096641,
+        "audi": 0.096032,
+        "ford": 0.066154,
+        "renault": 0.043726,
+        "peugeot": 0.030603,
+        "fiat": 0.024497,
+        "seat": 0.019900,
+        "skoda": 0.017669,
+        "mazda": 0.016253,
+        "smart": 0.015558,
+        "citroen": 0.015180,
+        "toyota": 0.014748,
+        "nissan": 0.013821,
+        "hyundai": 0.011259,
+        "mini": 0.010954,
+        "volvo": 0.009939,
+        "mitsubishi": 0.008680,
+    }
 
-    df_processed['brand_freq'] = user_input['brand'].map(brand_freq_map).fillna(0.01)
-    # Note: If you don't have model input, you'll need to add it or use a default
-    df_processed['model_freq'] = 0.01 # Placeholder if model input isn't collected
+    MODEL_FREQ = {
+        "golf": 0.082492,
+        "3-series": 0.060646,
+        "c-class": 0.037851,
+        "a4": 0.036454,
+        "corsa": 0.031765,
+        "polo": 0.028268,
+        "astra": 0.028048,
+        "passat": 0.026612,
+        "5-series": 0.024408,
+        "focus": 0.022637,
+        "e-class": 0.022289,
+        "a3": 0.019615,
+        "2-reihe": 0.018607,
+        "a6": 0.018021,
+        "transporter": 0.016307,
+        "fiesta": 0.014207,
+        "twingo": 0.013845,
+        "fortwo": 0.013779,
+        "punto": 0.013019,
+        "a-class": 0.012424,
+    }
+
+    df_processed['brand_freq'] = user_input['brand'].map(BRAND_FREQ).fillna(0.005)
+    df_processed['model_freq'] = 0.01  # Default - model not in sidebar
 
     # 3. ONE-HOT ENCODING (Manual implementation to guarantee column names match)
     # We must explicitly create ALL expected dummy columns and set them to 0 or False initially
@@ -326,7 +367,7 @@ with col_chart:
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
     )
 
-    st.plotly_chart(fig_comp, width='stretch', key="business_model_comparison")
+    st.plotly_chart(fig_comp, width='stretch', key="model_comparison_chart")
 
 with col_table:
     st.write("**Detailed Business Metrics**")
