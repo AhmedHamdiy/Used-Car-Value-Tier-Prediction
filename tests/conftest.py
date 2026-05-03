@@ -1,7 +1,9 @@
 import pandas as pd
 import numpy as np
 import pytest
+import os
 
+os.environ["PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION"] = "python"
 
 @pytest.fixture
 def sample_scraped():
