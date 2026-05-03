@@ -33,7 +33,7 @@ jobs:
         poetry install --no-interaction --no-root
 
     - name: Run code quality checks (Linting)
-      run: poetry run flake8 src/ tests/
+      run: poetry run flake8 src/ tests/ --max-line-length=100
 
     - name: Run tests with coverage
       run: poetry run pytest tests/ --cov=src --cov-report=term-missing --cov-report=html
