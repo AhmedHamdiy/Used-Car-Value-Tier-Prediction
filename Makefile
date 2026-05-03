@@ -33,7 +33,6 @@ clean:
 
 delete:
 	@echo "Cleaning up intermediate files..."
-	rm -rf $(DATA_DIR)/interim
 	rm -rf __pycache__ .pytest_cache dist build *.egg-info
 	@echo "Cleanup complete!"
 
