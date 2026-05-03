@@ -232,6 +232,61 @@ This problem is formulated as a \textbf{classification task}, where the goal is 
   \item AutoScout24 listings collected via web scraping using Python (e.g., \texttt{Scrapy} + \texttt{Scrapy-Splash}).
 \end{itemize}
 
+\subsection{Data Acquisition Pipeline}
+\begin{figure}[htpb]
+\centering
+\begin{tikzpicture}[
+    node distance=1.5cm and 0.5cm,
+    source/.style={cylinder, draw, shape border rotate=90, aspect=0.25, fill=blue!10, text width=2.2cm, align=center, minimum height=1.5cm, font=\sffamily},
+    process/.style={rectangle, draw, fill=orange!10, text width=5.5cm, align=left, rounded corners, minimum height=1.5cm, inner sep=10pt, font=\sffamily},
+    filter/.style={rectangle, draw, fill=yellow!10, text width=2.5cm, align=center, rounded corners, minimum height=1cm, font=\sffamily},
+    merge/.style={rectangle, draw, fill=green!10, text width=2.5cm, align=center, rounded corners, minimum height=1cm, font=\sffamily\bfseries},
+    output/.style={cylinder, draw, shape border rotate=90, aspect=0.25, fill=red!10, text width=2cm, align=center, minimum height=1.5cm, font=\sffamily\bfseries},
+    arrow/.style={thick, -{Stealth[length=2.5mm]}}
+]
+
+% Data Sources
+\node (kaggle) [source] {Loading \\ Kaggle Data};
+\node (autoscout) [source, below=3cm of kaggle] {Scraping \\ AutoScout24};
+
+% Transformations
+\node (transform_k) [process, right=of kaggle] {
+    \textbf{Transform Kaggle} \\[0.5em]
+    $\bullet$ Set \texttt{dataSource} \\
+    $\bullet$ Rename \texttt{powerPS} $\rightarrow$ \texttt{power} \\
+    $\bullet$ Normalize \texttt{price} (CPI 2026) \\
+    $\bullet$ Apply \texttt{price\_tier}
+};
+
+\node (transform_c) [process, right=of autoscout] {
+    \textbf{Transform Crawled} \\[0.5em]
+    $\bullet$ Set \texttt{dataSource} \\
+    $\bullet$ Rename \texttt{mileage} $\rightarrow$ \texttt{kilometer} \\
+    $\bullet$ Extract \texttt{power} \& \texttt{yearOfRegistration} \\
+    $\bullet$ Apply \texttt{price\_tier}
+};
+
+% Target Columns
+\node (target_k) [filter, right=of transform_k] {Filter \\ \texttt{TARGET\_COLS}};
+\node (target_c) [filter, right=of transform_c] {Filter \\ \texttt{TARGET\_COLS}};
+
+% Merge and Output
+\node (concat) [merge, right=1cm of target_k, yshift=-2.25cm] {Concat DataFrames};
+\node (final) [output, right=of concat] {Merged Data};
+
+% Connecting Arrows
+\draw [arrow] (kaggle) -- (transform_k);
+\draw [arrow] (autoscout) -- (transform_c);
+\draw [arrow] (transform_k) -- (target_k);
+\draw [arrow] (transform_c) -- (target_c);
+\draw [arrow] (target_k.east) -- ++(0.5,0) |- (concat.160);
+\draw [arrow] (target_c.east) -- ++(0.5,0) |- (concat.200);
+\draw [arrow] (concat) -- (final);
+
+\end{tikzpicture}
+\caption{Data Acquisition and Merging Pipeline}
+\label{fig:data_acquisition_pipeline}
+\end{figure}
 \subsection{Data Integration Strategy}
 
 \begin{itemize}
@@ -248,7 +303,6 @@ This problem is formulated as a \textbf{classification task}, where the goal is 
   \item Missing or noisy scraped fields due to unstructured HTML
   \item Potential duplicates across sources
 \end{itemize}
-\newpage
 \subsection{Feature Documentation (Core Fields)}
 
 The accepted features to be used after the merging and removal of redundant features:
@@ -294,34 +348,63 @@ The accepted features to be used after the merging and removal of redundant feat
 \section{Data Validation \& Documentation}
 
 \subsection{Dataset Validation Pipeline}
-\begin{center}
-\renewcommand{\arraystretch}{1.4}
-\begin{tabular}{c c c c}
-  \rowcolor{slate}
-  {\color{white}\small\bfseries Step} &
-  {\color{white}\small\bfseries Description} &
-  {\color{white}\small\bfseries Outcome} \\
-  \rowcolor{lightgray}
-  1 & Schema Validation  & Data type report \\
-  \rowcolor{white}
-  2 & Completeness Check & Missing value report \\
-  \rowcolor{lightgray}
-  3 & Duplicate Detection & Duplicate count \\
-  \rowcolor{white}
-  4 & Descriptive Statistics & Summary stats \\
-  \rowcolor{lightgray}
-  5 & Range \& Outlier Checks & Violation report \\
-  \rowcolor{white}
-  6 & Categorical Analysis  & Category distribution \\
-  \rowcolor{lightgray}
-  7 & Distribution Checks & Distribution plots \\
-  \rowcolor{white}
-  8 & Outlier Analysis  & IQR \& Z-Score  \& Isolation Forest Outliers \\
+\begin{figure}[htpb]
+\centering
+\begin{tikzpicture}[
+    node distance=0.8cm and 0cm,
+    input/.style={cylinder, draw, shape border rotate=90, aspect=0.05, fill=blue!10, text width=4cm, align=center, minimum height=1.5cm, font=\sffamily\bfseries},
+    process/.style={rectangle, draw, fill=orange!10, text width=14cm, align=left, rounded corners, minimum height=1.2cm, inner sep=10pt, font=\sffamily},
+    output/.style={cylinder, draw, shape border rotate=90, aspect=0.05, fill=green!10, text width=4.5cm, align=center, minimum height=1.5cm, font=\sffamily\bfseries},
+    arrow/.style={thick, -{Stealth[length=2.5mm]}}
+]
 
-\end{tabular}
-\end{center}
+% Input
+\node (input) [input] {Merged DataFrame};
 
+% Stage 1: Basic Integrity
+\node (stage1) [process, below=1cm of input] {
+    \textbf{1. Schema \& Completeness} \\[0.3em]
+    $\bullet$ \texttt{validate\_schema}: Check missing/extra cols \& expected Dtypes \\
+    $\bullet$ \texttt{validate\_completeness}: Verify required cols \& $<$5\% missing threshold
+};
 
+% Stage 2: Quality & Validity
+\node (stage2) [process, below=of stage1] {
+    \textbf{2. Uniqueness \& Validity} \\[0.3em]
+    $\bullet$ \texttt{validate\_uniqueness}: Detect full-row duplicates \\
+    $\bullet$ \texttt{validate\_validity}: Check min/max ranges \& allowed categorical values
+};
+
+% Stage 3: Outlier Detection
+\node (stage3) [process, below=of stage2] {
+    \textbf{3. Outlier Detection} \\[0.3em]
+    $\bullet$ \texttt{validate\_outliers\_zscore}: Univariate $|z| > 3.0$ \\
+    $\bullet$ \texttt{validate\_outliers\_iqr}: Univariate 1.5 $\times$ IQR fences \\
+    $\bullet$ \texttt{validate\_outliers\_isolation\_forest}: Multivariate anomaly detection
+};
+
+% Stage 4: Statistical Checks
+\node (stage4) [process, below=of stage3] {
+    \textbf{4. Statistical Profiling} \\[0.3em]
+    $\bullet$ \texttt{validate\_distribution}: Skewness, Kurtosis, KS Test \& mean bounds \\
+    $\bullet$ \texttt{validate\_relationships}: Pearson/Spearman correlation bounds
+};
+
+% Output
+\node (report) [output, below=1cm of stage4] {Validation Report \\ \texttt{.txt} \& \texttt{.json}};
+
+% Arrows
+\draw [arrow] (input) -- (stage1);
+\draw [arrow] (stage1) -- (stage2);
+\draw [arrow] (stage2) -- (stage3);
+\draw [arrow] (stage3) -- (stage4);
+\draw [arrow] (stage4) -- (report);
+
+\end{tikzpicture}
+\caption{Data Validation Pipeline Execution Flow}
+\label{fig:validation_pipeline}
+\end{figure}
+\newpage
 \subsection{Dataset Validation Report}
 \vspace{0.2cm}
 \begin{center}
@@ -538,26 +621,74 @@ PRICE\_TIER = value tier derived from listing \texttt{price}.
 \newpage
 % ─────────────────────────────────────────────────────────────
 \section{Preprocessing, Transformation \& Engineering Data}
-\subsection{Preprocessing Pipeline}
-\begin{center}
-\renewcommand{\arraystretch}{1.4}
-\begin{tabular}{c l c c}
-  \rowcolor{slate}
-  {\color{white}\small\bfseries Step} &
-  {\color{white}\small\bfseries Description} &
-  {\color{white}\small\bfseries Tools} &
-  {\color{white}\small\bfseries Outcome} \\
-  \rowcolor{lightgray}
-  1 & Data Cleaning & Pandas & Cleaned dataset (259,092 rows) \\
-  \rowcolor{white} 2 & Outlier Detection & IQR, Fixed Bounds & Outlier report \\
-  \rowcolor{lightgray} 3 & Feature Transformation & Scikit-learn & Transformed features \\
-  \rowcolor{white} 4 & Feature Engineering & Custom code & New features \\
-  \rowcolor{lightgray} 5 & Feature Selection & Scikit-learn & Selected features \\
-  \rowcolor{white} 6 & Train-Validation-Test Split & Scikit-learn & Data splits \\
-  \rowcolor{lightgray} 7 & Data Balancing & SMOTE, Undersampling & Balanced training set \\
-\end{tabular}
-\end{center}
+\subsection{Cleaning Pipeline}
+\begin{figure}[htpb]
+\centering
+\begin{tikzpicture}[
+    node distance=0.2cm and 0cm,
+    input/.style={cylinder, draw, shape border rotate=90, aspect=0.05, fill=blue!10, text width=4cm, align=center, minimum height=1.5cm, font=\sffamily\bfseries},
+    process/.style={rectangle, draw, fill=orange!10, text width=8.5cm, align=left, rounded corners, minimum height=1.2cm, inner sep=10pt, font=\sffamily},
+    output/.style={cylinder, draw, shape border rotate=90, aspect=0.05, fill=green!10, text width=4.5cm, align=center, minimum height=1.5cm, font=\sffamily\bfseries},
+    arrow/.style={thick, -{Stealth[length=2.5mm]}}
+]
 
+% Input
+\node (input) [input] {Raw / Merged \\ DataFrame};
+
+% Step 1: Load & Coerce
+\node (step1) [process, below=1cm of input] {
+    \textbf{Step 1: Load \& Coerce} \\[0.3em]
+    $\bullet$ Load CSV and enforce \texttt{INPUT\_COLS} \\
+    $\bullet$ Coerce numeric types (errors $\rightarrow$ NaN) \\
+    $\bullet$ Replace placeholder strings with NaN
+};
+
+% Step 2: Remove Invalid Rows
+\node (step2) [process, below=of step1] {
+    \textbf{Step 2: Remove Invalid Rows} \\[0.3em]
+    $\bullet$ Drop rows with \texttt{price} outside bounds \\
+    $\bullet$ Drop out-of-range \texttt{year}, \texttt{kilometer}, \texttt{power}
+};
+
+% Step 3: Impute Categoricals
+\node (step3) [process, below=of step2] {
+    \textbf{Step 3: Impute Categoricals} \\[0.3em]
+    $\bullet$ Clean brand/model/fuel/gearbox strings \\
+    $\bullet$ Impute NaNs using brand-grouped mode \\
+    $\bullet$ Apply global fallback mode / median
+};
+
+% Step 4: Outlier Handling
+\node (step4) [process, below=of step3] {
+    \textbf{Step 4: Outlier Handling} \\[0.3em]
+    $\bullet$ Cap values using fixed domain bounds \\
+    $\bullet$ Apply IQR capping rule (optional)
+};
+
+% Step 5 & 6: Deduplication & Finalize
+\node (step5) [process, below=of step4] {
+    \textbf{Step 5 \& 6: Deduplication \& Finalize} \\[0.3em]
+    $\bullet$ Drop exact full-row duplicates \\
+    $\bullet$ Remove any residual NaN rows \\
+    $\bullet$ Run final \texttt{validate\_schema}
+};
+
+% Output
+\node (output) [output, below=1cm of step5] {Cleaned \\ DataFrame};
+
+% Arrows
+\draw [arrow] (input) -- (step1);
+\draw [arrow] (step1) -- (step2);
+\draw [arrow] (step2) -- (step3);
+\draw [arrow] (step3) -- (step4);
+\draw [arrow] (step4) -- (step5);
+\draw [arrow] (step5) -- (output);
+
+\end{tikzpicture}
+\caption{Data Cleaning Pipeline Execution Flow}
+\label{fig:cleaning_pipeline}
+\end{figure}
+\newpage
 \subsection{Cleaning Steps \& Justification}
 \begin{itemize}
   \item \textbf{Remove invalid rows (58,245 removed):} Removed entries violating logical domain constraints to ensure data quality.

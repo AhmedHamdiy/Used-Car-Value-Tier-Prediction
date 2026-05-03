@@ -1,0 +1,88 @@
+\contentsline {section}{\numberline {1}Problem Definition \& Business Context}{5}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Business Problem}{5}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Stakeholders}{5}{subsection.1.2}%
+\contentsline {subsection}{\numberline {1.3}Problem Formulation}{5}{subsection.1.3}%
+\contentsline {subsection}{\numberline {1.4}Justification for Classification}{5}{subsection.1.4}%
+\contentsline {subsection}{\numberline {1.5}Business Impact}{5}{subsection.1.5}%
+\contentsline {section}{\numberline {2}Data Acquisition \& Integration}{6}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Sources Description}{6}{subsection.2.1}%
+\contentsline {subsubsection}{\numberline {2.1.1}Primary Source (Kaggle Dataset)}{6}{subsubsection.2.1.1}%
+\contentsline {subsubsection}{\numberline {2.1.2}Secondary Source (Web Scraping)}{6}{subsubsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.2}Data Acquisition}{6}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Data Acquisition Pipeline}{6}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Data Integration Strategy}{7}{subsection.2.4}%
+\contentsline {subsection}{\numberline {2.5}Feature Documentation (Core Fields)}{7}{subsection.2.5}%
+\contentsline {section}{\numberline {3}Data Validation \& Documentation}{8}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Dataset Validation Pipeline}{8}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Dataset Validation Report}{9}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.1}Completeness - Missing Values Analysis}{9}{subsubsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2}Descriptive Statistics (Numeric Columns)}{10}{subsubsection.3.2.2}%
+\contentsline {subsubsection}{\numberline {3.2.3}Distribution Checks}{10}{subsubsection.3.2.3}%
+\contentsline {subsubsection}{\numberline {3.2.4}Consistency - Schema \& Data Types}{10}{subsubsection.3.2.4}%
+\contentsline {subsubsection}{\numberline {3.2.5}Validity Checks}{10}{subsubsection.3.2.5}%
+\contentsline {subsubsection}{\numberline {3.2.6}Uniqueness - Duplicate Detection}{11}{subsubsection.3.2.6}%
+\contentsline {subsubsection}{\numberline {3.2.7}Statistical Outlier Detection}{11}{subsubsection.3.2.7}%
+\contentsline {subsection}{\numberline {3.3}Quality Issues Summary}{11}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}Target Variable Definition}{11}{subsection.3.4}%
+\contentsline {section}{\numberline {4}Preprocessing, Transformation \& Engineering Data}{12}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Cleaning Pipeline}{12}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Cleaning Steps \& Justification}{13}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Outlier Detection \& Handling}{13}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Feature Transformation \& Justification}{14}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Feature Engineering}{14}{subsection.4.5}%
+\contentsline {subsection}{\numberline {4.6}Feature Selection \& Justification}{14}{subsection.4.6}%
+\contentsline {subsection}{\numberline {4.7}Train-Validation-Test Split Procedure}{15}{subsection.4.7}%
+\contentsline {subsection}{\numberline {4.8}Data Balancing Strategy}{17}{subsection.4.8}%
+\contentsline {subsection}{\numberline {4.9}Preprocessing Summary}{17}{subsection.4.9}%
+\contentsline {subsection}{\numberline {4.10}Dataset After and Before Preprocessing}{17}{subsection.4.10}%
+\contentsline {section}{\numberline {5}Exploratory Data Analysis}{18}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Overview \& Motivation}{18}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}EDA Dashboard}{18}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Hypothesis-Driven Analysis}{18}{subsection.5.3}%
+\contentsline {subsubsection}{\numberline {5.3.1}Hypothesis 1 --- Vehicle Age and the Budget Tier}{18}{subsubsection.5.3.1}%
+\contentsline {subsubsection}{\numberline {5.3.2}Hypothesis 2 --- Accumulated Mileage and Budget Classification}{18}{subsubsection.5.3.2}%
+\contentsline {subsubsection}{\numberline {5.3.3}Hypothesis 3 --- Engine Power and the Luxury Tier}{20}{subsubsection.5.3.3}%
+\contentsline {subsubsection}{\numberline {5.3.4}Hypothesis 4 --- Brand Prestige and Luxury Market Share}{22}{subsubsection.5.3.4}%
+\contentsline {subsubsection}{\numberline {5.3.5}Hypothesis 5 --- Vehicle Body Type and Tier Composition}{22}{subsubsection.5.3.5}%
+\contentsline {subsection}{\numberline {5.4}From EDA Insights to Model Selection}{23}{subsection.5.4}%
+\contentsline {section}{\numberline {6}Model Development}{25}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Model Candidates and Rationale}{25}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Hyperparameter Search Strategy}{25}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Complete Model Comparison Results}{25}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}Validation Strategy and Overfitting Analysis}{25}{subsection.6.4}%
+\contentsline {subsubsection}{\numberline {6.4.1}Overfitting Check}{25}{subsubsection.6.4.1}%
+\contentsline {subsubsection}{\numberline {6.4.2}Stability Analysis}{25}{subsubsection.6.4.2}%
+\contentsline {subsubsection}{\numberline {6.4.3}Underfitting Detection}{26}{subsubsection.6.4.3}%
+\contentsline {subsection}{\numberline {6.5}Model Selection Criteria}{26}{subsection.6.5}%
+\contentsline {section}{\numberline {7}Experiment Tracking with MLflow}{28}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Experiment Setup and Logging Strategy}{28}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Model Runs and Hyperparameters}{28}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}Metrics Tracking}{29}{subsection.7.3}%
+\contentsline {subsection}{\numberline {7.4}Model Artifacts and Versioning}{29}{subsection.7.4}%
+\contentsline {subsection}{\numberline {7.5}MLflow Experiment Comparison Interface}{30}{subsection.7.5}%
+\contentsline {subsection}{\numberline {7.6}MLflow Benefits for This Project}{30}{subsection.7.6}%
+\contentsline {section}{\numberline {8}Testing}{31}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Software Testing: Unit and Integration}{31}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Model Testing: Generalization}{31}{subsection.8.2}%
+\contentsline {section}{\numberline {9}Results \& Evaluation}{33}{section.9}%
+\contentsline {subsection}{\numberline {9.1}Model Performance Summary}{33}{subsection.9.1}%
+\contentsline {subsection}{\numberline {9.2}Confusion Matrix Analysis}{33}{subsection.9.2}%
+\contentsline {subsection}{\numberline {9.3}Classification Report (Best Model)}{33}{subsection.9.3}%
+\contentsline {subsection}{\numberline {9.4}Feature Importance Analysis}{34}{subsection.9.4}%
+\contentsline {subsection}{\numberline {9.5}Error Analysis}{35}{subsection.9.5}%
+\contentsline {subsubsection}{\numberline {9.5.1}Primary Error Patterns}{35}{subsubsection.9.5.1}%
+\contentsline {subsubsection}{\numberline {9.5.2}Failure Mode Analysis}{35}{subsubsection.9.5.2}%
+\contentsline {subsection}{\numberline {9.6}Business Metric Interpretation}{36}{subsection.9.6}%
+\contentsline {subsubsection}{\numberline {9.6.1}Luxury Recall (90.53\%)}{36}{subsubsection.9.6.1}%
+\contentsline {subsubsection}{\numberline {9.6.2}Severe Misclassification Rate (0.28\%)}{36}{subsubsection.9.6.2}%
+\contentsline {subsection}{\numberline {9.7}Resampling Strategy Impact}{36}{subsection.9.7}%
+\contentsline {section}{\numberline {10}Code Automation}{38}{section.10}%
+\contentsline {section}{\numberline {11}Continuous Integration}{39}{section.11}%
+\contentsline {section}{\numberline {12}Interactive Dashboard}{40}{section.12}%
+\contentsline {subsection}{\numberline {12.1}Purpose \& Business Value}{40}{subsection.12.1}%
+\contentsline {subsection}{\numberline {12.2}Technology Stack}{40}{subsection.12.2}%
+\contentsline {subsection}{\numberline {12.3}Key Dashboard Components}{40}{subsection.12.3}%
+\contentsline {section}{\numberline {13}Limitations \& Future Work}{41}{section.13}%
+\contentsline {subsection}{\numberline {13.1}Limitations}{41}{subsection.13.1}%
+\contentsline {subsection}{\numberline {13.2}Future Work}{41}{subsection.13.2}%
+\contentsline {section}{\numberline {14}Team Contributions}{41}{section.14}%
