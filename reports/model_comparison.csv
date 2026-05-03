@@ -1,0 +1,2 @@
+model,dataset,val_f1,test_f1,test_bal_acc,luxury_recall,severe_misclassification_rate,best_params
+xgboost,none,0.8590912805430443,0.8590372905869573,0.8566052899720881,0.8611006051437217,0.0021999652637063626,"{'subsample': 0.8, 'n_estimators': 200, 'max_depth': 8, 'learning_rate': 0.1}"

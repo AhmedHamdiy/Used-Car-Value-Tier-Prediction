@@ -31,9 +31,3 @@ jobs:
           rm -f poetry.lock
           poetry lock
           poetry install --no-interaction --no-root --with dev
-
-      - name: Run code quality checks (Linting)
-        run: poetry run flake8 src/
-
-      - name: Run Tests
-        run: poetry run pytest

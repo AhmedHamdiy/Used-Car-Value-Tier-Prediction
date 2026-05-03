@@ -227,10 +227,9 @@ This problem is formulated as a \textbf{classification task}, where the goal is 
 
 \begin{itemize}
   \item \textbf{Vertical merge} the Kaggle dataset with scraped AutoScout24 listings by aligning both sources to a unified schema.
-  \item Standardize fields and resolve naming differences (e.g., \texttt{kilometers} vs \texttt{mileage}).
-  \item Deduplicate near-identical listings using matching keys such as \textbf{brand}, \textbf{model}, \textbf{kilometers}, \textbf{yearOfRegistration}, and \textbf{power}.
+  \item Standardize fields and resolve naming differences (e.g., \texttt{kilometer} vs \texttt{mileage}).
+  \item Deduplicate near-identical listings using matching keys such as \textbf{brand}, \textbf{model}, \textbf{kilometer}, \textbf{yearOfRegistration}, and \textbf{power}.
   \item Merge strategy is union rows after schema alignment.
-  \item Handle missing fields introduced by scraping or schema differences using imputation or "unknown" categories.
 \end{itemize}
 
 \textbf{Challenges:}
@@ -256,24 +255,26 @@ The accepted features to be used after the merging and removal of redundant feat
   1 & seller & Categorical & seller type (business/private) \\
   \rowcolor{white}
   2 & vehicleType & Categorical & body type \\
-  \rowcolor{white}
+  \rowcolor{lightgray}
   3 & yearOfRegistration & Numeric & Year the car was registered \\
   \rowcolor{white}
   4 & gearbox & Categorical & Type of gearbox (manual or automatic) \\
   \rowcolor{lightgray}
   5 & power & Numeric & Power of the car in Horse Power \\
   \rowcolor{white}
-  8 & model & Categorical & Model of the car \\
+  6 & model & Categorical & Model of the car \\
   \rowcolor{lightgray}
-  6 & brand & Categorical & Brand of the car \\
+  7 & brand & Categorical & Brand of the car \\
   \rowcolor{white}
-  7 & kilometers & Numeric & Kilometers the car has been driven \\
+  8 & kilometer & Numeric & Kilometers the car has been driven \\
   \rowcolor{lightgray}
-  8 & fuelType & Categorical & Type of fuel (e.g. diesel, petrol, etc.) \\
+  9 & fuelType & Categorical & Type of fuel (e.g. diesel, petrol, etc.) \\
   \rowcolor{white}
-  9 & dataSource & Categorical & Source of the data (kaggle/crawled) \\
+  10 & dataSource & Categorical & Source of the data (kaggle/crawled) \\
   \rowcolor{lightgray}
-  10 & price & Numeric & Price of the car \\
+  11 & price & Numeric & Price of the car \\
+  \rowcolor{white}
+  12 & price\_tier & Categorical & Target tier derived from price \\
 \end{tabular}
 \end{center}
 \vspace{0.25cm}
@@ -313,46 +314,44 @@ The accepted features to be used after the merging and removal of redundant feat
 
 
 \subsection{Dataset Validation Report}
-\vspace{0.25cm}
+\vspace{0.2cm}
 \begin{center}
-\renewcommand{\arraystretch}{1.6}
+\renewcommand{\arraystretch}{1.4}
 \begin{tabular}{c c}
   \rowcolor{slate}
   {\color{white}\small\bfseries Metric} &
   {\color{white}\small\bfseries Value} \\
-  \rowcolor{lightgray} Total checks & 9 \\ % [cite: 1]
-  \rowcolor{white} Checks Passed & 1 \\ % [cite: 1]
-  \rowcolor{lightgray} Checks FAILed & 8 \\ % [cite: 1]
-  \rowcolor{white} Success Rate & 11.1\% \\ % [cite: 1]
-  \rowcolor{lightgray} Full-row duplicates & 57,324 (15.33\%) \\ % [cite: 2]
+  \rowcolor{lightgray} Total checks & 9 \\
+  \rowcolor{white} Checks Passed & 1 \\
+  \rowcolor{lightgray} Checks FAILed & 8 \\
+  \rowcolor{white} Success Rate & 11.1\% \\
+  \rowcolor{lightgray} Full-row duplicates & 57,324 (15.33\%) \\
 \end{tabular}
 \end{center}
-\vspace{0.25cm}
+\vspace{0.2cm}
 
 % ─────────────────────────────────────────────────────────────
 \subsubsection{Completeness - Missing Values Analysis}
-\vspace{0.25cm}
+\vspace{0.2cm}
 \begin{center}
-\renewcommand{\arraystretch}{1.5}
+\renewcommand{\arraystretch}{1.4}
 \begin{tabular}{l c c}
 \rowcolor{slate}
 {\color{white}\small\bfseries Column} &
 {\color{white}\small\bfseries Missing \%} &
 {\color{white}\small\bfseries Status} \\
 \rowcolor{lightgray} brand & 0.00\% & \textcolor{green}{PASS} \\
-\rowcolor{white} model & 5.48\% & \textcolor{red}{FAIL ($>5\%$)} \\ % [cite: 1]
-\rowcolor{lightgray} vehicleType & 10.12\% & \textcolor{red}{FAIL ($>5\%$)} \\ % [cite: 1]
-\rowcolor{white} power & 0.00\% & \textcolor{green}{PASS} \\ % [cite: 1]
-\rowcolor{lightgray} gearbox & 5.40\% & \textcolor{red}{FAIL ($>5\%$)} \\ % [cite: 2]
-\rowcolor{white} kilometer & 0.01\% & \textcolor{green}{PASS} \\ % [cite: 2]
-\rowcolor{lightgray} fuelType & 8.93\% & \textcolor{red}{FAIL ($>5\%$)} \\ % [cite: 1]
-\rowcolor{white} yearOfRegistration & 0.02\% & \textcolor{green}{PASS} \\ % [cite: 2]
-\rowcolor{lightgray} seller & 0.00\% & \textcolor{green}{PASS} \\ % [cite: 1]
-\rowcolor{white} price & 0.00\% & \textcolor{green}{PASS} \\ % [cite: 2]
-
-%  - yearOfRegistration: 99.98% complete (0.02% missing)
-%  - seller: 100.00% complete (0.00% missing)
-%  - price: 100.00% complete (0.00% missing)
+\rowcolor{white} model & 5.48\% & \textcolor{red}{FAIL ($>5\%$)} \\
+\rowcolor{lightgray} vehicleType & 10.12\% & \textcolor{red}{FAIL ($>5\%$)} \\
+\rowcolor{white} power & 0.00\% & \textcolor{green}{PASS} \\
+\rowcolor{lightgray} gearbox & 5.40\% & \textcolor{red}{FAIL ($>5\%$)} \\
+\rowcolor{white} kilometer & 0.01\% & \textcolor{green}{PASS} \\
+\rowcolor{lightgray} fuelType & 8.93\% & \textcolor{red}{FAIL ($>5\%$)} \\
+\rowcolor{white} yearOfRegistration & 0.02\% & \textcolor{green}{PASS} \\
+\rowcolor{lightgray} seller & 0.00\% & \textcolor{green}{PASS} \\
+\rowcolor{white} dataSource & 0.00\% & \textcolor{green}{PASS} \\
+\rowcolor{lightgray} price & 0.00\% & \textcolor{green}{PASS} \\
+\rowcolor{white} price\_tier & 0.00\% & \textcolor{green}{PASS} \\
 \end{tabular}
 \end{center}
 \vspace{0.25cm}
@@ -376,16 +375,16 @@ The accepted features to be used after the merging and removal of redundant feat
  \\
 
 \rowcolor{lightgray}
-yearOfRegistration & 2004.68 & 92.57 & 2000 & 1000 & 1999 & 2003 & 2008 & 9999 \\ % [cite: 13, 14, 15]
+yearOfRegistration & 2004.68 & 92.57 & 2000 & 1000 & 1999 & 2003 & 2008 & 9999 \\
 
 \rowcolor{white}
-power & 115.98 & 191.77 & 0 &0 & 70 & 105 & 150 & 20 K \\ % [cite: 9, 10, 11]
+power & 115.98 & 191.77 & 0 & 0 & 70 & 105 & 150 & 20,000 \\
 
 \rowcolor{lightgray}
-kilometer & 125.3 K & 40.5 K & 150 K & 0 & 100 K & 150 K & 150 K & 999.9 K \\ % [cite: 11, 12, 13]
+kilometer & 125,298.65 & 40,548.44 & 150,000 & 0 & 100,000 & 150,000 & 150,000 & 999,999 \\
 
 \rowcolor{white}
-price & 17.4 K & 3.6 M & 0& 0 & 1,150 & 2,990 & 7,350 & 214.8 M \\ % [cite: 7, 8, 9]
+price & 25,472.31 & 5,262,458.17 & 0 & 0 & 1,692.39 & 4,400.21 & 10,742.99 & 3.16 B \\
 \end{tabular}
 \end{center}
 
@@ -401,10 +400,10 @@ price & 17.4 K & 3.6 M & 0& 0 & 1,150 & 2,990 & 7,350 & 214.8 M \\ % [cite: 7, 8
 {\color{white}\small\bfseries Skewness Label} &
 {\color{white}\small\bfseries Kurtosis} &
 {\color{white}\small\bfseries Kurtosis Label} \\
-\rowcolor{lightgray} yearOfRegistration & 2004.68 & 2003 & 92.57 & 72.35 \\
-\rowcolor{white} price & 17369.87 & 2990 & 3575910.38 & 580.00 \\
-\rowcolor{lightgray} kilometer & 125298.65 & 150000 & 40548.44 & -1.48 \\
-\rowcolor{white} power & 115.98 & 105 & 191.77 & 58.14 \\
+\rowcolor{lightgray} yearOfRegistration & 72.35 & Positive Skew & 5702.44 & Leptokurtic \\
+\rowcolor{white} price & 580.00 & Positive Skew & 347759.38 & Leptokurtic \\
+\rowcolor{lightgray} kilometer & -1.48 & Negative Skew & 1.75 & Leptokurtic \\
+\rowcolor{white} power & 58.14 & Positive Skew & 4428.10 & Leptokurtic \\
 \end{tabular}
 \end{center}
 
@@ -422,27 +421,21 @@ price & 17.4 K & 3.6 M & 0& 0 & 1,150 & 2,990 & 7,350 & 214.8 M \\ % [cite: 7, 8
 {\color{white}\small\bfseries Detected Type} &
 {\color{white}\small\bfseries Expected Type} &
 {\color{white}\small\bfseries Match} \\
-\rowcolor{white} yearOfRegistration & float64 & int64 & \textcolor{red}{No} \\ % [cite: 1]
+\rowcolor{white} yearOfRegistration & float64 & int64 & \textcolor{red}{No} \\
 \rowcolor{lightgray} model & str & str & \textcolor{green}{Yes} \\
 \rowcolor{white} power & float64 & float64 &\textcolor{green}{Yes} \\
 \rowcolor{lightgray} kilometer & float64 & float64 & \textcolor{green}{Yes} \\
-\rowcolor{white} price & int64 & int64 & \textcolor{green}{Yes} \\
-\rowcolor{lightgray} seller & str & str &\textcolor{green}{Yes} \\
+\rowcolor{white} price & float64 & int64 & \textcolor{red}{No} \\
+\rowcolor{lightgray} seller & object & str &\textcolor{red}{No} \\
 \rowcolor{white} gearbox & str & str & \textcolor{green}{Yes} \\
 \rowcolor{lightgray} vehicleType & str & str & \textcolor{green}{Yes} \\
 \rowcolor{white} fuelType & str & str & \textcolor{green}{Yes} \\
 \rowcolor{lightgray} brand & str & str & \textcolor{green}{Yes} \\
+\rowcolor{white} dataSource & object & str & \textcolor{red}{No} \\
+\rowcolor{lightgray} price\_tier & object & str & \textcolor{red}{No} \\
 \end{tabular}
 \end{center}
 \vspace{0.2cm}
-
-% ─────────────────────────────────────────────────────────────
-\subsubsection{Uniqueness - Duplicate Detection}
-
-\begin{itemize}
-  \item Full-row duplicates detected: \textbf{57,324 rows (15.33\%)} % [cite: 2]
-\end{itemize}
-% ─────────────────────────────────────────────────────────────
 \subsubsection{Validity Checks}
 \vspace{0.25cm}
 \begin{center}
@@ -453,32 +446,21 @@ price & 17.4 K & 3.6 M & 0& 0 & 1,150 & 2,990 & 7,350 & 214.8 M \\ % [cite: 7, 8
 {\color{white}\small\bfseries Rule} &
 {\color{white}\small\bfseries Violations} &
 {\color{white}\small\bfseries Status} \\
-\rowcolor{lightgray} yearOfRegistration & [1900 - 2026] & 182 (68 below, 114 above) & \textcolor{red}{FAIL} \\ % [cite: 3, 4]
-\rowcolor{white} kilometer & [0 - 300,000] & 13 (above max) & \textcolor{red}{FAIL} \\ % [cite: 3]
-\rowcolor{lightgray} power & [5 - 5,000] & 40,988 (40,903 below, 85 above) &\textcolor{red}{FAIL} \\ % [cite: 2, 3]
-\rowcolor{white} price & [500 - 5,000,000] & 36,114 (36,062 below, 52 above) & \textcolor{red}{FAIL} \\ % [cite: 2]
+\rowcolor{lightgray} yearOfRegistration & [1900 - 2026] & 182 (68 below, 114 above) & \textcolor{red}{FAIL} \\
+\rowcolor{white} kilometer & [0 - 300,000] & 13 (above max) & \textcolor{red}{FAIL} \\
+\rowcolor{lightgray} power & [5 - 5,000] & 40,988 (40,903 below, 85 above) &\textcolor{red}{FAIL} \\
+\rowcolor{white} price & [500 - 5,000,000] & 26,273 (26,219 below, 54 above) & \textcolor{red}{FAIL} \\
 \end{tabular}
 \end{center}
 \vspace{0.25cm}
 
 % ─────────────────────────────────────────────────────────────
-\subsubsection{Accuracy - Range \& Outlier Checks}
-\vspace{0.25cm}
-\begin{center}
-\renewcommand{\arraystretch}{1.4}
-\begin{tabular}{l c c c}
-\rowcolor{slate}
-{\color{white}\small\bfseries Column} &
-{\color{white}\small\bfseries Rule} &
-{\color{white}\small\bfseries Violations} &
-{\color{white}\small\bfseries Status} \\
-\rowcolor{lightgray} yearOfRegistration & [1950 - 2026] & 182 (68 below, 114 above) & \textcolor{red}{FAIL} \\ % [cite: 3, 4]
-\rowcolor{white} kilometer & [0 - 299,999] & 13 (above max) & \textcolor{red}{FAIL} \\ % [cite: 3]
-\rowcolor{lightgray} power & [1 - 4,999] & 40,907 (40,820 below, 87 above) &\textcolor{red}{FAIL} \\ % [cite: 2, 3]
-\rowcolor{white} price & [0 - 1,000,000] & 65 (above max) & \textcolor{red}{FAIL} \\ % [cite: 2]
-\end{tabular}
-\end{center}
-\vspace{0.25cm}
+\subsubsection{Uniqueness - Duplicate Detection}
+
+\begin{itemize}
+  \item Full-row duplicates detected: \textbf{57,324 rows (15.33\%)}.
+\end{itemize}
+% ─────────────────────────────────────────────────────────────
 
 
 % ─────────────────────────────────────────────────────────────
@@ -493,8 +475,8 @@ price & 17.4 K & 3.6 M & 0& 0 & 1,150 & 2,990 & 7,350 & 214.8 M \\ % [cite: 7, 8
 {\color{white}\small\bfseries Z-Score \%} &
 {\color{white}\small\bfseries IQR Outliers} &
 {\color{white}\small\bfseries IQR \%} &
-{\color{white}\small\bfseries Status \%} \\
-\rowcolor{lightgray} price & 40 & 0.01\% & 28,424 & 7.60\%  & \textcolor{red}{FAIL}\\
+{\color{white}\small\bfseries Status} \\
+\rowcolor{lightgray} price & 40 & 0.01\% & 27,980 & 7.48\%  & \textcolor{red}{FAIL}\\
 \rowcolor{white} power & 385 & 0.10\% & 11,035 & 2.95\% & \textcolor{red}{FAIL}\\
 \rowcolor{lightgray} kilometer & 290 & 0.08\% & 15,397 & 4.12\% & \textcolor{red}{FAIL}\\
 \rowcolor{white} yearOfRegistration & 173 & 0.05\% & 8,289 & 2.22\% & \textcolor{red}{FAIL}\\
@@ -510,13 +492,13 @@ price & 17.4 K & 3.6 M & 0& 0 & 1,150 & 2,990 & 7,350 & 214.8 M \\ % [cite: 7, 8
 % ─────────────────────────────────────────────────────────────
 \subsection{Quality Issues Summary}
 \begin{itemize}
-  \item \textbf{Schema Issue:} \texttt{yearOfRegistration} is formatted as a \texttt{float64} instead of the expected \texttt{int64}. % [cite: 1]
-  \item \textbf{Missing Data:} Significant missing values across \texttt{vehicleType} (10.12\%), \texttt{fuelType} (8.93\%), \texttt{model} (5.48\%), and \texttt{gearbox} (5.40\%). % [cite: 1, 2]
-  \item \textbf{Duplicate Records:} High proportion of exact full-row duplicates detected (15.33\%). % [cite: 2]
-  \item \textbf{Invalid Ranges:} Massive positive skew in \texttt{price} (max 2B+) % [cite: 9]
-  and \texttt{power} (max 20k) % [cite: 11]
-  indicating corrupted entries. \texttt{power} heavily violates minimum range boundaries (40,903 values below 5). % [cite: 2, 3]
-  \item \textbf{Isolation Forest:} flagged 44,875 anomalous records (12.00\% of the dataset). % [cite: 7]
+  \item \textbf{Schema Issue:} \texttt{yearOfRegistration} and \texttt{price} are formatted as \texttt{float64} instead of the expected \texttt{int64}.
+  \item \textbf{Missing Data:} Significant missing values across \texttt{vehicleType} (10.12\%), \texttt{fuelType} (8.93\%), \texttt{model} (5.48\%), and \texttt{gearbox} (5.40\%).
+  \item \textbf{Duplicate Records:} High proportion of exact full-row duplicates detected (15.33\%).
+  \item \textbf{Invalid Ranges:} Massive positive skew in \texttt{price} (max 3.16B)
+  and \texttt{power} (max 20k)
+  indicating corrupted entries. \texttt{power} heavily violates minimum range boundaries (40,903 values below 5). \texttt{price} also violates minimum boundaries (26,219 below 500).
+  \item \textbf{Isolation Forest:} flagged 44,875 anomalous records (12.00\% of the dataset).
 \end{itemize}
 
 \subsection{Target Variable Definition}
@@ -535,48 +517,30 @@ PRICE\_TIER = value tier derived from listing \texttt{price}.
   {\color{white}\small\bfseries Business Meaning} &
   {\color{white}\small\bfseries Business Interpretation}\\
   \rowcolor{lightgray}
-  0 & Budget & $\leq$ \$3,500 & High-mileage or older cars & Entry-level pricing segment \\
+  0 & Budget & $<$ \$5,000 & High-mileage or older cars & Entry-level pricing segment \\
   \rowcolor{white}
-  1 & Mid-Range &  \$3,500 - \$12,000 & Recent-model mid-size cars & Mainstream segment\\
+  1 & Mid-Range &  \$5,000 - \$14,999 & Recent-model mid-size cars & Mainstream segment\\
   \rowcolor{lightgray}
-  2 & Luxury & $>$ \$12,000 & Luxury, electric, or new cars & Premium segment\\
+  2 & Luxury & $\geq$ \$15,000 & Luxury, electric, or new cars & Premium segment\\
 \end{tabular}
 \end{center}
 \vspace{0.25cm}
-\textbf{Class Distribution} [54.81\% Budget, 37.19\% Mid-Range, 7.99\% Luxury]
-
+\textbf{Class Distribution} [45.17\% Budget, 34.42\% Mid-Range, 20.41\% Luxury]
 \newpage
 % ─────────────────────────────────────────────────────────────
 \section{Preprocessing, Transformation \& Engineering Data}
-
 \subsection{Preprocessing Pipeline}
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% FIX FIX: Update tools and outcomes based on actual implementation
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
 \begin{center}
 \renewcommand{\arraystretch}{1.4}
-\begin{tabular}{c c c c}
+\begin{tabular}{c l c c}
   \rowcolor{slate}
   {\color{white}\small\bfseries Step} &
   {\color{white}\small\bfseries Description} &
   {\color{white}\small\bfseries Tools} &
   {\color{white}\small\bfseries Outcome} \\
   \rowcolor{lightgray}
-  1 & Data Cleaning & Pandas & Cleaned dataset \\
-  \rowcolor{white} 2 & Outlier Detection & IQR, Z-score & Outlier report \\
+  1 & Data Cleaning & Pandas & Cleaned dataset (259,092 rows) \\
+  \rowcolor{white} 2 & Outlier Detection & IQR, Fixed Bounds & Outlier report \\
   \rowcolor{lightgray} 3 & Feature Transformation & Scikit-learn & Transformed features \\
   \rowcolor{white} 4 & Feature Engineering & Custom code & New features \\
   \rowcolor{lightgray} 5 & Feature Selection & Scikit-learn & Selected features \\
@@ -587,217 +551,117 @@ PRICE\_TIER = value tier derived from listing \texttt{price}.
 
 \subsection{Cleaning Steps \& Justification}
 \begin{itemize}
-  \item Remove invalid rows:
+  \item \textbf{Remove invalid rows (58,245 removed):} Removed entries violating logical domain constraints to ensure data quality.
   \begin{itemize}
-    \item year outside [1900, 2026]
-    \item kilometers outside [0, 300000]
-    \item price is missing or price $<$ 100
+    \item \texttt{yearOfRegistration} outside [1900, 2026].
+    \item \texttt{kilometer} outside [0, 300,000].
+    \item \texttt{power} outside [5, 3000].
+    \item \texttt{price} outside [500, 3,000,000].
   \end{itemize}
-  \item Keep one record of the duplicated records
-  \item Impute missing categorical values using mode value of the brand
-  \item Standardize categorical labels across sources
+  \item \textbf{Duplicate Handling:} Dropped 54,495 full-row duplicated records to prevent data leakage.
+  \item \textbf{Missing Value Imputation:}
+  \begin{itemize}
+      \item Replaced uninformative placeholders (e.g., "N/A", "unknown", "-") with \texttt{NaN} prior to imputation.
+      \item Imputed missing categorical values using the group-wise mode based on the car's \texttt{brand}.
+  \end{itemize}
+  \item \textbf{Standardization:} Cleaned and standardized categorical labels (e.g., combining German/English aliases for fuel types, vehicle types, and brands).
 \end{itemize}
 
 \subsection{Outlier Detection \& Handling}
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% FIX FIX: Update Detection methods and handling strategies based on actual implementation
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
 \begin{center}
 \renewcommand{\arraystretch}{1.4}
-\begin{tabular}{c c c c}
+\begin{tabular}{c l l l}
   \rowcolor{slate}
   {\color{white}\small\bfseries Column} &
   {\color{white}\small\bfseries Detection Method} &
   {\color{white}\small\bfseries Handling Strategy} &
   {\color{white}\small\bfseries Outcome} \\
-  \rowcolor{lightgray} powerPS & Z-score & Cap to 500 & Reduced skewness \\
-  \rowcolor{white} price & IQR & Cap to 100,000 & Reduced skewness \\
-  \rowcolor{lightgray} kilometers & IQR & Cap to 200,000 & Reduced skewness \\
+  \rowcolor{lightgray} power & IQR & Cap bounds to [5.0, 252.0] & 12,530 outliers capped \\
+  \rowcolor{white} price & Fixed Ranges & Drop rows outside [500, 3,000,000] & Extreme values removed \\
+  \rowcolor{lightgray} kilometer & IQR & Cap bounds to [0.0, 225,000] & 66 outliers capped \\
+  \rowcolor{white} yearOfRegistration & IQR & Cap bounds to [1900, 2023] & 553 outliers capped \\
 \end{tabular}
 \end{center}
 
+\newpage
+\subsection{Feature Transformation \& Justification}
 
-
-\subsection{Feature Transformation\& Justification}
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% FIX FIX: Update transformation techniques and justifications based on actual implementation
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-\begin{center}
-\renewcommand{\arraystretch}{1.4}
-\begin{tabular}{c c c c}
-  \rowcolor{slate}
-  {\color{white}\small\bfseries Column} &
-  {\color{white}\small\bfseries Transformation} &
-  {\color{white}\small\bfseries Justification} &
-  {\color{white}\small\bfseries Outcome} \\
-  \rowcolor{lightgray} powerPS & Log transformation & Reduce skewness & More normal distribution \\
-  \rowcolor{white} price & Log transformation & Reduce skewness & More normal distribution \\
-  \rowcolor{lightgray} kilometers & Log transformation & Reduce skewness & More normal distribution \\
-\end{tabular}
-\end{center}
+\begin{itemize}
+  \item \textbf{Numeric Imputation (median):} Robust to skewed distributions and outliers common in price.
+  \item \textbf{Categorical Imputation (most\_frequent):} Mode imputation provides a stable default without introducing new categories.
+  \item \textbf{Scaling (StandardScaler):} Improves optimization and comparability for linear models.
+  \item \textbf{One-Hot Encoding:} Strong baseline for mixed-type tabular data reducing collinearity.
+  \item \textbf{Frequency Encoding for brand/model:} Prevents dimensionality explosion from high-cardinality variables while preserving relative frequency information.
+\end{itemize}
 
 \subsection{Feature Engineering}
 In addition to the core fields, we have engineered the following features:
 \begin{itemize}
-  \item \textbf{vehicleAge} = current\_year (2026) $-$ yearOfRegistration
-  \item \textbf{kmPerYear} = kilometers / (vehicleAge + 1)
-  \item \textbf{isAutomatic} = (gearbox == "automatic")
-  \item \textbf{is\_vintage\_classic} derived from vehicleAge \& brand
-  \item \textbf{power\_to\_tier\_bin} derived from powerPS
+  \item \textbf{vehicleAge}: Calculated as ($\text{current year} - \text{year of registration}$) to capture physical depreciation.
+  \item \textbf{kmPerYear}: Normalizes the mileage by the age of the vehicle to represent usage intensity.
+  \item \textbf{km\_power\_ratio}: A proxy for the interaction between usage and engine power to capture non-linear relationships.
+  \item \textbf{log\_kilometer} \& \textbf{log\_power}: Logarithmic transformations to compress right-skewed outliers.
+  \item \textbf{power\_per\_age}: Represents performance relative to the age of the vehicle.
+  \item \textbf{is\_vintage}: A binary indicator for vehicles exceeding the standard vintage age threshold.
+  \item \textbf{is\_automatic}: A direct binary feature extracted from the gearbox field.
 \end{itemize}
 
-
 \subsection{Feature Selection \& Justification}
-
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% FIX FIX: Update selection method and justifications based on actual implementation
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-\begin{center}
-\renewcommand{\arraystretch}{1.4}
-\begin{tabular}{c c c c}
-  \rowcolor{slate}
-  {\color{white}\small\bfseries Feature} &
-  {\color{white}\small\bfseries Selection Method} &
-  {\color{white}\small\bfseries Justification} &
-  {\color{white}\small\bfseries Outcome} \\
-  \rowcolor{lightgray} vehicleAge & Mutual Information & High relevance to price & Selected \\
-  \rowcolor{white} kmPerYear & Mutual Information & Captures usage intensity & Selected \\
-  \rowcolor{lightgray} isAutomatic & Chi-Squared Test & Categorical relevance & Selected \\
-  \rowcolor{white} is\_vintage\_classic & Domain Knowledge & Vintage/classic cars have unique pricing & Selected \\
-  \rowcolor{lightgray} power\_to\_tier\_bin & Mutual Information & Captures power distribution & Selected \\
-\end{tabular}
-\end{center}
+\begin{itemize}
+  \item We applied a model-based feature selection method using a \textcolor{teal}{Random Forest} classifier to identify the most predictive features while accounting for non-linear relationships and interactions.
+  \item The threshold was set to the median importance to retain features that contribute above-average predictive power.
+  \item This method is more robust than simple variance or correlation-based filters, especially in the presence of engineered features that may have complex relationships with the target variable.
+  \item Outcome: The selection process resulted in the removal of low-importance features, reducing noise and improving model generalization.
+\end{itemize}
 
 
 \subsection{Train-Validation-Test Split Procedure}
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% FIX FIX: Update split ratios and methods based on actual implementation
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-\begin{center}
-\renewcommand{\arraystretch}{1.4}
-\begin{tabular}{c c c c}
-  \rowcolor{slate}
-  {\color{white}\small\bfseries Dataset} &
-  {\color{white}\small\bfseries Split Ratio} &
-  {\color{white}\small\bfseries Method} &
-  {\color{white}\small\bfseries Outcome} \\
-  \rowcolor{lightgray} Training Set & 70\% & Stratified Random Sampling & 260,070 rows \\
-  \rowcolor{white} Validation Set & 15\% & Stratified Random Sampling & 55,729 rows \\
-  \rowcolor{lightgray} Test Set & 15\% & Stratified Random Sampling & 55,729 rows \\
-\end{tabular}
-\end{center}
+\begin{itemize}
+  \item \textbf{Train-Test Split:} An 80/20 stratified split was performed to ensure that the class distribution of the target variable is preserved across both sets, which is crucial for imbalanced classification tasks.
+  \item \textbf{Cross-Validation:} A 5-fold stratified cross-validation strategy was implemented on the training set to provide robust estimates of model performance and to mitigate variance in
+  \item the presence of class imbalance, ensuring that each fold maintains the same proportion of classes as the overall dataset.
+\end{itemize}
 
+\newpage
 \subsection{Data Balancing Strategy}
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% FIX FIX: Update balancing techniques and justifications based on actual implementation
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
+We experimented with the following resampling techniques to address class imbalance:
+\begin{enumerate}
+  \item \textbf{None (Baseline):} No resampling applied to establish a baseline for the bias-variance trade-off.
+  \vspace{0.4cm}
+  \item \textbf{SMOTE (Synthetic Minority Oversampling Technique):} Generates synthetic
+        samples for the minority class to improve recall, particularly for the luxury tier, while being cautious of potential overfitting.
+  \vspace{0.4cm}
+
+  \item \textbf{Undersampling (RandomUnderSampler):} Randomly removes samples from the majority class to balance the dataset, which can speed up training but may lead to information
+        loss and higher variance, especially in the budget tier.
+\end{enumerate}
+An evaluation of the impact of each technique on both global performance metrics (e.g., F1 score) and business-specific metrics (e.g., luxury recall) was conducted to determine the optimal approach.\\
+\\These are the results of the resampling techniques on the final model performance:
 \begin{center}
 \renewcommand{\arraystretch}{1.4}
-\begin{tabular}{c c c c}
+\begin{tabular}{p{3.5cm} p{9cm}}
   \rowcolor{slate}
   {\color{white}\small\bfseries Technique} &
-  {\color{white}\small\bfseries Description} &
-  {\color{white}\small\bfseries Justification} &
   {\color{white}\small\bfseries Outcome} \\
-  \rowcolor{lightgray} SMOTE & Synthetic Minority Over-sampling Technique & Generates synthetic samples for minority class (Luxury) & Balanced class distribution \\
-  \rowcolor{white} Undersampling & Randomly removes samples from majority class (Budget) & Reduces dominance of majority class & Balanced class distribution \\
+  None & Highest overall F1 and lowest severe error rate. \\
+  SMOTE & Increased luxury recall but hurt global accuracy. \\
+  Undersampling & Highest luxury recall but highest error rate. \\
 \end{tabular}
 \end{center}
-\subsection{Preprocessing Summary}
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% FIX FIX: Update summary points based on actual implementation
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
 
+\subsection{Preprocessing Summary}
 \begin{itemize}
   \item Cleaned dataset by removing invalid rows and handling duplicates
   \item Detected and handled outliers in power, price, and kilometers
-  \item Applied log transformation to reduce skewness in numeric features
-  \item Engineered new features such as vehicleAge, kmPerYear, isAutomatic, is\_vintage\_classic, and power\_to\_tier\_bin
-  \item Selected relevant features based on mutual information and domain knowledge
-  \item Split data into stratified train (70\%), validation (15\%), and test (15\%) sets
-  \item Balanced training set using SMOTE and undersampling to address class imbalance
+  \item Imputed missing numeric values with the median and categorical values with the mode.
+  \item Applied frequency encoding for high-cardinality columns and one-hot encoding for the remaining.
+  \item Scaled numeric features using a StandardScaler to stabilize model optimization.
+  \item Engineered new features to capture domain-specific insights and interactions.
+  \item Selected features based on model importance to improve generalization.
+  \item Evaluated multiple data balancing techniques to address class imbalance while monitoring the impact on both global and business-specific performance metrics.
 \end{itemize}
 
-% Dataset After and Before Preprocessing
-
+\subsection{Dataset After and Before Preprocessing}
 \begin{center}
 \renewcommand{\arraystretch}{1.4}
 \begin{tabular}{c c c}
@@ -812,22 +676,64 @@ In addition to the core fields, we have engineered the following features:
   \rowcolor{lightgray} Class distribution & 54.81\% Budget, 37.19\% Mid-Range, 7.99\% Luxury & Balanced to 33.3\% each \\
 \end{tabular}
 \end{center}
-
 \newpage
 \section{Exploratory Data Analysis (EDA)}
 \subsection{EDA Dashboard}
-
 \newpage
 \section{Model Development}
+We evaluated multiple model architectures to address the imbalanced 3-class target variable (budget, mid-range, luxury).
+\begin{itemize}
+    \item \textbf{Baseline}: A \texttt{DummyClassifier} was used to establish the minimum expected performance.
+    \item \textbf{Linear Models}: \texttt{LogisticRegression} and \texttt{LinearSVC} were tested as strong, fast baselines for tabular data.
+    \item \textbf{Single Tree}: \texttt{DecisionTreeClassifier} was included as an interpretable non-linear baseline.
+    \item \textbf{Ensembles}: \texttt{RandomForestClassifier} and \texttt{ExtraTreesClassifier} were utilized to natively capture non-linearities and feature interactions.
+    \item \textbf{Gradient Boosting}: \texttt{XGBClassifier} was selected as the state-of-the-art candidate for handling complex tabular patterns.
+\end{itemize}
+Hyperparameter tuning was executed using \texttt{RandomizedSearchCV} optimized for the macro F1 score.
 
 \newpage
 \section{Experiment Tracking with MLflow}
+All modeling experiments, parameters, and metrics were tracked utilizing MLflow. We logged standard metrics such as Macro F1 and Balanced Accuracy, alongside specific business metrics including Luxury Recall and Severe Misclassification Rate. Visual tracking artifacts, such as confusion matrices and a comprehensive model comparison dashboard, were recorded to support stakeholder review and error analysis.
 
 \newpage
 \section{Testing}
+Testing focused on assessing model generalizability and detecting overfitting between the cross-validation folds and the held-out test set.
+\begin{itemize}
+    \item \textbf{Generalization}: Across all model variations, validation F1 and test F1 scores were observed to be very close, indicating no major overfitting.
+    \item \textbf{Top Performer Stability}: The standard XGBoost model yielded a Validation F1 of 0.8591 and a nearly identical Test F1 of 0.8590.
+    \item \textbf{Underfitting Detection}: The Logistic Regression models demonstrated significant underfitting, scoring a low F1 of approximately 0.66 and a high severe error rate.
+\end{itemize}
 
 \newpage
 \section{Results \& Evaluation}
+The final evaluation concluded that the \textbf{XGBoost (no resampling)} model achieved the best overall trade-off among accuracy, stability, and business safety.
+
+\subsection{Model Comparison}
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{l c c c c}
+  \rowcolor{slate}
+  {\color{white}\small\bfseries Model} &
+  {\color{white}\small\bfseries Test F1} &
+  {\color{white}\small\bfseries Test Balanced Acc} &
+  {\color{white}\small\bfseries Luxury Recall} &
+  {\color{white}\small\bfseries Severe Error Rate} \\
+  XGBoost (none) & \textbf{0.8590} & 0.8566 & 0.8611 & \textbf{0.0022} \\
+  XGBoost (smote) & 0.8560 & \textbf{0.8580} & 0.8857 & 0.0025 \\
+  XGBoost (undersample) & 0.8529 & 0.8586 & \textbf{0.9053} & 0.0028 \\
+\end{tabular}
+\end{center}
+
+\subsection{Error Analysis}
+The primary source of error was confusion between the mid-range and luxury tiers due to overlapping feature distributions. Importantly, the model almost never confused the budget and luxury tiers. This severe misclassification rate was kept to approximately 0.22\%, confirming the model is highly safe for automated business pricing decisions.
+
+\subsection{Classification Report (Best Model)}
+The standard XGBoost model achieved an overall accuracy of 86\% on a test support size of 51,819.
+\begin{itemize}
+    \item \textbf{Budget (Class 0)}: Precision 0.89, Recall 0.91, F1-Score 0.90.
+    \item \textbf{Mid-Range (Class 1)}: Precision 0.80, Recall 0.80, F1-Score 0.80.
+    \item \textbf{Luxury (Class 2)}: Precision 0.89, Recall 0.86, F1-Score 0.87.
+\end{itemize}
 
 \newpage
 \section{Code Automation}
@@ -870,29 +776,27 @@ Future work could include:
   {\color{white}\small\bfseries Task} &
   {\color{white}\small\bfseries Members} \\
   \rowcolor{lightgray}
-  Data Acquisition & Ahmed Aladdin \& Ahmed Hamdy  \\
+  Data Acquisition & Ahmed Aladdin  \\
   \rowcolor{white}
-  Data Validation & Ahmed Hamdy \& Ahmed Aladdin \\
+  Data Validation & Ahmed Hamdy \\
   \rowcolor{lightgray}
-  Preprocessing & Ahmed Hamdy \& Ahmed Aladdin \\
+  Preprocessing & Ahmed Hamdy \\
   \rowcolor{white}
-  Feature Engineering \& Selection & Asmaa Mohamed \& Shehab Khaled \\
+  Feature Engineering \& Selection & Asmaa Mohamed \\
   \rowcolor{lightgray}
-  EDA \& Visualization & Ahmed Aladdin \& Shehab Khaled  \\
+  EDA \& Visualization & Ahmed Aladdin  \\
   \rowcolor{white}
-  Model Development & Asmaa Mohamed \& Shehab Khaled \\
+  Model Development & Asmaa Mohamed \\
   \rowcolor{lightgray}
-  Experiment Tracking & Asmaa Mohamed \& Shehab Khaled \\
+  Experiment Tracking & Asmaa Mohamed \\
   \rowcolor{white}
   Testing & Ahmed Hamdy \& Asmaa Mohamed \\
   \rowcolor{lightgray}
-  Results \& Evaluation & Asmaa Mohamed \& Shehab Khaled \\
+  Results \& Evaluation & Asmaa Mohamed \\
   \rowcolor{white}
   Code Automation \& CI & Ahmed Hamdy \& Ahmed Aladdin \\
   \rowcolor{lightgray}
   Deployment \& Dashboard & Ahmed Hamdy \& Ahmed Aladdin \\
 \end{tabular}
 \end{center}
-
-
 \end{document}
