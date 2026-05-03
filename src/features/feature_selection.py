@@ -10,11 +10,10 @@ This module provides multiple feature selection strategies:
 
 import numpy as np
 import pandas as pd
-from typing import List, Optional, Tuple, Dict, Any
+from typing import List, Optional, Tuple, Any
 from sklearn.feature_selection import (
     VarianceThreshold,
     SelectKBest,
-    chi2,
     f_classif,
     mutual_info_classif,
 )
@@ -328,7 +327,7 @@ def select_features(
     X_val_selected = selector.transform(X_val)
     X_test_selected = selector.transform(X_test)
 
-    print(f"\nFeature Selection Summary:")
+    print("\nFeature Selection Summary:")
     print(f"  Strategy: {strategy}")
     print(f"  Original features: {X_train.shape[1]}")
     print(f"  Selected features: {X_train_selected.shape[1]}")

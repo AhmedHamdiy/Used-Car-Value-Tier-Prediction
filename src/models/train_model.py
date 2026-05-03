@@ -490,7 +490,8 @@ def train_all_models(
         datasets: List of dataset types (default: ["none", "smote", "undersample"])
         experiment_name: MLflow experiment name
         mlflow_tracking_uri: MLflow tracking URI
-        feature_selection_strategy: Feature selection strategy (xgboost, variance, correlation, k_best, mutual_info)
+        feature_selection_strategy: Feature selection strategy
+            (xgboost, variance, correlation, k_best, mutual_info)
         feature_selection_threshold: Threshold for feature selection
         feature_selection_k: Number of features to select (for k_best, mutual_info)
         feature_selection_report_path: Path to save feature selection report
