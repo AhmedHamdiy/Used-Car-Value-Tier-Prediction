@@ -584,168 +584,84 @@ PRICE\_TIER = value tier derived from listing \texttt{price}.
 \end{center}
 
 \newpage
-\subsection{Feature Transformation\& Justification}
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% FIX: Update transformation techniques and justifications based on actual implementation
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-\begin{center}
-\renewcommand{\arraystretch}{1.4}
-\begin{tabular}{c c c c}
-  \rowcolor{slate}
-  {\color{white}\small\bfseries Column} &
-  {\color{white}\small\bfseries Transformation} &
-  {\color{white}\small\bfseries Justification} &
-  {\color{white}\small\bfseries Outcome} \\
-  \rowcolor{lightgray} powerPS & Log transformation & Reduce skewness & More normal distribution \\
-  \rowcolor{white} price & Log transformation & Reduce skewness & More normal distribution \\
-  \rowcolor{lightgray} kilometers & Log transformation & Reduce skewness & More normal distribution \\
-\end{tabular}
-\end{center}
+\subsection{Feature Transformation \& Justification}
+
+\begin{itemize}
+  \item \textbf{Numeric Imputation (median):} Robust to skewed distributions and outliers common in price.
+  \item \textbf{Categorical Imputation (most\_frequent):} Mode imputation provides a stable default without introducing new categories.
+  \item \textbf{Scaling (StandardScaler):} Improves optimization and comparability for linear models.
+  \item \textbf{One-Hot Encoding:} Strong baseline for mixed-type tabular data reducing collinearity.
+  \item \textbf{Frequency Encoding for brand/model:} Prevents dimensionality explosion from high-cardinality variables while preserving relative frequency information.
+\end{itemize}
 
 \subsection{Feature Engineering}
 In addition to the core fields, we have engineered the following features:
 \begin{itemize}
-  \item \textbf{vehicleAge} = current\_year (2026) $-$ yearOfRegistration
-  \item \textbf{kmPerYear} = kilometers / (vehicleAge + 1)
-  \item \textbf{isAutomatic} = (gearbox == "automatic")
-  \item \textbf{is\_vintage\_classic} derived from vehicleAge \& brand
-  \item \textbf{power\_to\_tier\_bin} derived from powerPS
+  \item \textbf{vehicleAge}: Calculated as ($\text{current year} - \text{year of registration}$) to capture physical depreciation.
+  \item \textbf{kmPerYear}: Normalizes the mileage by the age of the vehicle to represent usage intensity.
+  \item \textbf{km\_power\_ratio}: A proxy for the interaction between usage and engine power to capture non-linear relationships.
+  \item \textbf{log\_kilometer} \& \textbf{log\_power}: Logarithmic transformations to compress right-skewed outliers.
+  \item \textbf{power\_per\_age}: Represents performance relative to the age of the vehicle.
+  \item \textbf{is\_vintage}: A binary indicator for vehicles exceeding the standard vintage age threshold.
+  \item \textbf{is\_automatic}: A direct binary feature extracted from the gearbox field.
 \end{itemize}
 
-
 \subsection{Feature Selection \& Justification}
-
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% FIX: Update selection method and justifications based on actual implementation
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-\begin{center}
-\renewcommand{\arraystretch}{1.4}
-\begin{tabular}{c c c c}
-  \rowcolor{slate}
-  {\color{white}\small\bfseries Feature} &
-  {\color{white}\small\bfseries Selection Method} &
-  {\color{white}\small\bfseries Justification} &
-  {\color{white}\small\bfseries Outcome} \\
-  \rowcolor{lightgray} vehicleAge & Mutual Information & High relevance to price & Selected \\
-  \rowcolor{white} kmPerYear & Mutual Information & Captures usage intensity & Selected \\
-  \rowcolor{lightgray} isAutomatic & Chi-Squared Test & Categorical relevance & Selected \\
-  \rowcolor{white} is\_vintage\_classic & Domain Knowledge & Vintage/classic cars have unique pricing & Selected \\
-  \rowcolor{lightgray} power\_to\_tier\_bin & Mutual Information & Captures power distribution & Selected \\
-\end{tabular}
-\end{center}
+\begin{itemize}
+  \item We applied a model-based feature selection method using a \textcolor{teal}{Random Forest} classifier to identify the most predictive features while accounting for non-linear relationships and interactions.
+  \item The threshold was set to the median importance to retain features that contribute above-average predictive power.
+  \item This method is more robust than simple variance or correlation-based filters, especially in the presence of engineered features that may have complex relationships with the target variable.
+  \item Outcome: The selection process resulted in the removal of low-importance features, reducing noise and improving model generalization.
+\end{itemize}
 
 
 \subsection{Train-Validation-Test Split Procedure}
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% FIX: Update split ratios and methods based on actual implementation
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-\begin{center}
-\renewcommand{\arraystretch}{1.4}
-\begin{tabular}{c c c c}
-  \rowcolor{slate}
-  {\color{white}\small\bfseries Dataset} &
-  {\color{white}\small\bfseries Split Ratio} &
-  {\color{white}\small\bfseries Method} &
-  {\color{white}\small\bfseries Outcome} \\
-  \rowcolor{lightgray} Training Set & 70\% & Stratified Random Sampling & 260,070 rows \\
-  \rowcolor{white} Validation Set & 15\% & Stratified Random Sampling & 55,729 rows \\
-  \rowcolor{lightgray} Test Set & 15\% & Stratified Random Sampling & 55,729 rows \\
-\end{tabular}
-\end{center}
+\begin{itemize}
+  \item \textbf{Train-Test Split:} An 80/20 stratified split was performed to ensure that the class distribution of the target variable is preserved across both sets, which is crucial for imbalanced classification tasks.
+  \item \textbf{Cross-Validation:} A 5-fold stratified cross-validation strategy was implemented on the training set to provide robust estimates of model performance and to mitigate variance in
+  \item the presence of class imbalance, ensuring that each fold maintains the same proportion of classes as the overall dataset.
+\end{itemize}
 
+\newpage
 \subsection{Data Balancing Strategy}
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% FIX: Update balancing techniques and justifications based on actual implementation
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
+We experimented with the following resampling techniques to address class imbalance:
+\begin{enumerate}
+  \item \textbf{None (Baseline):} No resampling applied to establish a baseline for the bias-variance trade-off.
+  \vspace{0.4cm}
+  \item \textbf{SMOTE (Synthetic Minority Oversampling Technique):} Generates synthetic
+        samples for the minority class to improve recall, particularly for the luxury tier, while being cautious of potential overfitting.
+  \vspace{0.4cm}
+
+  \item \textbf{Undersampling (RandomUnderSampler):} Randomly removes samples from the majority class to balance the dataset, which can speed up training but may lead to information
+        loss and higher variance, especially in the budget tier.
+\end{enumerate}
+An evaluation of the impact of each technique on both global performance metrics (e.g., F1 score) and business-specific metrics (e.g., luxury recall) was conducted to determine the optimal approach.\\
+\\These are the results of the resampling techniques on the final model performance:
 \begin{center}
 \renewcommand{\arraystretch}{1.4}
-\begin{tabular}{c c c c}
+\begin{tabular}{p{3.5cm} p{9cm}}
   \rowcolor{slate}
   {\color{white}\small\bfseries Technique} &
-  {\color{white}\small\bfseries Description} &
-  {\color{white}\small\bfseries Justification} &
   {\color{white}\small\bfseries Outcome} \\
-  \rowcolor{lightgray} SMOTE & Synthetic Minority Over-sampling Technique & Generates synthetic samples for minority class (Luxury) & Balanced class distribution \\
-  \rowcolor{white} Undersampling & Randomly removes samples from majority class (Budget) & Reduces dominance of majority class & Balanced class distribution \\
+  None & Highest overall F1 and lowest severe error rate. \\
+  SMOTE & Increased luxury recall but hurt global accuracy. \\
+  Undersampling & Highest luxury recall but highest error rate. \\
 \end{tabular}
 \end{center}
-\subsection{Preprocessing Summary}
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% FIX FIX: Update summary points based on actual implementation
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────
 
+\subsection{Preprocessing Summary}
 \begin{itemize}
   \item Cleaned dataset by removing invalid rows and handling duplicates
   \item Detected and handled outliers in power, price, and kilometers
+  \item Imputed missing numeric values with the median and categorical values with the mode.
+  \item Applied frequency encoding for high-cardinality columns and one-hot encoding for the remaining.
+  \item Scaled numeric features using a StandardScaler to stabilize model optimization.
+  \item Engineered new features to capture domain-specific insights and interactions.
+  \item Selected features based on model importance to improve generalization.
+  \item Evaluated multiple data balancing techniques to address class imbalance while monitoring the impact on both global and business-specific performance metrics.
 \end{itemize}
 
-% Dataset After and Before Preprocessing
-
+\subsection{Dataset After and Before Preprocessing}
 \begin{center}
 \renewcommand{\arraystretch}{1.4}
 \begin{tabular}{c c c}
@@ -760,22 +676,64 @@ In addition to the core fields, we have engineered the following features:
   \rowcolor{lightgray} Class distribution & 54.81\% Budget, 37.19\% Mid-Range, 7.99\% Luxury & Balanced to 33.3\% each \\
 \end{tabular}
 \end{center}
-
 \newpage
 \section{Exploratory Data Analysis (EDA)}
 \subsection{EDA Dashboard}
-
 \newpage
 \section{Model Development}
+We evaluated multiple model architectures to address the imbalanced 3-class target variable (budget, mid-range, luxury).
+\begin{itemize}
+    \item \textbf{Baseline}: A \texttt{DummyClassifier} was used to establish the minimum expected performance.
+    \item \textbf{Linear Models}: \texttt{LogisticRegression} and \texttt{LinearSVC} were tested as strong, fast baselines for tabular data.
+    \item \textbf{Single Tree}: \texttt{DecisionTreeClassifier} was included as an interpretable non-linear baseline.
+    \item \textbf{Ensembles}: \texttt{RandomForestClassifier} and \texttt{ExtraTreesClassifier} were utilized to natively capture non-linearities and feature interactions.
+    \item \textbf{Gradient Boosting}: \texttt{XGBClassifier} was selected as the state-of-the-art candidate for handling complex tabular patterns.
+\end{itemize}
+Hyperparameter tuning was executed using \texttt{RandomizedSearchCV} optimized for the macro F1 score.
 
 \newpage
 \section{Experiment Tracking with MLflow}
+All modeling experiments, parameters, and metrics were tracked utilizing MLflow. We logged standard metrics such as Macro F1 and Balanced Accuracy, alongside specific business metrics including Luxury Recall and Severe Misclassification Rate. Visual tracking artifacts, such as confusion matrices and a comprehensive model comparison dashboard, were recorded to support stakeholder review and error analysis.
 
 \newpage
 \section{Testing}
+Testing focused on assessing model generalizability and detecting overfitting between the cross-validation folds and the held-out test set.
+\begin{itemize}
+    \item \textbf{Generalization}: Across all model variations, validation F1 and test F1 scores were observed to be very close, indicating no major overfitting.
+    \item \textbf{Top Performer Stability}: The standard XGBoost model yielded a Validation F1 of 0.8591 and a nearly identical Test F1 of 0.8590.
+    \item \textbf{Underfitting Detection}: The Logistic Regression models demonstrated significant underfitting, scoring a low F1 of approximately 0.66 and a high severe error rate.
+\end{itemize}
 
 \newpage
 \section{Results \& Evaluation}
+The final evaluation concluded that the \textbf{XGBoost (no resampling)} model achieved the best overall trade-off among accuracy, stability, and business safety.
+
+\subsection{Model Comparison}
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{l c c c c}
+  \rowcolor{slate}
+  {\color{white}\small\bfseries Model} &
+  {\color{white}\small\bfseries Test F1} &
+  {\color{white}\small\bfseries Test Balanced Acc} &
+  {\color{white}\small\bfseries Luxury Recall} &
+  {\color{white}\small\bfseries Severe Error Rate} \\
+  XGBoost (none) & \textbf{0.8590} & 0.8566 & 0.8611 & \textbf{0.0022} \\
+  XGBoost (smote) & 0.8560 & \textbf{0.8580} & 0.8857 & 0.0025 \\
+  XGBoost (undersample) & 0.8529 & 0.8586 & \textbf{0.9053} & 0.0028 \\
+\end{tabular}
+\end{center}
+
+\subsection{Error Analysis}
+The primary source of error was confusion between the mid-range and luxury tiers due to overlapping feature distributions. Importantly, the model almost never confused the budget and luxury tiers. This severe misclassification rate was kept to approximately 0.22\%, confirming the model is highly safe for automated business pricing decisions.
+
+\subsection{Classification Report (Best Model)}
+The standard XGBoost model achieved an overall accuracy of 86\% on a test support size of 51,819.
+\begin{itemize}
+    \item \textbf{Budget (Class 0)}: Precision 0.89, Recall 0.91, F1-Score 0.90.
+    \item \textbf{Mid-Range (Class 1)}: Precision 0.80, Recall 0.80, F1-Score 0.80.
+    \item \textbf{Luxury (Class 2)}: Precision 0.89, Recall 0.86, F1-Score 0.87.
+\end{itemize}
 
 \newpage
 \section{Code Automation}

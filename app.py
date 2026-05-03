@@ -8,7 +8,7 @@ import pickle
 @st.cache_resource
 def load_model():
     # Update this path if your model is inside a specific folder, e.g., "models/model.pkl"
-    with open("models/production_model.pkl", "rb") as file:
+    with open("models/best_model_for_production.pkl", "rb") as file:
         model = pickle.load(file)
     return model
 
@@ -92,9 +92,9 @@ user_input = pd.DataFrame({
 })
 
 labels_map ={
-    1: 'budget',
-    2: 'mid-range',
-    3: 'luxury'
+    0: 'budget',
+    1: 'mid-range',
+    2: 'luxury'
 }
 try:
     # 2. FEATURE ENGINEERING (Replicating your notebook logic)
