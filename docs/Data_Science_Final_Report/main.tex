@@ -696,14 +696,24 @@ Hyperparameter tuning was executed using \texttt{RandomizedSearchCV} optimized f
 All modeling experiments, parameters, and metrics were tracked utilizing MLflow. We logged standard metrics such as Macro F1 and Balanced Accuracy, alongside specific business metrics including Luxury Recall and Severe Misclassification Rate. Visual tracking artifacts, such as confusion matrices and a comprehensive model comparison dashboard, were recorded to support stakeholder review and error analysis.
 
 \newpage
+\newpage
+\newpage
 \section{Testing}
-Testing focused on assessing model generalizability and detecting overfitting between the cross-validation folds and the held-out test set.
+Testing focused on assessing model generalizability and detecting overfitting between the cross-validation folds and the held-out test set, alongside comprehensive software testing to ensure code correctness.
+
+\subsection{Software Testing: Unit and Integration}
+\begin{itemize}
+    \item \textbf{Unit Tests \& Justification}: We implemented targeted unit tests using \texttt{pytest} across all critical modules, justifying our test cases based on critical business logic and potential data failure points. Tests for the merge module verified CPI-based price normalization formulas and correct price tier assignments. Cleaning module tests guarded against missing required columns, placeholder replacements, and extreme value capping. Validation tests ensured completeness thresholds and anomaly detection algorithms (e.g., Isolation Forest) handled edge cases like all-NaN columns or boundary values gracefully.
+    \item \textbf{Integration Tests}: To verify component interaction and data flow, we built end-to-end tests spanning the entire pipeline: \texttt{merge\_data} $\rightarrow$ \texttt{clean\_data} $\rightarrow$ \texttt{validate\_data}. These tests confirmed that prices normalized during the merge phase remain within acceptable bounds during cleaning, and that German alias resolutions correctly propagate downstream. Furthermore, the integration tests validated that duplicate rows are properly removed across module boundaries and that after outlier capping, the data successfully passes the stringent range checks enforced by the validation step.
+    \item \textbf{Coverage \& Reporting}: The test suite runs natively via \texttt{pytest}, which is configured to generate terminal and HTML coverage statistics to measure and report on untested portions of the codebase. Through rigorous testing, we proactively identified and documented edge cases—such as a \texttt{ZeroDivisionError} during IQR validation on all-NaN inputs—ensuring overall pipeline robustness.
+\end{itemize}
+
+\subsection{Model Testing: Generalization}
 \begin{itemize}
     \item \textbf{Generalization}: Across all model variations, validation F1 and test F1 scores were observed to be very close, indicating no major overfitting.
     \item \textbf{Top Performer Stability}: The standard XGBoost model yielded a Validation F1 of 0.8591 and a nearly identical Test F1 of 0.8590.
     \item \textbf{Underfitting Detection}: The Logistic Regression models demonstrated significant underfitting, scoring a low F1 of approximately 0.66 and a high severe error rate.
 \end{itemize}
-
 \newpage
 \section{Results \& Evaluation}
 The final evaluation concluded that the \textbf{XGBoost (no resampling)} model achieved the best overall trade-off among accuracy, stability, and business safety.
@@ -737,12 +747,28 @@ The standard XGBoost model achieved an overall accuracy of 86\% on a test suppor
 
 \newpage
 \section{Code Automation}
+To ensure reproducibility and streamline the development workflow, we utilized \texttt{Make} as our primary automation tool. The \texttt{Makefile} is configured to automate various critical stages of the machine learning pipeline, abstracting complex commands into simple targets:
+\begin{itemize}
+    \item \textbf{Data Acquisition \& Preprocessing:} Targets such as \texttt{make merge}, \texttt{make validate\_raw}, and \texttt{make clean} automate the execution of Python and Bash scripts for merging sources, validating, and cleaning data.
+    \item \textbf{Data Validation:} The \texttt{make validate\_raw} and \texttt{make validate\_preprocessed} commands ensure data integrity at different pipeline stages.
+    \item \textbf{Code Quality:} We enforce clean code practices by automating formatting with Black (\texttt{make format}) and linting with Flake8 (\texttt{make lint}).
+    \item \textbf{Testing:} The \texttt{make test} target executes the Pytest suite, generating detailed terminal and HTML coverage reports.
+    \item \textbf{End-to-End Execution:} The \texttt{make pipeline} target runs the complete data preparation and quality check sequence (merge, validate, clean, check, and delete) sequentially, while \texttt{make check} bundles formatting and linting.
+\end{itemize}
+This structured automation simplifies team collaboration and integrates seamlessly with our continuous integration workflows.
 
 \newpage
-\section{Continous Integration}
+\section{Continuous Integration}
+We implemented a Continuous Integration (CI) pipeline using GitHub Actions to automatically enforce code quality, run testing suites, and ensure code robustness on every update. The pipeline is configured to trigger automatically on any \texttt{push} or \texttt{pull\_request} to the \texttt{main} branch.
 
-\newpage
-\section{Deployment \& Monitoring}
+The workflow is executed on an \texttt{ubuntu-latest} runner and consists of the following automated steps:
+\begin{itemize}
+    \item \textbf{Environment Setup:} Checks out the repository, initializes Python 3.14, and installs the Poetry package manager (version 2.1.1) to handle dependencies in an isolated virtual environment.
+    \item \textbf{Dependency Management:} Automatically generates the \texttt{poetry.lock} file and installs all project dependencies without interaction.
+    \item \textbf{Static Code Analysis (Linting):} Executes Flake8 via Poetry against the \texttt{src/} and \texttt{tests/} directories to ensure the codebase maintains clean code practices and formatting standards.
+    \item \textbf{Automated Testing \& Coverage:} Runs the comprehensive Pytest suite, generating both terminal and HTML coverage reports (\texttt{--cov-report=term-missing --cov-report=html}) to verify code correctness and identify untested logic.
+\end{itemize}
+This CI configuration prevents breaking changes from being merged into the main branch and guarantees that all integrated code meets the required quality thresholds outlined in the project requirements.
 
 \newpage
 \section{Interactive Dashboard}

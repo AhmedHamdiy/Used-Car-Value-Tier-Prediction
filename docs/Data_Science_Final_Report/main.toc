@@ -39,18 +39,19 @@
 \contentsline {section}{\numberline {6}Model Development}{14}{section.6}%
 \contentsline {section}{\numberline {7}Experiment Tracking with MLflow}{15}{section.7}%
 \contentsline {section}{\numberline {8}Testing}{16}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Software Testing: Unit and Integration}{16}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Model Testing: Generalization}{16}{subsection.8.2}%
 \contentsline {section}{\numberline {9}Results \& Evaluation}{17}{section.9}%
 \contentsline {subsection}{\numberline {9.1}Model Comparison}{17}{subsection.9.1}%
 \contentsline {subsection}{\numberline {9.2}Error Analysis}{17}{subsection.9.2}%
 \contentsline {subsection}{\numberline {9.3}Classification Report (Best Model)}{17}{subsection.9.3}%
 \contentsline {section}{\numberline {10}Code Automation}{18}{section.10}%
-\contentsline {section}{\numberline {11}Continous Integration}{19}{section.11}%
-\contentsline {section}{\numberline {12}Deployment \& Monitoring}{20}{section.12}%
-\contentsline {section}{\numberline {13}Interactive Dashboard}{21}{section.13}%
-\contentsline {subsection}{\numberline {13.1}Purpose \& Business Value}{21}{subsection.13.1}%
-\contentsline {subsection}{\numberline {13.2}Technology Stack}{21}{subsection.13.2}%
-\contentsline {subsection}{\numberline {13.3}Key Dashboard Components}{21}{subsection.13.3}%
-\contentsline {section}{\numberline {14}Limitations \& Future Work}{22}{section.14}%
-\contentsline {subsection}{\numberline {14.1}Limitations}{22}{subsection.14.1}%
-\contentsline {subsection}{\numberline {14.2}Future Work}{22}{subsection.14.2}%
-\contentsline {section}{\numberline {15}Team Contributions}{22}{section.15}%
+\contentsline {section}{\numberline {11}Continuous Integration}{19}{section.11}%
+\contentsline {section}{\numberline {12}Interactive Dashboard}{20}{section.12}%
+\contentsline {subsection}{\numberline {12.1}Purpose \& Business Value}{20}{subsection.12.1}%
+\contentsline {subsection}{\numberline {12.2}Technology Stack}{20}{subsection.12.2}%
+\contentsline {subsection}{\numberline {12.3}Key Dashboard Components}{20}{subsection.12.3}%
+\contentsline {section}{\numberline {13}Limitations \& Future Work}{21}{section.13}%
+\contentsline {subsection}{\numberline {13.1}Limitations}{21}{subsection.13.1}%
+\contentsline {subsection}{\numberline {13.2}Future Work}{21}{subsection.13.2}%
+\contentsline {section}{\numberline {14}Team Contributions}{21}{section.14}%

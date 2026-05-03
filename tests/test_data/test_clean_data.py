@@ -20,7 +20,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from clean_data import (
+from src.data.clean_data import (
     BRAND_ALIASES,
     BRANDS_TO_DROP,
     CAP_BOUNDS,
