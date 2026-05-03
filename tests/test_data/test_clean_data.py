@@ -47,22 +47,19 @@ from src.data.clean_data import (
     validate_schema,
 )
 
-# Compatibility aliases for constants refactored into SCHEMA
 MIN_PRICE = SCHEMA["price"]["min"]
 MAX_PRICE = SCHEMA["price"]["max"]
 POWER_MIN = SCHEMA["power"]["min"]
 POWER_MAX = SCHEMA["power"]["max"]
 KM_RANGE = (SCHEMA["kilometer"]["min"], SCHEMA["kilometer"]["max"])
-YEAR_RANGE = (
-    SCHEMA["yearOfRegistration"]["min"],
-    SCHEMA["yearOfRegistration"]["max"],
-)
+YEAR_RANGE = (SCHEMA["yearOfRegistration"]["min"], SCHEMA["yearOfRegistration"]["max"])
 
-# Compatibility wrappers for categorical cleaners refactored into clean_with_aliases
-clean_fuel_type = lambda s: clean_with_aliases(s, FUEL_ALIASES)
-clean_gearbox = lambda s: clean_with_aliases(s, GEAR_ALIASES)
-clean_seller = lambda s: clean_with_aliases(s, SELLER_ALIASES)
-clean_vehicle_type = lambda s: clean_with_aliases(s, VT_ALIASES)
+# Helper functions that replace removed categorical cleaning methods
+def clean_fuel_type(series): return clean_with_aliases(series, FUEL_ALIASES)
+def clean_gearbox(series): return clean_with_aliases(series, GEAR_ALIASES)
+def clean_seller(series): return clean_with_aliases(series, SELLER_ALIASES)
+def clean_vehicle_type(series): return clean_with_aliases(series, VT_ALIASES)
+
 
 
 # ─────────────────────────── helpers ────────────────────────────
