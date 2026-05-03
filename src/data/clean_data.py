@@ -8,106 +8,52 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+import json
+
 warnings.filterwarnings("ignore")
+
+
+def _log_step(msg: str) -> None:
+    print(f" [DEBUG] {msg}")
+
+
+def _log_ok(msg: str) -> None:
+    print(f"  [INFO] {msg}")
+
+
+def _log_warn(msg: str) -> None:
+    print(f"  [WARN] {msg}")
 
 # ========================= CONFIGURATION =========================
 
-# Missing value placeholders (implicit)
-PLACEHOLDERS: set[str] = {
-    "",
-    " ",
-    "?",
-    "N/A",
-    "n/a",
-    "NA",
-    "na",
-    "null",
-    "NULL",
-    "None",
-    "none",
-    "unknown",
-    "Unknown",
-    "-",
-    "--",
-    "keine_angabe",
-    "andere",
-    "sonstige",
-    "nan",
-}
+with open("src/data/mappings/missing_placeholders.json") as f:
+    PLACEHOLDERS: set[str] = set(json.load(f))
 
-# brand mapping
-BRAND_ALIASES: dict[str, str] = {
-    "alfa": "alfa-romeo",
-    "land": "land-rover",
-    "aston": "aston-martin",
-    "lynk": "lynk-co",
-    "alpine": "alpina",
-    "merc": "mercedes-benz",
-    "vw": "volkswagen",
-    "landrover": "land-rover",
-}
+with open("src/data/mappings/brand_aliases.json") as f:
+    BRAND_ALIASES: dict[str, str] = json.load(f)
+
+with open("src/data/mappings/model_aliases.json") as f:
+    MODEL_ALIASES: dict[str, str] = json.load(f)
+
+with open("src/data/mappings/fuel_aliases.json") as f:
+    FUEL_ALIASES: dict[str, str] = json.load(f)
+
+with open("src/data/mappings/vt_aliases.json") as f:
+    VT_ALIASES: dict[str, str] = json.load(f)
+
+with open("src/data/mappings/seller_aliases.json") as f:
+    SELLER_ALIASES: dict[str, str] = json.load(f)
+
+with open("src/data/mappings/gear_aliases.json") as f:
+    GEAR_ALIASES: dict[str, str] = json.load(f)
+
+with open("src/data/schemas/schema.json") as f:
+    SCHEMA: dict[str, dict[str, Any]] = json.load(f)
 
 BRANDS_TO_DROP: set[str] = {"sonstige-autos", "unbekannt", "keine_angabe"}
 
-# Simplified model mapping
-MODEL_ALIASES: dict[str, str] = {
-    "kaefer": "beetle",
-    "käfer": "beetle",
-    "new-beetle": "beetle",
-    "1er": "1-series",
-    "2er": "2-series",
-    "3er": "3-series",
-    "4er": "4-series",
-    "5er": "5-series",
-    "6er": "6-series",
-    "7er": "7-series",
-    "8er": "8-series",
-    "a-klasse": "a-class",
-    "b-klasse": "b-class",
-    "c-klasse": "c-class",
-    "e-klasse": "e-class",
-    "g-klasse": "g-class",
-    "m-klasse": "m-class",
-    "s-klasse": "s-class",
-    "v-klasse": "v-class",
-    "x-klasse": "x-class",
-    "up!": "up",
-    "e-up!": "e-up",
-    "ceed": "ceed",
-    "andere": "other",
-    "unknown": "other",
-}
-
 MODELS_TO_DROP: set[str] = {"sonstige", "sonstige_autos", "keine_angabe"}
 
-FUEL_ALIASES: dict[str, str] = {
-    "benzin": "gasoline",
-    "elektro": "electric",
-    "electric/gasoline": "hybrid",
-    "electric/diesel": "hybrid",
-    "andere": "other",
-}
-
-VT_ALIASES: dict[str, str] = {
-    "limousine": "sedan",
-    "kleinwagen": "compact",
-    "kombi": "station-wagon",
-    "Station Wagon": "station-wagon",
-    "bus": "van",
-    "cabrio": "convertible",
-    "suv/off-road/pick-up": "suv",
-    "andere": "other",
-}
-
-SELLER_ALIASES: dict[str, str] = {
-    "privat": "private",
-    "gewerblich": "dealer",
-}
-
-GEAR_ALIASES: dict[str, str] = {
-    "manuell": "manual",
-    "automatik": "automatic",
-}
 
 # Categorical columns (after cleaning)
 CATEGORICAL_COLS: list[str] = [
@@ -136,57 +82,14 @@ INPUT_COLS: list[str] = [
     "price_tier",
 ]
 
-# Domain constraints (based on validation report)
-YEAR_RANGE: tuple[int, int] = (1900, 2026)
-KM_RANGE: tuple[float, float] = (0.0, 300_000.0)
-MIN_PRICE: float = 500.0
-MAX_PRICE: float = 3_000_000.0
-POWER_MIN: float = 5.0
-POWER_MAX: float = 3000.0
 
 # Fixed capping bounds (domain knowledge)
 CAP_BOUNDS: dict[str, dict[str, float]] = {
-    "power": {"lower": POWER_MIN, "upper": POWER_MAX},
-    "price": {"lower": MIN_PRICE, "upper": MAX_PRICE},
-    "kilometer": {"lower": KM_RANGE[0], "upper": KM_RANGE[1]},
-    "yearOfRegistration": {"lower": YEAR_RANGE[0], "upper": YEAR_RANGE[1]},
+    "power": {"lower": SCHEMA["power"]["min"], "upper": SCHEMA["power"]["max"]},
+    "price": {"lower": SCHEMA["price"]["min"], "upper": SCHEMA["price"]["max"]},
+    "kilometer": {"lower": SCHEMA["kilometer"]["min"], "upper": SCHEMA["kilometer"]["max"]},
+    "yearOfRegistration": {"lower": SCHEMA["yearOfRegistration"]["min"], "upper": SCHEMA["yearOfRegistration"]["max"]},
 }
-
-# Schema definition for validation (tutorial golden rule)
-SCHEMA: dict[str, dict[str, Any]] = {
-    "price": {
-        "dtype": "float64",
-        "nullable": False,
-        "min": MIN_PRICE,
-        "max": MAX_PRICE,
-    },
-    "power": {
-        "dtype": "float64",
-        "nullable": False,
-        "min": POWER_MIN,
-        "max": POWER_MAX,
-    },
-    "kilometer": {
-        "dtype": "float64",
-        "nullable": False,
-        "min": KM_RANGE[0],
-        "max": KM_RANGE[1],
-    },
-    "yearOfRegistration": {
-        "dtype": "int64",
-        "nullable": False,
-        "min": YEAR_RANGE[0],
-        "max": YEAR_RANGE[1],
-    },
-    "brand": {"dtype": "object", "nullable": False},
-    "model": {"dtype": "object", "nullable": True},
-    "vehicleType": {"dtype": "object", "nullable": True},
-    "gearbox": {"dtype": "object", "nullable": True},
-    "fuelType": {"dtype": "object", "nullable": True},
-    "seller": {"dtype": "object", "nullable": True},
-    "dataSource": {"dtype": "object", "nullable": True},
-}
-
 
 # ========================= HELPER FUNCTIONS =========================
 
@@ -323,17 +226,6 @@ def validate_schema(df: pd.DataFrame, schema: dict) -> list[str]:
     return violations
 
 
-def _log_step(msg: str) -> None:
-    print(f"  #️⃣ {msg}")
-
-
-def _log_ok(msg: str) -> None:
-    print(f"  ✅ {msg}")
-
-
-def _log_warn(msg: str) -> None:
-    print(f"  ⚠️  {msg}")
-
 
 # ========================= CLEANING STEPS =========================
 
@@ -376,29 +268,29 @@ def remove_invalid_rows(df: pd.DataFrame) -> pd.DataFrame:
 
     # price
     df = df.dropna(subset=["price"])
-    df = df[(df["price"] >= MIN_PRICE) & (df["price"] <= MAX_PRICE)]
+    df = df[(df["price"] >= SCHEMA["price"]["min"]) & (df["price"] <= SCHEMA["price"]["max"])]
 
     # year
     year_valid = (
         df["yearOfRegistration"].notna()
-        & (df["yearOfRegistration"] >= YEAR_RANGE[0])
-        & (df["yearOfRegistration"] <= YEAR_RANGE[1])
+        & (df["yearOfRegistration"] >= SCHEMA["yearOfRegistration"]["min"])
+        & (df["yearOfRegistration"] <= SCHEMA["yearOfRegistration"]["max"])
     )
     df = df[year_valid]
 
     # kilometer
     km_valid = (
         df["kilometer"].notna()
-        & (df["kilometer"] >= KM_RANGE[0])
-        & (df["kilometer"] <= KM_RANGE[1])
+        & (df["kilometer"] >= SCHEMA["kilometer"]["min"])
+        & (df["kilometer"] <= SCHEMA["kilometer"]["max"])
     )
     df = df[km_valid]
 
     # power
     power_valid = (
         df["power"].notna()
-        & (df["power"] >= POWER_MIN)
-        & (df["power"] <= POWER_MAX)
+        & (df["power"] >= SCHEMA["power"]["min"])
+        & (df["power"] <= SCHEMA["power"]["max"])
     )
     df = df[power_valid]
 

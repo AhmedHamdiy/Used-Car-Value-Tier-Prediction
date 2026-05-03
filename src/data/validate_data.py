@@ -635,7 +635,7 @@ class DataValidator:
                     output_lines.append(frth_line)
 
             for issue in result["issues"]:
-                output_lines.append(f"       ⚠️  {issue}")
+                output_lines.append(f"       [WARN]  {issue}")
 
         output_lines.append("\n" + "=" * 65 + "\n")
         report_text = "\n".join(output_lines)
