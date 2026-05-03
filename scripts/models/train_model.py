@@ -6,7 +6,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-from src.models.train_model import train_all_models  # : E402
+from src.models.train_model import train_all_models  # noqa: E402
 
 
 def main():
