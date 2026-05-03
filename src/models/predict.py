@@ -205,18 +205,20 @@ class CarPriceTierPredictor:
         Returns:
             Dictionary with prediction and confidence
         """
-        df = pd.DataFrame({
-            "brand": [brand],
-            "model": [model],
-            "vehicleType": [vehicle_type],
-            "power": [power],
-            "gearbox": [gearbox],
-            "kilometer": [kilometer],
-            "fuelType": [fuel_type],
-            "yearOfRegistration": [year],
-            "seller": [seller],
-            "dataSource": [data_source],
-        })
+        df = pd.DataFrame(
+            {
+                "brand": [brand],
+                "model": [model],
+                "vehicleType": [vehicle_type],
+                "power": [power],
+                "gearbox": [gearbox],
+                "kilometer": [kilometer],
+                "fuelType": [fuel_type],
+                "yearOfRegistration": [year],
+                "seller": [seller],
+                "dataSource": [data_source],
+            }
+        )
 
         result = self.predict(df, return_proba=True)
 
@@ -227,7 +229,11 @@ class CarPriceTierPredictor:
                 tier: prob
                 for tier, prob in zip(
                     ["budget", "mid-range", "luxury"],
-                    result["probabilities"][0] if result["probabilities"] else [0, 0, 0],
+                    (
+                        result["probabilities"][0]
+                        if result["probabilities"]
+                        else [0, 0, 0]
+                    ),
                 )
             },
         }

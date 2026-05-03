@@ -102,9 +102,7 @@ class CarsSpider(scrapy.Spider):
                     if isinstance(listing, dict) and listing.get("url")
                 ]
             except json.JSONDecodeError:
-                self.logger.warning(
-                    "Page %s: could not decode __NEXT_DATA__.", page
-                )
+                self.logger.warning("Page %s: could not decode __NEXT_DATA__.", page)
 
         # Fallback strategy: parse rendered anchors
         if not links:
